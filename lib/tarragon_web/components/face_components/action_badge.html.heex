@@ -1,0 +1,23 @@
+<div class="flex flex-row items-center gap-2 hover:scale-[1.05] hover:duration-300 transition-all">
+    <div class="aspect-square min-w-[60px] w-[6vw] md:w-[6vw]">
+        <div class="relative w-full h-full">
+            <div class={[
+                    "absolute z-50 bg-transparent bg-gradient-to-b from-white to-transparent",
+                    "rounded-[8px] content-none h-1/2 top-[6%] left-[7%]",
+                    "opacity-70 transition-all duration-300 w-[86%]"
+                 ]}/>
+
+            <div class={[
+                "absolute z-0 shadow-sm shadow-black w-full h-full ",
+                "border-[2px] border-solid border-black rounded-[12px] inline-block	outline-none",
+                "py-[16px] px-[21px] text-center transition-all",
+                @bg_color,
+                @class
+            ]}>
+                <div class="absolute transition-all aspect-square top-0 left-0 flex flex-row z-20 justify-center items-center w-full h-full">
+                    <%= render_slot(@inner_block) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

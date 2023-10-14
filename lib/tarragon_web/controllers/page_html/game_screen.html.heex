@@ -1,0 +1,81 @@
+<.flash_group flash={@flash} />
+
+<!--# open on a map view-->
+<!--# display player button + player lvl, exp-->
+<!--# display messages button-->
+<!--# display battles icon-->
+<!--# display shop icon-->
+<!--# display available resources-->
+<!--# display menu button-->
+
+<div class="relative-container relative w-screen h-screen">
+    <div class="absolute top-[3vh] left-[3vh] z-10 flex flex-row items-center gap-4">
+        <.experience_badge />
+        <.health_progress_bar class="p-10"/>
+    </div>
+
+<!--    <div class="absolute top-[10vh] left-[5vw] z-10 w-[5rem] h-[5rem] md:w-[8rem] md:h-[8rem] play-button">-->
+<!--        <div class="sea-lion w-full h-full"></div>-->
+<!--    </div>-->
+<!--    <div class="absolute top-[10vh] left-[5vw] sea-lion w-[5rem] h-[5rem] md:w-[8rem] md:h-[8rem] z-10 user-profile-icon game-screen-button"></div>-->
+<!--    <div class="absolute top-[80vh] left-[5vw] w-[5rem] h-[5rem] md:w-[8rem] md:h-[8rem] z-10 game-screen-button swords"></div>-->
+
+    <div class="absolute-container absolute grid-container grid grid-cols-30 bg-map">
+        <%= for i <- 0..900 do %>
+            <%= if i == assigns[:current_location_id] do %>
+                <div onclick="changeCurrentLocation(this)" id={"location-#{i}"} class="current-location map-grid-cell relative aspect-square shadow-neutral-100 shadow-xl">
+                    <div class="user-location-icon absolute -top-10"></div>
+                </div>
+            <% else %>
+                <div onclick="changeCurrentLocation(this)" id={"location-#{i}"} class="aspect-square relative map-grid-cell map-grid-border">
+                    <div class="absolute -top-10"></div>
+                </div>
+            <% end %>
+        <% end %>
+    </div>
+</div>
+
+
+<script>
+    function adjustGridSize() {
+        const grid = document.querySelector('.grid-container');
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const maxSize = Math.max(viewportWidth, viewportHeight);
+
+        grid.style.width = `${maxSize}px`;
+        grid.style.height = `${maxSize}px`;
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function() {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+
+    function placeLocations() {
+        document.querySelector('#location-320').classList.add("bonfire");
+        document.querySelector('#location-403').classList.add("swords");
+        document.querySelector('#location-253').classList.add("nuclear-plant");
+        document.querySelector('#location-378').classList.add("tyre-2");
+    }
+
+    adjustGridSize();
+    window.addEventListener('resize', debounce(adjustGridSize,50));
+    window.addEventListener('DOMContentLoaded', placeLocations);
+
+    function changeCurrentLocation(element) {
+        const oldLocation = document.querySelector('.current-location')
+        oldLocation.children[0].classList.remove("user-location-icon");
+        oldLocation.classList.remove("current-location");
+
+        element.classList.add("current-location");
+        element.children[0].classList.add("user-location-icon");
+    }
+</script>
+
+

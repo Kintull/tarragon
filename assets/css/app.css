@@ -1,0 +1,273 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+/* This file is for your main application CSS */
+
+@font-face {
+    font-family: "Conventional-Wisdom";
+    src: url("/fonts/cwisdom.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "JotiOne-Regular";
+    src: url("/fonts/JotiOne-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@layer base {
+    .face-screen-stroke {
+        -webkit-text-stroke: 2px black;
+        text-shadow: 0.1rem 0.15rem 0 black,
+        -0.06rem -0.06rem 0 black,
+        0.06rem -0.06rem 0 black,
+        -0.06rem 0.06rem 0 black,
+        0.06rem 0.06rem 0 black;
+    }
+
+    .font-outline-darkblue {
+        -webkit-text-stroke: 1px darkcyan;
+        color: white;
+        text-shadow: 3px 3px 0 lightblue,
+        -1px -1px 0 lightblue,
+        1px -1px 0 lightblue,
+        -1px 1px 0 lightblue,
+        1px 1px 0 lightblue;
+    }
+
+    .outline-play-button {
+        -webkit-text-stroke: 0.5px darkcyan;
+        color: white;
+        text-shadow: 2px 1.5px 0 darkcyan,
+        -1px -1px 0 darkcyan,
+        1px -1px 0 darkcyan,
+        -1px 1px 0 darkcyan,
+        1px 1px 0 darkcyan;
+    }
+
+    /* CSS */
+    .play-button {
+        background-color: #7accdc;
+        border: 1.5px;
+        border-style: solid;
+        border-color: #000;
+        border-radius: 12px;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        outline: 0;
+        padding: 16px 21px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: all .3s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    .play-button::before {
+        background-color: initial;
+        background-image: linear-gradient(#ffffff 0, rgba(122, 204, 220, 0) 120%);
+        border-radius: 12px;
+        content: "";
+        height: 50%;
+        top: 3%;
+        left: 3%;
+        opacity: .7;
+        position: absolute;
+        transition: all .3s;
+        width: 94%;
+    }
+
+    .play-button:hover {
+        box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+        transform: scale(1.05);
+    }
+
+    .bg-map {
+        background-image: url("/images/clean-map-transformed.png");
+        background-size: contain;
+    }
+
+    .grid-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .bonfire {
+        background-image: url("/images/bonfire.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .swords {
+        background-image: url("/images/swords.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .nuclear-plant {
+        background-image: url("/images/nuclear-plant.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .tyre-2 {
+        background-image: url("/images/tyre-2.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .sea-lion {
+        background-image: url("/images/sea-lion.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .user-location-icon {
+        background-image: url("/images/tyre-2.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+
+    .user-location-icon::after {
+        content: "";
+        position: absolute;
+        top: -25px;
+        left: -13px;
+        width: 70px;
+        height: 70px;
+        background-image: url("/images/location.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .map-grid-border {
+        margin: 0 -2px -2px 0;
+        border-color: lightgrey;
+        border-style: dotted;
+        border-width: 2px;
+    }
+
+    .map-grid-cell:hover {
+        box-shadow: rgb(105, 170, 192) 0 3px 15px inset, rgb(105, 170, 192) 0 3px 15px, rgb(105, 170, 192) 0 3px 15px
+    }
+
+    .user-profile-icon {
+        z-index: 10;
+        border-width: 4px;
+        border-radius: 50%;
+        border-color: darkcyan;
+    }
+
+    .map-button {
+        border: 2px;
+        border-style: solid;
+        border-color: #000;
+        border-radius: 12px;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        outline: 0;
+        padding: 16px 21px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: all .3s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    .map-button::before {
+        background-color: initial;
+        background-image: linear-gradient(#ffffff 0, rgba(122, 204, 220, 0) 120%);
+        border-radius: 8px;
+        content: "";
+        height: 50%;
+        top: 4%;
+        left: 4%;
+        opacity: .7;
+        position: absolute;
+        transition: all .3s;
+        width: 92%;
+    }
+
+    .map-proress-bar {
+        background-color: rgba(255, 255, 255, 0);
+        border: 2px;
+        border-style: solid;
+        border-color: #000;
+        border-radius: 12px;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        outline: 0;
+        padding: 16px 21px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: all .3s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    .map-proress-bar::before {
+        background-color: initial;
+        background-image: linear-gradient(#ffffff 0, rgba(122, 204, 220, 0) 120%);
+        border-radius: 12px;
+        content: "";
+        height: 50%;
+        top: 3%;
+        left: 3%;
+        opacity: .7;
+        position: absolute;
+        transition: all .3s;
+        width: 94%;
+    }
+
+    .inner-dark-shadow {
+        box-shadow: inset 0 0 13px #3d4848;
+    }
+
+    .blue-game-button {
+        background-color: #7accdc;
+        border: 2px;
+        border-style: solid;
+        border-color: #000;
+        border-radius: 12px;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        outline: 0;
+        padding: 16px 21px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: all .3s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    .blue-game-button:before {
+         background-color: initial;
+         background-image: linear-gradient(#ffffff 0, rgba(122, 204, 220, 0) 120%);
+         border-radius: 8px;
+         content: "";
+         height: 50%;
+         top: 4%;
+         left: 4%;
+         opacity: .7;
+         position: absolute;
+         transition: all .3s;
+         width: 92%;
+     }
+}
