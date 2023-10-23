@@ -1,0 +1,19 @@
+<div class={[@class,"m-5 flex flex-col pt-1 items-center gap-5 border-[3px] rounded-2xl overflow-y-auto scrollbar-y-hidden"]}>
+    <% images = ["helmet", "boot-transparent", "knee-pads-transparent"] %>
+
+    <div class="w-full grid grid-cols-5 gap-5 p-5">
+        <%= for i <- 1..3 do %>
+        <.equipment_item quantity={2} rarity="legendary" img_url={"/images/#{Enum.at(images, rem(i,3)-1)}.png"}/>
+        <% end %>
+        <%= for i <- 1..3 do %>
+        <.equipment_item rarity="rare" img_url={"/images/#{Enum.at(images, rem(i,3)-1)}.png"}/>
+        <% end %>
+        <%= for i <- 1..3 do %>
+        <.equipment_item rarity="uncommon" img_url={"/images/#{Enum.at(images, rem(i,3)-1)}.png"}/>
+        <% end %>
+        <%= for i <- 1..30 do %>
+            <.equipment_item rarity="common" img_url={"/images/#{Enum.at(images, 0)}.png"}/>
+        <% end %>
+
+    </div>
+</div>

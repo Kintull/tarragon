@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="[scrollbar-gutter:stable]">
+<html lang="en" class="[scrollbar-gutter:auto]">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,14 +11,8 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <%= if assigns[:overflow_hidden] do %>
-    <body class="bg-white antialiased overflow-hidden">
-      <%= @inner_content %>
-    </body>
-  <% else %>
-    <body class="bg-white antialiased">
-      <%= @inner_content %>
-    </body>
-  <% end %>
+  <body class="bg-white antialiased overflow-hidden">
+    <%= @inner_content %>
+  </body>
 
 </html>

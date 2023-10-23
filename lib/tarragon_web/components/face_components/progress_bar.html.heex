@@ -1,0 +1,47 @@
+<div class="flex flex-row gap-2 items-center justify-center rounded-xl p-2 md:border-none md:rounded-none md:p-0 min-h-[60px] select-none">
+    <%= if !@reversed do %>
+        <div class="block md:hidden w-[4vw] md:w-[6vw] bg-transparent rounded-sm flex justify-center items-center">
+            <img class="min-w-[30px] w-full h-full" src={@img_url} alt="icon for a progress bar"/>
+        </div>
+    <% end %>
+    <div class="block md:hidden font-jotione-regular text-white text-[4vw] face-screen-stroke-small">
+        <%= @current %>/<%= @max %>
+    </div>
+    <%= if @reversed do %>
+        <div class="block md:hidden w-[4vw] md:w-[6vw] bg-transparent rounded-sm flex justify-center items-center">
+            <img class="min-w-[30px] w-full h-full" src={@img_url} alt="icon for a progress bar"/>
+        </div>
+    <% end %>
+
+    <div class="hidden md:block">
+        <div class={["relative rounded-[12px] min-w-[100px] min-h-[30px] border-[2.5px] border-gun-powder bg-transparent",
+                @class]}>
+            <!--    reflection-->
+            <div class={["absolute top-[5%] left-[2%] bg-transparent opacity-70 z-10 h-1/2 w-[96%] rounded-[10px] bg-gradient-to-b from-white to-transparent"]}></div>
+
+            <%= if @reversed do %>
+                <div class="z-10 absolute right-[60px] -top-[60%] font-jotione-regular text-white text-3xl face-screen-stroke">
+                    <%= @current %>/<%= @max %>
+                </div>
+                <div class="absolute w-full h-full" style="transform: rotate(180deg);">
+                    <div class={["relative rounded-[10px] h-full #{@bg_color} "]} style={"width: #{5 + 95/100 * @percentage}%;"}]}></div>
+                </div>
+                <div class="z-20 absolute -top-[15px] min-w-[60px] w-[4vw] md:w-[5vw] bg-transparent rounded-sm flex justify-center items-center">
+                    <img class="w-full h-full" src={@img_url} alt="icon for a progress bar"/>
+                </div>
+            <% else %>
+                <div class="z-20 absolute -top-[15px] bg-transparent rounded-sm flex justify-center items-center">
+                    <div class="aspect-square min-w-[60px] w-[4vw] md:w-[5vw] flex flex-row justify-center">
+                        <img class="aspect-square w-3/4 h-3/4" alt="badge" src={@img_url}/>
+                    </div>
+                </div>
+                <div class="z-10 absolute left-[40%] -top-[60%] font-jotione-regular text-white text-3xl face-screen-stroke">
+                    <%= @current %>/<%= @max %>
+                </div>
+                <div class={["absolute rounded-[10px] h-full #{@bg_color}"]} style={"width: #{5 + 95/100 * @percentage}%"}]}></div>
+            <% end %>
+        </div>
+    </div>
+
+</div>
+

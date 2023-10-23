@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="jsonpatch" type="mix">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/jsonpatch/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/jsonpatch/ebin" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/jsonpatch/lib" />
+      <root url="file://$PROJECT_DIR$/deps/jsonpatch/lib" />
+    </SOURCES>
+  </library>
+</component>

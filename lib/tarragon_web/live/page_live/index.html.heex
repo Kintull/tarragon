@@ -1,0 +1,52 @@
+<.flash_group flash={@flash} />
+<div class="w-full h-screen block p-4 flex items-center justify-center bg-cover bg-center bg-no-repeat" style="background-image: url('/images/background-newspaper-light.webp')">
+    <div class="py-6 px-10 sm:max-w-md md:max-w-xl w-full rounded-2xl">
+        <div class="flex flex-col space-y-3">
+            <div class="flex flex-col gap-2 justify-center items-center">
+                <div class="w-60 font-metropolis-regular shadow-play-button outline-play-button-text play-button bg-obsidian-black">
+                    <div class="relative w-full h-5 flex flex-row justify-center">
+                        <div class="absolute -top-2">
+                            <a class="text-3xl" onClick="toggleFullScreenAndRedirect()">FullScreen!</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="font-metropolis-regular shadow-play-button outline-play-button-text play-button bg-obsidian-black w-60">
+                    <div class="relative w-full h-5 flex flex-row justify-center">
+                        <div class="absolute -top-2">
+                            <.link class="text-3xl" navigate={~p"/game_screen"}>Next</.link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleFullScreenAndRedirect() {
+        var doc = window.document;
+        var docEl = doc.documentElement;
+
+        var requestFullScreen =
+            docEl.requestFullscreen ||
+            docEl.mozRequestFullScreen ||
+            docEl.webkitRequestFullScreen ||
+            docEl.msRequestFullscreen;
+        var cancelFullScreen =
+            doc.exitFullscreen ||
+            doc.mozCancelFullScreen ||
+            doc.webkitExitFullscreen ||
+            doc.msExitFullscreen;
+
+        if (
+            !doc.fullscreenElement &&
+            !doc.mozFullScreenElement &&
+            !doc.webkitFullscreenElement &&
+            !doc.msFullscreenElement
+        ) {
+            requestFullScreen.call(docEl);
+        } else {
+            cancelFullScreen.call(doc);
+        }
+    }
+</script>

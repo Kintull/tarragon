@@ -3,5 +3,10 @@
     "css-loader": "^6.8.1",
     "sass-loader": "^12.4.0",
     "styles-loader": "^3.0.0"
+  },
+  "dependencies": {
+    "flowbite": "^1.8.1",
+    "live_json": "file:./deps/live_json",
+    "sprity": "^1.0.8"
   }
 }

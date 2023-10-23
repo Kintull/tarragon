@@ -22,8 +22,10 @@ defmodule TarragonWeb.Router do
   scope "/", TarragonWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-    get "/game_screen", PageController, :game_screen
+#    get "/", PageController, :home
+    live "/", PageLive.Index, :index
+    live "/game_screen", PageLive.GameScreen, :game_screen
+    live "/player_screen", PageLive.PlayerScreen, :player_screen
     live_storybook "/storybook", backend_module: TarragonWeb.Storybook
   end
 

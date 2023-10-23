@@ -17,13 +17,36 @@ defmodule TarragonWeb.FaceComponents do
 
   def experience_badge(assigns)
 
+  def chrono_link_timer(assigns)
+
+  def battle_badge(assigns)
+
   attr :class, :string, default: nil
+  attr :bg_color, :string, default: "bg-red-500"
+  attr :reversed, :boolean, default: false
   attr :percentage, :integer, default: 50
   attr :max, :integer, default: 100
   attr :current, :integer, default: 50
-  def health_progress_bar(assigns)
+  attr :img_url, :string, default: nil
+  def progress_bar(assigns)
 
+  attr :class, :string, default: nil
+  attr :reversed, :boolean, default: false
+  def health_bar(assigns)
 
+  attr :class, :string, default: nil
+  attr :reversed, :boolean, default: true
+  def drone_bar(assigns)
+
+  attr :class, :string, default: nil
+  def return_badge(assigns)
+
+  attr :class, :string, default: nil
+  attr :img_url, :string, required: true
+  attr :rarity, :string, required: true
+  attr :quantity, :integer, default: 1
+  attr :level, :integer, default: 1
+  def equipment_item(assigns)
 
   @style """
    .blue-game-button {

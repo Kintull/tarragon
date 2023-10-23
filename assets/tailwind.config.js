@@ -10,10 +10,14 @@ module.exports = {
     "./js/**/*.js",
     "../lib/tarragon_web.ex",
     "../lib/tarragon_web/**/*.*ex",
-    "../storybook/**/*.story.exs"
+    "../storybook/**/*.story.exs",
+    "../node_modules/flowbite/**/*.js"
   ],
   theme: {
     screens: {
+      'xs': '420px',
+      // => @media (min-width: 640px) { ... }
+
       'sm': '640px',
       // => @media (min-width: 640px) { ... }
 
@@ -35,7 +39,9 @@ module.exports = {
       },
       fontFamily: {
         'cwisdom': ['Conventional-Wisdom', 'sans-serif'],
-        'jotione-regular': ['"JotiOne-Regular"', 'sans-serif']
+        'jotione-regular': ['JotiOne-Regular', 'sans-serif'],
+        'metropolis-regular': ['Metropolis-Regular', 'sans-serif'],
+        'futura': ['Futura', 'sans-serif']
       },
       gridTemplateColumns: {
         '30': 'repeat(30, minmax(0, 1fr))'
@@ -44,6 +50,7 @@ module.exports = {
   },
   plugins: [
     require("@tailwindcss/forms"),
+    require("flowbite/plugin"),
     // Allows prefixing tailwind classes with LiveView classes to add rules
     // only when LiveView classes are applied, for example:
     //

@@ -52,7 +52,8 @@ defmodule Tarragon.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:comeonin, "~> 2.5"},
-      {:phoenix_storybook, "~> 0.5.0"}
+      {:phoenix_storybook, "~> 0.5.0"},
+      {:live_json, "~> 0.4.3"}
     ]
   end
 

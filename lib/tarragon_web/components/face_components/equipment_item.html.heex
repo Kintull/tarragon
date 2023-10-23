@@ -1,0 +1,31 @@
+<%
+    rarity_map = %{
+        "common" => "bg-gradient-to-br to-gray-400 from-gray-200 border-[2px] border-gray-300 ",
+        "uncommon" => "bg-gradient-to-br to-lime-800 from-lime-300 border-[2px] border-lime-500",
+        "rare" => "bg-gradient-to-br to-blue-800 from-blue-200 border-[2px] border-blue-500",
+        "epic" => "bg-gradient-to-br to-purple-600 from-purple-200 border-[2px] border-purple-400",
+        "legendary" => "bg-gradient-to-br to-yellow-500 from-yellow-200 border-[2px] border-yellow-500"
+    }
+%>
+
+<div class={["min-w-[45px] w-[8vh] md:w-[5vw]",
+    "aspect-square rounded-xl text-center text-[1rem]",
+    "hover:scale-105 hover:duration-300",
+    rarity_map[@rarity],
+    @class]}>
+
+    <div class="relative w-full h-full">
+        <div class="absolute z-20 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
+            <%= if @quantity > 1, do: "+#{@level}" %>
+        </div>
+        <div class="absolute z-20 bottom-0 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
+            <%= if @quantity > 1, do: "#{@quantity}" %>
+        </div>
+        <div class="absolute z-10 top-0 left-0 h-full flex flex-col justify-center items-center">
+            <div class="h-full flex flex-col justify-center items-center p-[9%]">
+                <img class="w-full h-full" src={@img_url}/>
+            </div>
+        </div>
+        <div class="backdrop-brightness-[0.92] w-full h-full rounded-[10px]"/>
+    </div>
+</div>

@@ -10,9 +10,8 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
 ## Learn more
+  * Optimizing loading pictures https://css-tricks.com/the-blur-up-technique-for-loading-background-images/
+  * Passing Viewport dimensions on mount https://gist.github.com/cblavier/0e227de6fd1dfa00814b88642cdcb2a9
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+
+

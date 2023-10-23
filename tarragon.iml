@@ -62,6 +62,9 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/makeup_html" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/phoenix_storybook" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/earmark" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/jsonpatch" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/live_json" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/json_diff_ex" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="phoenix" level="project" />
@@ -148,5 +151,14 @@
     <orderEntry type="library" name="makeup_html" level="project" />
     <orderEntry type="library" name="unicode_set" level="project" />
     <orderEntry type="library" name="benchee_markdown" level="project" />
+    <orderEntry type="library" name="live_json" level="project" />
+    <orderEntry type="library" name="jsonpatch" level="project" />
+    <orderEntry type="library" name="json_diff_ex" level="project" />
+    <orderEntry type="library" name="poison" level="project" />
+    <orderEntry type="library" name="muzak" level="project" />
+    <orderEntry type="library" name="dogma" level="project" />
+    <orderEntry type="library" name="coverex" level="project" />
+    <orderEntry type="library" name="httpoison" level="project" />
+    <orderEntry type="library" name="eep" level="project" />
   </component>
 </module>
