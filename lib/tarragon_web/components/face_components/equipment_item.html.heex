@@ -1,31 +1,84 @@
-<%
-    rarity_map = %{
-        "common" => "bg-gradient-to-br to-gray-400 from-gray-200 border-[2px] border-gray-300 ",
-        "uncommon" => "bg-gradient-to-br to-lime-800 from-lime-300 border-[2px] border-lime-500",
-        "rare" => "bg-gradient-to-br to-blue-800 from-blue-200 border-[2px] border-blue-500",
-        "epic" => "bg-gradient-to-br to-purple-600 from-purple-200 border-[2px] border-purple-400",
-        "legendary" => "bg-gradient-to-br to-yellow-500 from-yellow-200 border-[2px] border-yellow-500"
-    }
-%>
+<% rarity_map = %{
+  "common" => "bg-gradient-to-br to-gray-300 from-gray-200 border-[2px] border-gray-100 ",
+  "uncommon" => "bg-gradient-to-br to-lime-500 from-lime-200 border-[2px] border-lime-200",
+  "rare" => "bg-gradient-to-br to-blue-500 from-blue-200 border-[2px] border-blue-300",
+  "epic" => "bg-gradient-to-br to-purple-500 from-purple-200 border-[2px] border-purple-200",
+  "legendary" => "bg-gradient-to-br to-yellow-400 from-yellow-200 border-[2px] border-yellow-300"
+}
 
-<div class={["min-w-[45px] w-[8vh] md:w-[5vw]",
-    "aspect-square rounded-xl text-center text-[1rem]",
-    "hover:scale-105 hover:duration-300",
-    rarity_map[@rarity],
-    @class]}>
+border_rarity_map = %{
+  "common" => "border-[2px] border-gray-200 ",
+  "uncommon" => "border-[2px] border-lime-400",
+  "rare" => "border-[2px] border-blue-400",
+  "epic" => "border-[2px] border-purple-300",
+  "legendary" => "border-[2px] border-yellow-400",
+  "broken" => "border-[2px] border-amber-400",
+  "trash" => "border-[2px] border-light-carmine-pink"
+}
 
-    <div class="relative w-full h-full">
-        <div class="absolute z-20 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
-            <%= if @quantity > 1, do: "+#{@level}" %>
-        </div>
-        <div class="absolute z-20 bottom-0 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
-            <%= if @quantity > 1, do: "#{@quantity}" %>
-        </div>
-        <div class="absolute z-10 top-0 left-0 h-full flex flex-col justify-center items-center">
-            <div class="h-full flex flex-col justify-center items-center p-[9%]">
-                <img class="w-full h-full" src={@img_url}/>
-            </div>
-        </div>
-        <div class="backdrop-brightness-[0.92] w-full h-full rounded-[10px]"/>
+bg_rarity_map = %{
+  "common" => "bg-gray-300",
+  "uncommon" => "bg-lime-400",
+  "rare" => "bg-blue-300",
+  "epic" => "bg-purple-300",
+  "legendary" => "bg-yellow-300",
+  "broken" => "bg-amber-300",
+  "trash" => "bg-red-300"
+} %>
+
+<% border_condition_info =
+  cond do
+    !@is_repairable ->
+      border_rarity_map["trash"]
+
+    @is_broken ->
+      border_rarity_map["broken"]
+
+    true ->
+      border_rarity_map[@rarity]
+  end
+
+bg_condition_info =
+  cond do
+    !@is_repairable ->
+      bg_rarity_map["trash"]
+
+    @is_broken ->
+      bg_rarity_map["broken"]
+
+    true ->
+      bg_rarity_map[@rarity]
+  end %>
+
+<div class={[
+  "min-w-[50px] md:w-[5vw] max-w-[100px]",
+  "aspect-square rounded-xl text-center text-[1rem]",
+  "transition-all",
+  rarity_map[@rarity],
+  @class
+]}>
+  <div class="relative w-full h-full">
+    <div class="absolute z-20 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
+      <%= if @level > 0, do: "+#{@level}" %>
     </div>
+    <div class="absolute z-20 bottom-0 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
+      <%= if @quantity > 1, do: "#{@quantity}" %>
+    </div>
+    <div class="absolute z-10 top-0 left-0 h-full flex flex-col justify-center items-center">
+      <div class="h-full flex flex-col justify-center items-center p-[9%]">
+        <img class="w-full h-full" src={@img_url} />
+      </div>
+    </div>
+    <%= if @condition do %>
+      <div class="absolute z-20 -bottom-[20%] h-[20%] w-full flex justify-center items-center ">
+        <div class={[
+          "#{bg_condition_info} #{border_condition_info} rounded-md text-[0.5rem] text-gun-powder font-medium px-[0.19rem]"
+        ]}>
+          <%= @condition %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="w-full h-full rounded-[10px]" />
+  </div>
 </div>

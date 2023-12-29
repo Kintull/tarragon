@@ -1,0 +1,85 @@
+<div>
+  <%= if @item do %>
+    <div
+      class="w-full h-full relative z-10"
+      phx-click-away={JS.hide(to: "#equipment-actions-#{@myself}")}
+      phx-click={JS.show(to: "#equipment-actions-#{@myself}")}
+    >
+      <.equipment_item
+        condition={@item.condition}
+        rarity={@item.rarity}
+        img_url={@item.img_url}
+        level={@item.level}
+        quantity={@item.quantity}
+        is_broken={@item.is_broken}
+        is_repairable={@item.is_repairable}
+        class="min-w-[60px]"
+      />
+
+      <div id={"equipment-actions-#{@myself}"} class="hidden">
+        <%= if !@item.is_repairable do %>
+          <div
+            phx-click={JS.push("recycle_item", value: %{id: @item.id}, target: @target_component)}
+            class="absolute -right-[24px] top-[13px] z-20 w-[30px] h-[30px] rounded bg-red-700 border border-[0.19rem] border-red-400"
+          >
+            <div class="w-full h-full flex justify-center items-center">
+              <.icon name="hero-trash-bold" class="text-white w-[1.3rem] h-[1.3rem]" />
+            </div>
+          </div>
+        <% else %>
+          <div
+            class="absolute -right-[24px] -top-[0.35rem] z-20 w-[30px] h-[30px] rounded bg-lime-700 border border-[0.19rem] border-lime-500"
+            phx-click={
+              JS.push("replacing_item_initialize", value: %{item_id: @item.id})
+              |> JS.hide(to: "#equipment-actions-#{@myself}")
+              |> JS.show(to: "#equipmentBagModal")
+            }
+          >
+            <div class="w-full h-full flex justify-center items-center">
+              <.icon name="hero-arrow-path-bold" class="text-white w-[1.3rem] h-[1.3rem]" />
+            </div>
+          </div>
+          <%= if @item.is_broken do %>
+            <div
+              class="absolute -right-[24px] -bottom-[0.35rem] z-20 w-[30px] h-[30px] rounded bg-amber-700 border border-[0.19rem] border-amber-300"
+              phx-click={
+                JS.push("repairing_item_initialize", value: %{item_id: @item.id})
+                |> JS.hide(to: "#equipment-actions-#{@myself}")
+                |> JS.show(to: "#equipmentBagModal")
+              }
+              }
+            >
+              <div class="w-full h-full flex justify-center items-center">
+                <.icon name="hero-wrench-bold" class="text-white w-[1.3rem] h-[1.3rem]" />
+              </div>
+            </div>
+          <% else %>
+            <div
+              class="absolute -right-[24px] -bottom-[0.35rem] z-20 w-[30px] h-[30px] rounded bg-amber-700 border border-[0.19rem] border-amber-300"
+              phx-click={
+                JS.push("upgrading_item_initialize", value: %{item_id: @item.id})
+                |> JS.hide(to: "#equipment-actions-#{@myself}")
+                |> JS.show(to: "#equipmentBagModal")
+              }
+            >
+              <div class="w-full h-full flex justify-center items-center">
+                <.icon name="hero-arrow-up-bold" class="text-white w-[1.3rem] h-[1.3rem]" />
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div
+      class="w-full h-full relative z-10"
+      phx-click={
+        JS.push("equipping_item_initialize", value: %{slot_id: @id})
+        |> JS.hide(to: "#equipment-actions-#{@myself}")
+        |> JS.show(to: "#equipmentBagModal")
+      }
+    >
+      <.empty_equipment_item class="min-w-[60px]" />
+    </div>
+  <% end %>
+</div>

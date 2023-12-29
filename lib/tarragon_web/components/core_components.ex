@@ -221,7 +221,9 @@ defmodule TarragonWeb.CoreComponents do
   """
   attr :type, :string, default: nil
   attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr :enabled_class, :string, default: nil
+  attr :disabled, :boolean, default: false
+  attr :rest, :global, include: ~w(form name value phx-click)
 
   slot :inner_block, required: true
 
@@ -229,11 +231,22 @@ defmodule TarragonWeb.CoreComponents do
     ~H"""
     <button
       type={@type}
-      class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
-        @class
-      ]}
+      class={
+        if @disabled do
+          [
+            "rounded-md bg-zinc-400 border-[2px] border-zinc-700 px-3 py-2 text-sm font-semibold text-white shadow-sm",
+            @class
+          ]
+        else
+          [
+            "phx-submit-loading:opacity-75 rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white shadow-sm",
+            "hover:bg-zinc-700 active:text-white/80",
+            @class,
+            @enabled_class
+          ]
+        end
+      }
+      disabled={@disabled}
       {@rest}
     >
       <%= render_slot(@inner_block) %>

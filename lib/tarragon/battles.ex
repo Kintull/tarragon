@@ -3,252 +3,67 @@ defmodule Tarragon.Battles do
   The Battles context.
   """
 
-  import Ecto.Query, warn: false
-  alias Tarragon.Repo
-
-  alias Tarragon.Accounts.UserCharacter
   alias Tarragon.Battles.Room
   alias Tarragon.Battles.Participant
-
-  @doc """
-  Returns the list of battle_rooms.
-
-  ## Examples
-
-      iex> list_battle_rooms()
-      [%Room{}, ...]
-
-  """
-  def list_battle_rooms do
-    Repo.all(Room)
-  end
-
-  @doc """
-  Gets a single room.
-
-  Raises `Ecto.NoResultsError` if the Room does not exist.
-
-  ## Examples
-
-      iex> get_room!(123)
-      %Room{}
-
-      iex> get_room!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_room!(id), do: Repo.get!(Room, id)
-
-  def get_all_rooms!(), do: Repo.all(Room)
-
-  def get_open_room_or_create() do
-    rooms_awaiting_start = Enum.filter(get_all_rooms!(), &(&1.awaiting_start))
-
-    case rooms_awaiting_start do
-      [] ->
-        create_room()
-      rooms ->
-         fullest_room =
-          rooms
-          |> Repo.preload(:participants)
-          |> Enum.sort_by(&(length(&1.participants)), &>=/2)
-          |> hd
-
-         {:ok, fullest_room}
-    end
-  end
-
-  def get_assigned_room(character_id) do
-    case Repo.get_by(Participant, user_character_id: character_id) |> Repo.preload(:battle_room) do
-      nil ->
-        nil
-      {:ok, %{room: room}} ->
-        room
-    end
-  end
-
-  @doc """
-  Creates a room.
-
-  ## Examples
-
-      iex> create_room(%{field: value})
-      {:ok, %Room{}}
-
-      iex> create_room(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_room(attrs \\ %{}) do
-    %Room{}
-    |> Room.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a room.
-
-  ## Examples
-
-      iex> update_room(room, %{field: new_value})
-      {:ok, %Room{}}
-
-      iex> update_room(room, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_room(%Room{} = room, attrs) do
-    room
-    |> Room.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def update_room_multi(multi, multi_name, %Room{} = room, attrs) do
-   Ecto.Multi.update(multi, multi_name, Room.changeset(room, attrs))
-  end
-
-  @doc """
-  Deletes a room.
-
-  ## Examples
-
-      iex> delete_room(room)
-      {:ok, %Room{}}
-
-      iex> delete_room(room)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_room(%Room{} = room) do
-    Repo.delete(room)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking room changes.
-
-  ## Examples
-
-      iex> change_room(room)
-      %Ecto.Changeset{data: %Room{}}
-
-  """
-  def change_room(%Room{} = room, attrs \\ %{}) do
-    Room.changeset(room, attrs)
-  end
-
-  alias Tarragon.Battles.Participant
-
-  @doc """
-  Returns the list of battle_participant.
-
-  ## Examples
-
-      iex> list_battle_participant()
-      [%Participant{}, ...]
-
-  """
-  def list_battle_participant do
-    Repo.all(Participant)
-  end
-
-  @doc """
-  Gets a single participant.
-
-  Raises `Ecto.NoResultsError` if the Participant does not exist.
-
-  ## Examples
-
-      iex> get_participant!(123)
-      %Participant{}
-
-      iex> get_participant!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_participant!(id), do:
-    Repo.get!(Participant, id)
-    |> Repo.preload(:battle_room)
-    |> Repo.preload(:user_character)
-
-  def get_participant(%Room{} = room, %UserCharacter{} = character) do
-    Repo.get_by!(Participant, %{battle_room_id: room.id, user_character_id: character.id})
-    |> Repo.preload(:battle_room)
-    |> Repo.preload(:user_character)
-  end
-
-  def get_participant(%UserCharacter{} = character) do
-    Repo.get_by(Participant, %{user_character_id: character.id})
-    |> Repo.preload(:battle_room)
-    |> Repo.preload(:user_character)
-  end
-
-
-  @doc """
-  Creates a participant.
-
-  ## Examples
-
-      iex> create_participant(%{field: value})
-      {:ok, %Participant{}}
-
-      iex> create_participant(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_participant(attrs \\ %{}) do
-    %Participant{}
-    |> Participant.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a participant.
-
-  ## Examples
-
-      iex> update_participant(participant, %{field: new_value})
-      {:ok, %Participant{}}
-
-      iex> update_participant(participant, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_participant(%Participant{} = participant, attrs) do
-    participant
-    |> Participant.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def update_participant_multi(multi, multi_name, %Participant{} = participant, attrs) do
-    Ecto.Multi.update(multi, multi_name, Participant.changeset(participant, attrs))
-  end
-
-  @doc """
-  Deletes a participant.
-
-  ## Examples
-
-      iex> delete_participant(participant)
-      {:ok, %Participant{}}
-
-      iex> delete_participant(participant)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_participant(%Participant{} = participant) do
-    Repo.delete(participant)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking participant changes.
-
-  ## Examples
-
-      iex> change_participant(participant)
-      %Ecto.Changeset{data: %Participant{}}
-
-  """
-  def change_participant(%Participant{} = participant, attrs \\ %{}) do
-    Participant.changeset(participant, attrs)
-  end
+  alias Tarragon.Battles.CharacterBattleBonuses
+  alias Tarragon.Accounts.UserCharacter
+
+  @type attrs :: map
+
+  def impl(), do: Application.get_env(:tarragon, :battles_impl)
+  @callback list_battle_rooms :: [Room.t()]
+  @callback get_room!(integer) :: Room.t()
+  @callback get_all_rooms!() :: [Room.t()]
+  @callback get_all_active_rooms!() :: [Room.t()]
+  @callback get_character_active_room(character_id) :: Room.t() | nil
+  @callback get_open_room_or_create() :: {:ok, Room.t()} | {:error, any}
+  @callback get_assigned_room(UserCharacter.t()) :: Room.t() | nil
+  @callback create_room(attrs) :: {:ok, Room.t()} | {:error, Ecto.Changeset}
+  @callback update_room(Room.t(), attrs) :: {:ok, Room.t()} | {:error, Ecto.Changeset}
+  @callback update_room_multi(Ecto.Multi.t(), atom, Room.t(), attrs) :: Ecto.Multi.t()
+  @callback delete_room(Room.t()) :: {:ok, Room.t()} | {:error, Ecto.Changeset}
+  @callback change_room(Room.t(), attrs) :: Ecto.Changeset
+
+  @callback list_human_battle_participants :: [Participant.t()]
+  @callback get_participant!(integer) :: Participant.t()
+  @callback get_participant(Room.t(), UserCharacter.t()) :: Participant.t()
+  @callback get_participant(UserCharacter.t()) :: Participant.t() | nil
+  @callback get_active_participant(UserCharacter.t()) :: Participant.t() | nil
+  @callback create_participant(attrs) :: {:ok, Participant.t()} | {:error, Ecto.Changeset}
+  @callback update_participant(Participant.t(), attrs) ::
+              {:ok, Participant.t()} | {:error, Ecto.Changeset}
+  @callback update_participant_multi(Ecto.Multi.t(), atom, Participant.t(), attrs) ::
+              Ecto.Multi.t()
+  @callback delete_participant(Participant.t()) ::
+              {:ok, Participant.t()} | {:error, Ecto.Changeset}
+  @callback change_participant(Participant.t(), attrs) :: Ecto.Changeset
+  @callback build_character_bonuses(integer) :: CharacterBattleBonuses.t()
+
+  @callback create_bot_character :: [UserCharacter.t()]
+
+  @type battle_room_id :: integer()
+  @type participants :: [Participant.t()]
+  @callback init_battle_process(participants) :: battle_room_id
+  @callback submit_battle_action(
+              battle_room_id,
+              %{
+                character_id: character_id,
+                move: String.t(),
+                attack: String.t(),
+                target_id: character_id
+              }
+            ) :: :ok
+  @callback finalize_battle_process_turn(battle_room_id) :: :ok
+  @callback battle_turn_seconds_left(battle_room_id) :: :ok
+  @callback check_all_submitted(battle_room_id) :: boolean
+  @callback count_submitted(battle_room_id) :: boolean
+
+  @type atk_options :: [%{distance: integer, health: integer, target_id: character_id}]
+  @type bot_id :: integer
+  @type character_id :: integer
+  @callback decide_bot_move(bot_id, [atk_options]) :: %{
+              target_id: character_id,
+              move: String.t(),
+              attack: String.t()
+            }
 end

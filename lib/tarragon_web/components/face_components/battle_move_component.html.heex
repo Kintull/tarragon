@@ -1,0 +1,134 @@
+<div class={["w-[300px] h-[150px] font-metropolis-regular", @class]}>
+  <div class="w-full h-full flex flex-col items-center justify-center text-center align-middle">
+    <div class="text-[1.5rem] font-bold">Move</div>
+    <div
+      id="move-radio-group"
+      role="radiogroup"
+      class="h-2/3 w-full grid grid-cols-3 grid-flow-row"
+      style="grid-auto-rows: 1fr"
+    >
+      <div
+        phx-click="move-left-and-step"
+        class="flex overflow-hidden hover:scale-[105%] hover:border-[3px] transition-transform border border-[1px] border-black rounded-tl-xl"
+      >
+        <input
+          {[checked: @move == "move-left-and-step"]}
+          id="move-left-and-step"
+          type="radio"
+          name="move-group"
+          class="hidden peer"
+        />
+        <label for="move-left-and-step" class="flex w-full h-full peer-checked:bg-green-600">
+          <svg class="mx-auto py-[10%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path
+              d="M3.41 2H16V0H1a1 1 0 0 0-1 1v16h2V3.41l28.29 28.3 1.41-1.41z"
+              data-name="7-Arrow Up"
+            />
+          </svg>
+        </label>
+      </div>
+
+      <div
+        phx-click="move-center-and-step"
+        class="flex overflow-hidden hover:scale-[105%] hover:border-[3px] transition-transform border border-[1px] border-black"
+      >
+        <input
+          {[checked: @move == "move-center-and-step"]}
+          id="move-center-and-step"
+          type="radio"
+          name="move-group"
+          class="hidden peer"
+        />
+        <label for="move-center-and-step" class="flex w-full h-full peer-checked:bg-green-600">
+          <svg
+            class="mx-auto py-[10%]"
+            data-name="1-Arrow Up"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+          >
+            <path d="m26.71 10.29-10-10a1 1 0 0 0-1.41 0l-10 10 1.41 1.41L15 3.41V32h2V3.41l8.29 8.29z" />
+          </svg>
+        </label>
+      </div>
+
+      <div
+        phx-click="move-right-and-step"
+        class="flex overflow-hidden hover:scale-[105%] hover:border-[3px] transition-transform border border-[1px] border-black rounded-tr-xl"
+      >
+        <input
+          {[checked: @move == "move-right-and-step"]}
+          id="move-right-and-step"
+          type="radio"
+          name="move-group"
+          class="hidden peer"
+        />
+        <label for="move-right-and-step" class="flex w-full h-full peer-checked:bg-green-600">
+          <svg class="mx-auto py-[10%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path
+              d="M31 0H15v2h13.59L.29 30.29 1.7 31.7 30 3.41V16h2V1a1 1 0 0 0-1-1z"
+              data-name="5-Arrow Up"
+            />
+          </svg>
+        </label>
+      </div>
+
+      <div
+        phx-click="move-left"
+        class="flex overflow-hidden hover:scale-[105%] hover:border-[3px] transition-transform border border-[1px] border-black"
+      >
+        <input
+          {[checked: @move == "move-left"]}
+          id="move-left"
+          type="radio"
+          name="move-group"
+          class="hidden peer"
+        />
+        <label for="move-left" class="flex w-full h-full peer-checked:bg-green-600">
+          <svg class="mx-auto py-[10%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path
+              d="M32 15H3.41l8.29-8.29-1.41-1.42-10 10a1 1 0 0 0 0 1.41l10 10 1.41-1.41L3.41 17H32z"
+              data-name="4-Arrow Left"
+            />
+          </svg>
+        </label>
+      </div>
+
+      <div
+        phx-click="move-center"
+        class="flex overflow-hidden hover:scale-[105%] hover:border-[3px] transition-transform border border-[1px] border-black"
+      >
+        <input
+          {[checked: @move == "move-center"]}
+          id="move-center"
+          type="radio"
+          name="move-group"
+          class="hidden peer"
+        />
+        <label for="move-center" class="flex w-full h-full peer-checked:bg-green-600">
+          <span class="m-auto">o</span>
+        </label>
+      </div>
+
+      <div
+        phx-click="move-right"
+        class="flex overflow-hidden hover:scale-[105%] hover:border-[3px] transition-transform border border-[1px] border-black"
+      >
+        <input
+          {[checked: @move == "move-right"]}
+          id="move-right"
+          type="radio"
+          name="move-group"
+          class="hidden peer"
+        />
+        <label for="move-right" class="flex w-full h-full peer-checked:bg-green-600">
+          <svg class="mx-auto py-[10%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path
+              d="m31.71 15.29-10-10-1.42 1.42 8.3 8.29H0v2h28.59l-8.29 8.29 1.41 1.41 10-10a1 1 0 0 0 0-1.41z"
+              data-name="3-Arrow Right"
+            />
+          </svg>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

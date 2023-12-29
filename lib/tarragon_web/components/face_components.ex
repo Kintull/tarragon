@@ -5,7 +5,6 @@ defmodule TarragonWeb.FaceComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import TarragonWeb.Gettext
 
   import TarragonWeb.CoreComponents
   embed_templates "face_components/*"
@@ -21,13 +20,24 @@ defmodule TarragonWeb.FaceComponents do
 
   def battle_badge(assigns)
 
+  attr :requires_confirmation, :boolean, default: false
+  attr :confirmation_button_text, :string, default: nil
+  # "upgrading_item" | "repairing_item" | "replacing_item" | "equipping_item"
+  attr :action, :string, default: nil
+  attr :modal_id, :string, default: nil
+  attr :title_text, :string, default: ""
+  slot :inner_block
+  def equipment_modal(assigns)
+
   attr :class, :string, default: nil
   attr :bg_color, :string, default: "bg-red-500"
   attr :reversed, :boolean, default: false
+  attr :collapsable, :boolean, default: true
   attr :percentage, :integer, default: 50
   attr :max, :integer, default: 100
   attr :current, :integer, default: 50
   attr :img_url, :string, default: nil
+
   def progress_bar(assigns)
 
   attr :class, :string, default: nil
@@ -46,41 +56,47 @@ defmodule TarragonWeb.FaceComponents do
   attr :rarity, :string, required: true
   attr :quantity, :integer, default: 1
   attr :level, :integer, default: 1
+  attr :condition, :string, default: nil
+  attr :is_broken, :boolean, default: false
+  attr :is_repairable, :boolean, default: true
+  attr :is_selected, :boolean, default: false
   def equipment_item(assigns)
 
-  @style """
-   .blue-game-button {
-          background-color: #7accdc;
-          border: 2px;
-          border-style: solid;
-          border-color: #000;
-          border-radius: 12px;
-          color: #fff;
-          cursor: pointer;
-          display: inline-block;
-          outline: 0;
-          padding: 16px 21px;
-          position: relative;
-          text-align: center;
-          text-decoration: none;
-          transition: all .3s;
-          user-select: none;
-          -webkit-user-select: none;
-          touch-action: manipulation;
-      }
+  attr :player_name, :string, default: "UserName123123123"
+  attr :class, :string, default: nil
+  attr :hg_rarity, :string, default: "uncommon"
+  attr :cg_rarity, :string, default: "rare"
+  attr :pw_rarity, :string, default: "epic"
+  attr :fg_rarity, :string, default: "legendary"
+  attr :atk_value, :integer, default: 10
+  attr :def_value, :integer, default: 20
+  attr :range_value, :integer, default: 30
+  attr :distance_to_value, :integer, default: 40
+  attr :max_hp, :integer, default: 100
+  attr :current_hp, :integer, default: 50
+  def battle_player_component(assigns)
 
-      .blue-game-button:before {
-           background-color: initial;
-           background-image: linear-gradient(#ffffff 0, rgba(122, 204, 220, 0) 120%);
-           border-radius: 8px;
-           content: "";
-           height: 50%;
-           top: 4%;
-           left: 4%;
-           opacity: .7;
-           position: absolute;
-           transition: all .3s;
-           width: 92%;
-       }
-"""
+  attr :class, :string, default: nil
+  attr :disabled, :boolean, default: false
+  attr :attack, :string, default: nil
+  def battle_attack_component(assigns)
+
+  attr :class, :string, default: nil
+  attr :move, :string, default: nil
+  def battle_move_component(assigns)
+
+  attr :class, :string, default: nil
+  attr :log_entries, :list, default: []
+  attr :current_character_id, :integer, default: nil
+  attr :characters, :list, default: []
+  attr :ally_character_ids, :list, default: []
+  def battle_log_component(assigns)
+
+  attr :state, :string, default: "idle"
+  attr :class, :string, default: nil
+  attr :submitted_players_cnt, :integer, default: 0
+  attr :total_players_cnt, :integer, default: 6
+  attr :seconds_left, :integer, default: 59
+  attr :disabled, :boolean, default: false
+  def battle_confirm_component(assigns)
 end

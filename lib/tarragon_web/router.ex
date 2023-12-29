@@ -22,11 +22,15 @@ defmodule TarragonWeb.Router do
   scope "/", TarragonWeb do
     pipe_through :browser
 
-#    get "/", PageController, :home
+    get "/login/:user_id", AuthenticationController, :index
+
+    #    get "/", PageController, :home
     live "/", PageLive.Index, :index
     live "/game_screen", PageLive.GameScreen, :game_screen
     live "/player_screen", PageLive.PlayerScreen, :player_screen
-    live_storybook "/storybook", backend_module: TarragonWeb.Storybook
+    live "/battle_screen", PageLive.BattleScreen, :battle_screen
+    live "/lobby", PageLive.Lobby, :lobby
+    live_storybook("/storybook", backend_module: TarragonWeb.Storybook)
   end
 
   # Other scopes may use custom stacks.

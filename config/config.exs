@@ -61,6 +61,13 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :tarragon, :battles_impl, Tarragon.Battles.Impl
+config :tarragon, :inventory_impl, Tarragon.Inventory.Impl
+config :tarragon, :accounts_impl, Tarragon.Accounts.Impl
+config :tarragon, :start_workers, true
+
+config :tarragon, :start_versus_immediately, true
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

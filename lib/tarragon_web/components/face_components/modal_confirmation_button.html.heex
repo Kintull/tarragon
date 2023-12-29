@@ -1,0 +1,12 @@
+<div phx-click={
+  JS.push("#{@action}_finalize")
+  |> JS.push("reset_action")
+  |> JS.hide(to: "##{@modal_id}")
+}>
+  <.action_badge
+    bg_color="bg-golden-glow"
+    class={"min-w-[40px] h-[30px] md:h-[50px] select-none rounded-[8px] #{@class}"}
+  >
+    <%= render_slot(@inner_block) %>
+  </.action_badge>
+</div>

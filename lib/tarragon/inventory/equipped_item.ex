@@ -6,10 +6,10 @@ defmodule Tarragon.Inventory.EquippedItem do
 
   @purposes [:head, :feet, :hand, :body, :belt, :transport]
 
-  schema "equipped_items" do
+  schema "character_items" do
     field :purpose, Ecto.Enum, values: @purposes
     belongs_to :user, User
-    belongs_to :user_item, CharacterItem
+    belongs_to :character_item, CharacterItem
 
     timestamps()
   end

@@ -7,5 +7,4 @@ defmodule TarragonWeb.Storybook do
     js_path: "/assets/app.js",
     sandbox_class: "tarragon-web",
     compilation_mode: :eager
-
 end

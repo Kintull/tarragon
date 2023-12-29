@@ -1,0 +1,65 @@
+<div id="battle-screen" class="w-screen h-screen">
+  <.versus_victory_modal modal_id="versusVictoryModal" hidden={!@show_victory_modal}>
+  </.versus_victory_modal>
+  <.versus_defeat_modal modal_id="versusDefeatModal" hidden={!@show_defeat_modal}>
+  </.versus_defeat_modal>
+
+  <div class="h-full w-full flex flex-col justify-between items-center">
+    <%= if @current_player_eliminated do %>
+      <div class="md:py-[3vh] p-[3px] md:pl-[3vh] w-[100vw] bg-gun-powder md:bg-transparent border-obsidian-black md:backdrop-blur-none">
+        <div class="flex flex-row items-center">
+          <.return_badge />
+          <p class="text-2xl w-full text-center font-jotione-regular text-golden-glow select-none">
+            Match history
+          </p>
+        </div>
+      </div>
+
+      <.battle_log_component
+        class="w-[90%] h-[90%]"
+        log_entries={@logs}
+        current_character_id={@current_player_character_id}
+        characters={@ally_team ++ @enemy_team}
+        ally_character_ids={Enum.map(@ally_team, & &1.id)}
+      />
+    <% else %>
+      <div class="flex flex-row justify-center gap-[5%] mt-[20px]">
+        <!--      add phx-click => "target_id-enemy_id" to each enemy -->
+        <%= for char <- @enemy_team do %>
+          <.battle_player_component
+            current_hp={char.current_health}
+            max_hp={char.max_health}
+            player_name={char.nickname}
+          />
+        <% end %>
+      </div>
+      <.battle_attack_component
+        attack={@current_attack_action}
+        disabled={@attack_action_allowed == false}
+      />
+      <.battle_move_component move={@current_move_action} />
+      <.battle_confirm_component
+        seconds_left={@seconds_left}
+        total_players_cnt={length(@ally_team ++ @enemy_team)}
+        submitted_players_cnt={@submitted_players_count}
+        disabled={@submit_action_allowed == false}
+      />
+      <div class="flex flex-row justify-center gap-[5%]">
+        <%= for char <- @ally_team do %>
+          <.battle_player_component
+            current_hp={char.current_health}
+            max_hp={char.max_health}
+            player_name={char.nickname}
+          />
+        <% end %>
+      </div>
+      <.battle_log_component
+        class="w-[90%]"
+        log_entries={@logs}
+        current_character_id={@current_player_character_id}
+        characters={@ally_team ++ @enemy_team}
+        ally_character_ids={Enum.map(@ally_team, & &1.id)}
+      />
+    <% end %>
+  </div>
+</div>

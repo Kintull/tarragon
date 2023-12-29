@@ -1,72 +1,136 @@
-<.equipment_modal modal_id="equipmentBagModal" title_text="Gear list">
-    <.gear_container class="border-gun-powder bg-golden-glow h-[80%] max-h-[400px]"/>
+<.equipment_modal action={@action} modal_id="equipmentBagModal" title_text="Gear list">
+  <.gear_container
+    modal_id="equipmentBagModal"
+    selected_items={@selected_items}
+    action={@action}
+    items={@preloaded_items}
+    requires_confirmation={@requires_confirmation}
+    class="border-gun-powder bg-golden-glow h-[50vh]"
+  />
+
+  <%= if @action == :upgrading_item do %>
+    <div class="flex flex-row justify-center items-center gap-[0.5rem]">
+      <span class="text-md font-semibold text-white face-screen-stroke-experimental">
+        Lvl <%= @lvl_with_xp_selected %>
+      </span>
+
+      <.progress_bar
+        bg_color="bg-yellow-400"
+        max={@xp_till_next_level}
+        current={@xp_with_selected}
+        percentage={round(@xp_with_selected / @xp_till_next_level * 100)}
+        collapsable={false}
+        img_url="/images/up-arrow.png"
+        class="w-[250px]"
+      />
+    </div>
+  <% end %>
+
+  <%= if @requires_confirmation do %>
+    <div class="inline-block w-1/2 max-w-[200px] mx-auto">
+      <.modal_confirmation_button
+        class="border-[0.19rem] h-[3rem] rounded-[0.8rem]"
+        action={@action}
+        modal_id="equipmentBagModal"
+      >
+        <p class="font-jotione-regular text-gun-powder"><%= @confirmation_button_text %></p>
+      </.modal_confirmation_button>
+    </div>
+  <% end %>
 </.equipment_modal>
 
-<div class="w-screen h-screen overflow-hidden bg-gun-powder">
-    <div class="flex flex-col py-[1vh] md:py-[3vh] pl-[3vh] w-[100vw] backdrop-blur border-gun-powder border-[1.5px] md:border-0 md:backdrop-blur-none">
-        <div class="flex flex-row gap-4 items-center">
-            <.return_badge/>
+<div id="player_screen" class="w-screen h-screen overflow-hidden bg-gun-powder">
+  <div class="md:py-[3vh] p-[3px] md:pl-[3vh] w-[100vw] bg-gun-powder md:bg-transparent border-obsidian-black md:backdrop-blur-none">
+    <div class="flex flex-row items-center">
+      <.return_badge />
+      <p class="text-2xl w-full text-center font-jotione-regular text-golden-glow select-none">
+        Equipment
+      </p>
+    </div>
+  </div>
+  <div class="w-full h-full flex flex-row justify-center items-start">
+    <div class="md:w-5/6 bg-gun-powder flex flex-row justify-center items-center bg-gun-powder md:gap-4 md:py-[1vh]">
+      <div
+        class="aspect-[5/6] md:min-w-[400px] min-h-[500px] md:min-h-[300px] h-[90vh] md:h-[80vh] max-h-[80%] border-[0.19rem] rounded-xl border-gun-powder bg-top bg-cover bg-no-repeat"
+        style="background-image: url('/images/female-character.png')"
+      >
+        <div class="relative right-[3vh] md:static w-full h-full grid grid-cols-7 gap-2 place-items-center">
+          <div class="col-span-4"></div>
+          <div class="col-span-2">
+            <.live_component
+              module={EquipmentSlotComponent}
+              id="head_gear"
+              item={@equipped_items[:head_gear]}
+              target_component="#player_screen"
+            />
+          </div>
+          <div class=""></div>
+
+          <div class="col-span-4"></div>
+          <div class="col-span-2">
+            <.live_component
+              module={EquipmentSlotComponent}
+              id="chest_gear"
+              item={@equipped_items[:chest_gear]}
+              target_component="#player_screen"
+            />
+          </div>
+          <div class=""></div>
+
+          <div class="col-span-4"></div>
+          <div class="col-span-2">
+            <.live_component
+              module={EquipmentSlotComponent}
+              id="primary_weapon"
+              item={@equipped_items[:primary_weapon]}
+              target_component="#player_screen"
+            />
+          </div>
+          <div class=""></div>
+
+          <div class="col-span-4"></div>
+          <div class="col-span-2">
+            <.live_component
+              module={EquipmentSlotComponent}
+              id="knee_gear"
+              item={@equipped_items[:knee_gear]}
+              target_component="#player_screen"
+            />
+          </div>
+          <div class=""></div>
+
+          <div class="col-span-4"></div>
+          <div class="col-span-2">
+            <.live_component
+              module={EquipmentSlotComponent}
+              id="foot_gear"
+              item={@equipped_items[:foot_gear]}
+              target_component="#player_screen"
+            />
+          </div>
+          <div class=""></div>
+        </div>
+      </div>
+
+      <div class="hidden md:block rounded-xl min-w-[400px] min-h-[300px] h-[80vh] w-full border-[0.19rem] border-gun-powder">
+        <div class="h-full bg-hazel-green w-full flex flex-col items-center justify-items-start rounded-[8px]">
+          <div class="h-[15%] rounded-t-[8px] bg-obsidian-black w-full flex flex-col justify-center items-center">
             <div class="text-[5vh] w-full text-center font-jotione-regular text-golden-glow select-none">
-                Equipment
+              Gear list
             </div>
+          </div>
+          <div class="h-[80%] flex flex-col justify-center items-center">
+            <.gear_container
+              modal_id="equipmentBagModal"
+              selected_items={@selected_items}
+              action={@action}
+              items={@preloaded_items}
+              requires_confirmation={@requires_confirmation}
+              class="border-obsidian-black bg-golden-glow h-[80%] max-h-[350px]"
+            />
+          </div>
         </div>
+      </div>
     </div>
-    <div class="w-full h-full flex flex-row justify-center items-start">
-        <div class="md:w-5/6 bg-gun-powder flex flex-row justify-center items-center bg-gun-powder md:gap-4 md:py-[1vh]">
-            <div class="aspect-[5/6] h-[80vh] border-[3px] rounded-xl border-gun-powder bg-top bg-cover bg-no-repeat" style="background-image: url('/images/female-character.png')">
-                <div class="w-full h-full grid grid-cols-7 gap-2 place-items-center	">
-                    <div class="col-span-4"></div>
-                    <div class="col-span-2">
-                        <button data-modal-target="equipmentBagModal" data-modal-toggle="equipmentBagModal" class="block md:hidden" type="button">
-                            <.equipment_item  rarity="rare" img_url="/images/helmet.png"/>
-                        </button>
-
-                        <button class="hidden md:block" type="button">
-                            <.equipment_item  rarity="rare" img_url="/images/helmet.png"/>
-                        </button>
-                    </div>
-                    <div class=""></div>
-
-                    <div class="col-span-4"></div>
-                    <div class="col-span-2">
-                        <.equipment_item rarity="uncommon" img_url="/images/chest-plate-transparent.png"/>
-                    </div>
-                    <div class=""></div>
-
-                    <div class="col-span-4"></div>
-                    <div class="col-span-2">
-                        <.equipment_item rarity="common" img_url="/images/bow.png"/>
-                    </div>
-                    <div class=""></div>
-
-                    <div class="col-span-4"></div>
-                    <div class="col-span-2">
-                        <.equipment_item rarity="epic" img_url="/images/knee-pads-transparent.png"/>
-                    </div>
-                    <div class=""></div>
-
-                    <div class="col-span-4"></div>
-                    <div class="col-span-2">
-                        <.equipment_item rarity="legendary" img_url="/images/boot-transparent.png"/>
-                    </div>
-                    <div class=""></div>
-                </div>
-            </div>
-
-            <div class="rounded-xl h-[80vh] w-full border-[3px] border-gun-powder hidden md:block">
-                <div class="h-full w-full bg-hazel-green w-full flex flex-col items-center justify-items-start rounded-[8px]">
-                    <div class="h-[15%] rounded-t-[8px] bg-obsidian-black w-full flex flex-col justify-center items-center">
-                        <div class="text-[5vh] w-full text-center font-jotione-regular text-golden-glow select-none">
-                            Gear list
-                        </div>
-                    </div>
-                    <div class="h-[80%] flex flex-col justify-center items-center">
-                        <.gear_container class="border-obsidian-black bg-golden-glow h-[80%] max-h-[350px]"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+  </div>
 </div>

@@ -3,9 +3,19 @@
     <CLASSES>
       <root url="file://$PROJECT_DIR$/_build/dev/lib/makeup_html/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/makeup_html/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/makeup_html/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/makeup_html/lib" />
+      <root url="file://$PROJECT_DIR$/deps/makeup_html/lib" />
       <root url="file://$PROJECT_DIR$/deps/makeup_html/lib" />
       <root url="file://$PROJECT_DIR$/deps/makeup_html/lib" />
     </SOURCES>

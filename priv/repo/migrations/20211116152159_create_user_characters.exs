@@ -6,6 +6,7 @@ defmodule Tarragon.Repo.Migrations.CreateUserCharacters do
       add :nickname, :string
       add :max_health, :integer
       add :current_health, :integer
+      add :avatar_url, :string
       add :user_id, references(:users, on_delete: :delete_all)
 
       timestamps()

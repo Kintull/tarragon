@@ -1,0 +1,92 @@
+<% enabled_class = if !@disabled, do: "hover:scale-[105%] hover:border-[3px]"
+disabled_class = if @disabled, do: "bg-gray-300" %>
+
+<div class={["w-[300px] h-[75px] font-metropolis-regular", @class]}>
+  <div class="w-full h-full flex flex-col items-center justify-center text-center align-middle">
+    <%= if @disabled do %>
+      <div class="text-[1.5rem] font-bold text-gray-400">Attack - moving instead</div>
+    <% else %>
+      <div class="text-[1.5rem] font-bold">Attack</div>
+    <% end %>
+
+    <div
+      id="attack-radio-group"
+      role="radiogroup"
+      class="h-2/3 w-full grid grid-cols-3 grid-flow-row"
+      style="grid-auto-rows: 1fr"
+    >
+      <div
+        phx-click="attack-left"
+        class={[
+          enabled_class,
+          disabled_class,
+          "flex overflow-hidden transition-transform border border-[1px] border-black rounded-l-xl"
+        ]}
+      >
+        <input
+          {[checked: @attack == "attack-left"]}
+          disabled={@disabled}
+          id="attack-left"
+          type="radio"
+          name="attack-group"
+          class="hidden peer"
+        />
+        <label for="attack-left" class="flex w-full h-full peer-checked:bg-green-600">
+          <svg class="mx-auto py-[10%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path
+              d="M32 15H3.41l8.29-8.29-1.41-1.42-10 10a1 1 0 0 0 0 1.41l10 10 1.41-1.41L3.41 17H32z"
+              data-name="4-Arrow Left"
+            />
+          </svg>
+        </label>
+      </div>
+
+      <div
+        phx-click="attack-center"
+        class={[
+          enabled_class,
+          disabled_class,
+          "flex overflow-hidden transition-transform border border-[1px] border-black"
+        ]}
+      >
+        <input
+          {[checked: @attack == "attack-center"]}
+          disabled={@disabled}
+          id="attack-center"
+          type="radio"
+          name="attack-group"
+          class="hidden peer"
+        />
+        <label for="attack-center" class="flex w-full h-full peer-checked:bg-green-600">
+          <span class="m-auto">o</span>
+        </label>
+      </div>
+
+      <div
+        phx-click="attack-right"
+        class={[
+          enabled_class,
+          disabled_class,
+          "flex overflow-hidden transition-transform border border-[1px] border-black rounded-r-xl"
+        ]}
+      >
+        <input
+          {[checked: @attack == "attack-right"]}
+          disabled={@disabled}
+          id="attack-right"
+          type="radio"
+          name="attack-group"
+          class="hidden peer"
+        />
+        <label for="attack-right" class="flex w-full h-full peer-checked:bg-green-600">
+          <svg class="mx-auto py-[10%]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path
+              d="m31.71 15.29-10-10-1.42 1.42 8.3 8.29H0v2h28.59l-8.29 8.29 1.41 1.41 10-10a1 1 0 0 0 0-1.41z"
+              data-name="3-Arrow Right"
+            />
+          </svg>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

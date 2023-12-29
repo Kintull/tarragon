@@ -1,0 +1,38 @@
+<div id="lobby" class="w-screen h-screen overflow-hidden bg-gun-powder">
+  <div class="md:py-[3vh] p-[3px] md:pl-[3vh] w-[100vw] bg-gun-powder md:bg-transparent border-obsidian-black md:backdrop-blur-none">
+    <div class="flex flex-row items-center">
+      <.return_badge />
+      <p class="text-2xl w-full text-center font-jotione-regular text-golden-glow select-none">
+        Match lobby
+      </p>
+    </div>
+  </div>
+
+  <div class="h-full w-full flex flex-col justify-center items-center">
+    <%= if @participant && @participant.battle_room_id == nil do %>
+      <div class="flex flex-col gap-[10px] items-center justify-center h-full">
+        <div class="font-metropolis-regular text-xl text-golden-glow">
+          <% seconds = String.pad_leading(inspect(rem(@counter_sec, 60)), 2, "0")
+          minutes = String.pad_leading(inspect(div(@counter_sec, 60)), 2, "0") %> 3 vs 3 00:<%= minutes %>:<%= seconds %>
+        </div>
+        <div phx-click="stop_searching_for_battles">
+          <.action_badge
+            class="font-metropolis-regular font-semibold text-gun-powder text-xl w-[200px] h-[50px]"
+            bg_color="bg-golden-glow"
+          >
+            Stop searching...
+          </.action_badge>
+        </div>
+      </div>
+    <% else %>
+      <div phx-click="search_for_battles">
+        <.action_badge
+          class="font-metropolis-regular font-semibold text-gun-powder text-xl w-[150px] h-[50px]"
+          bg_color="bg-golden-glow"
+        >
+          Find a match
+        </.action_badge>
+      </div>
+    <% end %>
+  </div>
+</div>

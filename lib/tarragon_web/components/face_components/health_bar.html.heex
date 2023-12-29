@@ -1,3 +1,8 @@
-<.progress_bar class={["w-[200px]", @class]} img_url="/images/blood-drop.png" reversed={@reversed}/>
-
-
+<.progress_bar
+  class={"w-[200px] #{@class}"}
+  img_url="/images/blood-drop.webp"
+  max={100}
+  current={10}
+  percentage={0.1}
+  reversed={@reversed}
+/>

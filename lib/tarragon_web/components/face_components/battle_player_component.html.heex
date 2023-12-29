@@ -1,0 +1,85 @@
+<% bg_rarity_map = %{
+  "common" => "bg-gray-300 ",
+  "uncommon" => "bg-lime-500",
+  "rare" => "bg-blue-500",
+  "epic" => "bg-purple-400",
+  "legendary" => "bg-yellow-500"
+}
+
+hp_percentage = round(@current_hp / @max_hp * 100)
+is_dead = @current_hp == 0
+is_dying = @current_hp < @max_hp / 3
+
+border_color =
+  if !is_dead do
+    "bg-gradient-to-t to-black from-transparent from-10%"
+  else
+    "bg-gradient-to-t to-red-900 from-transparent from-10%"
+  end %>
+<div class={["aspect-square w-[120px] h-[120px]  p-[4px] rounded-[10px]", border_color, @class]}>
+  <div class="relative aspect-square bg-gray-200 font-metropolis-regular rounded-[6px] overflow-hidden">
+    <!-- death gradient -->
+    <%= if is_dead do %>
+      <div class="absolute w-full h-full bg-gradient-to-b to-transparent from-red-400 opacity-70">
+        &nbsp;
+      </div>
+    <% end %>
+    <!-- main content -->
+    <div class="flex flex-col justify-between w-full h-full max-h-full overflow-hidden">
+      <div class="text-black mx-auto max-w-full whitespace-nowrap"><%= @player_name %></div>
+      <div class="flex flex-row justify-center w-full h-[20%]">
+        <div class={[
+          "aspect-square mx-auto w-auto border-[1px] border-black",
+          bg_rarity_map[@hg_rarity]
+        ]}>
+          <img class="w-full h-full p-[2px]" src="/images/helm.png" />
+        </div>
+        <div class={[
+          "aspect-square mx-auto w-auto border-[1px] border-black",
+          bg_rarity_map[@cg_rarity]
+        ]}>
+          <img class="w-full h-full p-[2px]" src="/images/armor.png" />
+        </div>
+        <div class={[
+          "aspect-square mx-auto w-auto border-[1px] border-black",
+          bg_rarity_map[@pw_rarity]
+        ]}>
+          <img class="w-full h-full p-[2px]" src="/images/archery.png" />
+        </div>
+        <div class={[
+          "aspect-square mx-auto w-auto border-[1px] border-black",
+          bg_rarity_map[@fg_rarity]
+        ]}>
+          <img class="w-full h-full p-[2px]" src="/images/boot-1.png" />
+        </div>
+      </div>
+      <div class="flex flex-row justify-center w-full ">
+        <div class="text-[0.8rem] mx-auto">A-<%= @atk_value %></div>
+        <div class="text-[0.8rem] mx-auto">D-<%= @def_value %></div>
+        <div class="text-[0.8rem] mx-auto">R-<%= @range_value %></div>
+      </div>
+
+      <div class="flex flex-row justify-center w-full ">
+        <div class="flex flex-row justify-center items-center">
+          <%= if is_dead do %>
+            <img class="w-5 h-5 p-[2px]" src="/images/die.png" />
+            <div class="text-[1rem] mx-auto">dead</div>
+          <% else %>
+            <img class="w-5 h-5 p-[2px]" src="/images/target (1).png" />
+            <div class="text-[1rem] mx-auto"><%= @distance_to_value %></div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="relative bg-gray-300 w-full h-[20%] flex flex-row items-left">
+        <div class="relative z-10 mx-auto"><%= @current_hp %>/<%= @max_hp %></div>
+
+        <%= if is_dying do %>
+          <div class="absolute bg-red-500 w-full" style={"width:#{hp_percentage}%"}>&nbsp;</div>
+        <% else %>
+          <div class="absolute bg-green-400 w-full" style={"width:#{hp_percentage}%"}>&nbsp;</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

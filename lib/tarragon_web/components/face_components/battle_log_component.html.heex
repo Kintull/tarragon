@@ -1,0 +1,147 @@
+<% player_text_color = fn log, id_key when id_key in [:target_id, :attacker_id] ->
+  cond do
+    Map.get(log, id_key) == @current_character_id ->
+      "text-amber-500"
+
+    Map.get(log, id_key) in @ally_character_ids ->
+      "text-sky-700"
+
+    true ->
+      "text-red-700"
+  end
+end
+
+is_ally = fn id ->
+  id in @ally_character_ids
+end
+
+is_enemy = fn id ->
+  id not in @ally_character_ids
+end
+
+player_name = fn log, id_key when id_key in [:target_id, :attacker_id] ->
+  if @current_character_id == Map.get(log, id_key) do
+    "you"
+  else
+    Enum.find(@characters, &(&1.id == Map.get(log, id_key))).nickname
+    |> Tarragon.Accounts.UserCharacter.truncate_nickname()
+  end
+end %>
+
+<div class={["w-[300px] h-[150px] bg-gray-300 font-metropolis-regular", @class]}>
+  <div class="w-full h-full px-[0.7rem] flex flex-col justify-between items-center">
+    <p class="font-bold my-[0.3rem]">Battle log</p>
+    <div class="relative bg-white w-full h-full overflow-y-auto">
+      <div class="absolute w-full h-full top-0 left-0">
+        <div class="relative px-[0.7rem] pt-[0.7rem] flex flex-col-reverse space-y-[0.7rem] text-[0.7rem]">
+          <%= for {turn, turn_logs} <- Enum.group_by(@log_entries, &(&1.turn)) do %>
+            <div class="even:bg-gray-200">
+              <%= for log <- turn_logs do %>
+                <% hit_word = if log.attacker_id == @current_character_id, do: "hit", else: "hits"
+
+                kill_word =
+                  if log.attacker_id == @current_character_id, do: "eliminate", else: "eliminates"
+
+                attack_word =
+                  if log.attacker_id == @current_character_id, do: "attack", else: "attacks"
+
+                step_words =
+                  if log.attacker_id == @current_character_id,
+                    do: "step closer",
+                    else: "steps closer"
+
+                skip_words =
+                  if log.attacker_id == @current_character_id,
+                    do: "skip a turn",
+                    else: "skips a turn" %>
+
+                <%= cond  do %>
+                  <% log.event == :hit && is_ally.(log.target_id)-> %>
+                    <p>
+                      (<%= turn %>)
+                      <span class={["font-semibold", player_text_color.(log, :attacker_id)]}>
+                        <%= player_name.(log, :attacker_id) %>
+                      </span>
+                      <%= hit_word %>
+                      <span class={["font-semibold", player_text_color.(log, :target_id)]}>
+                        <%= player_name.(log, :target_id) %>
+                      </span>
+                      for <span class="text-red-500 font-bold">-<%= log.damage %> HP</span>
+                    </p>
+                  <% log.event == :hit && is_enemy.(log.target_id)-> %>
+                    <p>
+                      (<%= turn %>)
+                      <span class={["font-semibold", player_text_color.(log, :attacker_id)]}>
+                        <%= player_name.(log, :attacker_id) %>
+                      </span>
+                      <%= hit_word %>
+                      <span class={["font-semibold", player_text_color.(log, :target_id)]}>
+                        <%= player_name.(log, :target_id) %>
+                      </span>
+                      <%= String.upcase(log.attacker_attack) %> for
+                      <span class="text-red-500 font-bold">-<%= log.damage %> HP</span>
+                    </p>
+                  <% log.event == :last_hit -> %>
+                    <p>
+                      (<%= turn %>)
+                      <span class={["font-semibold", player_text_color.(log, :attacker_id)]}>
+                        <%= player_name.(log, :attacker_id) %>
+                      </span>
+                      <%= kill_word %>
+                      <span class={["font-semibold", player_text_color.(log, :target_id)]}>
+                        <%= player_name.(log, :target_id) %>
+                      </span>
+                    </p>
+                  <% log.event == :miss && is_ally.(log.target_id)  -> %>
+                    <p>
+                      (<%= turn %>)
+                      <span class={["font-semibold", player_text_color.(log, :attacker_id)]}>
+                        <%= player_name.(log, :attacker_id) %>
+                      </span>
+                      missed attacking
+                      <span class={["font-semibold", player_text_color.(log, :target_id)]}>
+                        <%= player_name.(log, :target_id) %>
+                      </span>
+                      <%= String.upcase(log.attacker_attack) %>
+                    </p>
+                  <% log.event == :miss && is_enemy.(log.target_id) -> %>
+                    <p>
+                      (<%= turn %>)
+                      <span class={["font-semibold", player_text_color.(log, :attacker_id)]}>
+                        <%= player_name.(log, :attacker_id) %>
+                      </span>
+                      <%= attack_word %>
+                      <span class={["font-semibold", player_text_color.(log, :target_id)]}>
+                        <%= player_name.(log, :target_id) %>
+                      </span>
+                      <%= String.upcase(log.attacker_attack) %> but they moved <%= String.upcase(
+                        log.target_move
+                      ) %>
+                    </p>
+                  <% log.event == :step_closer -> %>
+                    <p>
+                      (<%= turn %>)
+                      <span class={["font-semibold", player_text_color.(log, :attacker_id)]}>
+                        <%= player_name.(log, :attacker_id) %>
+                      </span>
+                      <%= step_words %>
+                    </p>
+                  <% log.event == :turn_skip -> %>
+                    <p>
+                      (<%= turn %>)
+                      <span class={["font-semibold", player_text_color.(log, :attacker_id)]}>
+                        <%= player_name.(log, :attacker_id) %>
+                      </span>
+                      <%= skip_words %>
+                    </p>
+                  <% true -> %>
+                    &nbsp;
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,9 +3,21 @@
     <CLASSES>
       <root url="file://$PROJECT_DIR$/_build/dev/lib/live_json/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/live_json/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/live_json/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/live_json/lib" />
+      <root url="file://$PROJECT_DIR$/deps/live_json/priv" />
+      <root url="file://$PROJECT_DIR$/deps/live_json/lib" />
+      <root url="file://$PROJECT_DIR$/deps/live_json/priv" />
       <root url="file://$PROJECT_DIR$/deps/live_json/lib" />
       <root url="file://$PROJECT_DIR$/deps/live_json/priv" />
       <root url="file://$PROJECT_DIR$/deps/live_json/lib" />

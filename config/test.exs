@@ -31,3 +31,8 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :tarragon, :battles_impl, Tarragon.BattlesMock
+config :tarragon, :inventory_impl, Tarragon.InventoryMock
+config :tarragon, :accounts_impl, Tarragon.AccountsMock
+config :tarragon, :start_workers, false

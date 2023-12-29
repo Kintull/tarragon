@@ -1,5 +1,4 @@
 <.flash_group flash={@flash} />
-
 <!--# open on a map view-->
 <!--# display player button + player lvl, exp-->
 <!--# display messages button-->
@@ -7,42 +6,56 @@
 <!--# display shop icon-->
 <!--# display available resources-->
 <!--# display menu button-->
-
-<div>
-    <%= for i <- 0..29, j <- 0..20 do %>
-    <link rel="preload" href={"/images/cuts/map_#{i*48}_#{j*48}.webp"} as="image">
-    <% end %>
-</div>
-
-<div class="relative-container relative w-screen h-screen overflow-hidden">
-    <div class="z-10 absolute top-0 left-0 py-[1vh] md:py-[3vh] pl-[3vh] w-[100vw] backdrop-blur border-gun-powder border-[1.5px] md:border-0 md:backdrop-blur-none pointer-events-none">
-        <div class="w-min flex flex-row gap-4 justify-between items-center pointer-events-auto">
-            <.experience_badge />
-            <.chrono_link_timer />
-            <.drone_bar reversed={false} class="md:justify-self-end lg:justify-self-auto"/>
-            <.health_bar class="md:justify-self-end lg:justify-self-auto"/>
-        </div>
+<% animate_class = if assigns[:show_loading_map_animation], do: "animate-pulse-once" %>
+<div class={[animate_class]}>
+  <div class="relative w-screen h-screen overflow-hidden">
+    <div class="z-10 absolute top-0 left-0 md:py-[3vh] md:pl-[3vh] p-[3px] w-[100vw] bg-gun-powder md:bg-transparent border-obsidian-black border-b-[1.5px] md:border-0 md:backdrop-blur-none pointer-events-none">
+      <div class="w-min flex flex-row gap-2 md:gap-3 justify-between items-center pointer-events-auto">
+        <.experience_badge />
+        <.chrono_link_timer />
+        <.health_bar
+          user_character={@user_character}
+          class="md:justify-self-start lg:justify-self-auto"
+        />
+        <.drone_bar reversed={false} class="md:justify-self-end lg:justify-self-auto" />
+      </div>
     </div>
 
     <div class="flex flex-col absolute gap-4 bottom-[10vh] md:bottom-[3vh] left-[3vh] z-20 ">
-        <.battle_badge/>
+      <.battle_badge />
     </div>
 
     <div class="flex flex-col absolute gap-4 bottom-[10vh] md:bottom-[3vh] right-[3vh] z-20 ">
-        <.shop_badge/>
+      <.shop_badge />
     </div>
 
-    <div id="map-grid" class="absolute grid" style={"grid-template-columns: repeat(#{@w_tiles}, minmax(0, 1fr)); width: #{@w_tiles*@tile_size}px; height: #{@h_tiles*@tile_size}px"}>
-    <%= for row <- @grid_map.tiles do %>
+    <div
+      id="map-grid"
+      class="absolute grid"
+      style={"grid-template-columns: repeat(#{@w_tiles}, minmax(0, 1fr)); width: #{@w_tiles*@tile_size}px; height: #{@h_tiles*@tile_size}px"}
+    >
+      <%= for row <- @grid_map.tiles do %>
         <%= for {x,y} <- row do %>
-            <% current_location_class = (if @user_x == x and @user_y == y, do: "map-grid-border", else: nil) %>
-            <div phx-click="change-location" phx-value-x={x} phx-value-y={y} id={"location-#{x}-#{y}"} class={["aspect-square", current_location_class]} style="width: #{@tile_size}px;height: #{@tile_size}px">
-                <img class="w-full h-full" src={"/images/cuts/map_#{y*@tile_size}_#{x*@tile_size}.webp"}/>
-            </div>
+          <% current_location_class =
+            if @user_x == x and @user_y == y, do: "map-grid-border", else: nil %>
+          <div
+            phx-click="change-location"
+            phx-value-x={x}
+            phx-value-y={y}
+            id={"location-#{x}-#{y}"}
+            class={["aspect-square", current_location_class]}
+            style="width: #{@tile_size}px;height: #{@tile_size}px"
+          >
+            <!--                <img class="w-full h-full" src={"/images/cuts/map_#{y*@tile_size}_#{x*@tile_size}.webp"}/>-->
+            <img
+              class="w-full h-full"
+              src={"data:image/webp;base64,#{@compiled_images[{y*@tile_size, x*@tile_size}]}"}
+            />
+          </div>
         <% end %>
-    <% end %>
+      <% end %>
     </div>
+  </div>
+  <!--    <div id="lj" phx-hook="LiveJSON" hidden/>-->
+  <div id="reloader" phx-hook="ViewportResizeHooks" />
 </div>
-
-<div id="lj" phx-hook="LiveJSON" hidden/>
-<div id="reloader" phx-hook="ViewportResizeHooks" />

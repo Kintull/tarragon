@@ -32,6 +32,14 @@
 }
 
 @layer base {
+    .glow-crimson {
+        filter: drop-shadow(0 0 0.4rem crimson);
+    }
+
+    .glow-golden-glow {
+        filter: drop-shadow(0 0 0.4rem #FFE69D);
+    }
+
     .bg-midnight-blue {
         --tw-bg-opacity: 1;
         /*background-color: rgb(20 184 166 / var(--tw-bg-opacity));*/
@@ -49,6 +57,7 @@
         /*background-color: rgb(20 184 166 / var(--tw-bg-opacity));*/
         background-color: #2E8B57;
     }
+
     .bg-obsidian-black {
         --tw-bg-opacity: 1;
         /*background-color: rgb(20 184 166 / var(--tw-bg-opacity));*/
@@ -157,6 +166,15 @@
         background-color: #8B0000;
     }
 
+
+    .face-screen-stroke-experimental {
+        text-shadow: 0.01rem 0.01rem 0 black,
+        -0.01rem -0.01rem 0 black,
+        0.01rem -0.01rem 0 black,
+        -0.01rem 0.01rem 0 black,
+        0.03rem 0.03rem 0px black;
+    }
+
     .face-screen-stroke-bold {
         -webkit-text-stroke: 1.5px black;
         text-shadow: 0.1rem 0.1rem 0 black,
@@ -175,7 +193,7 @@
         0.02rem 0.02rem 0 black;
     }
 
-    .\ {
+    .face-screen-stroke-small {
         -webkit-text-stroke: 0.5px black;
         text-shadow: 0.03rem 0.03rem 0 black,
         -0.02rem -0.02rem 0 black,
@@ -209,8 +227,14 @@
     }
 
     .scrollbar-y-hidden {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .wave-separator {
+        --mask: radial-gradient(4.5px at 50% calc(100% + 1.80px), #0000 calc(99% - 2px), #000 calc(101% - 2px) 99%, #0000 101%) calc(50% - 6px) calc(50% - 2.5px + .5px)/12px 5px repeat-x, radial-gradient(4.5px at 50% -1.8px, #0000 calc(99% - 2px), #000 calc(101% - 2px) 99%, #0000 101%) 50% calc(50% + 2.5px)/12px 5px repeat-x;
+        -webkit-mask: var(--mask);
+        mask: var(--mask);
     }
 
     /* CSS */
@@ -254,7 +278,7 @@
     }
 
     .bg-map {
-        background-image: url("/images/clean-map-transformed.png");
+        background-image: url("/images/clean-map-transformed.webp");
         background-size: contain;
     }
 
@@ -266,91 +290,91 @@
     }
 
     .bonfire {
-        background-image: url("/images/bonfire.png");
+        background-image: url("/images/bonfire.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .star {
-        background-image: url("/images/star.png");
+        background-image: url("/images/star.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .swords {
-        background-image: url("/images/swords.png");
+        background-image: url("/images/swords.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .skyscrapers {
-        background-image: url("/images/skyscraper.png");
+        background-image: url("/images/skyscraper.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .buildings {
-        background-image: url("/images/buildings.png");
+        background-image: url("/images/buildings.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .buildings-yellow {
-        background-image: url("/images/buildings-yellow.png");
+        background-image: url("/images/buildings-yellow.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .office-building {
-        background-image: url("/images/office-building.png");
+        background-image: url("/images/office-building.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .tower {
-        background-image: url("/images/tower.png");
+        background-image: url("/images/tower.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .cyberpunk {
-        background-image: url("/images/cyberpunk.png");
+        background-image: url("/images/cyberpunk.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .drone {
-        background-image: url("/images/drone.png");
+        background-image: url("/images/drone.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .sand-clock {
-        background-image: url("/images/sand-clock.png");
+        background-image: url("/images/sand-clock.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .nuclear-plant {
-        background-image: url("/images/nuclear-plant.png");
+        background-image: url("/images/nuclear-plant.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .tyre-2 {
-        background-image: url("/images/tyre-2.png");
+        background-image: url("/images/tyre-2.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .sea-lion {
-        background-image: url("/images/sea-lion.png");
+        background-image: url("/images/sea-lion.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
 
     .user-location-icon {
-        background-image: url("/images/tyre-2.png");
+        background-image: url("/images/tyre-2.webp");
         background-size: contain;
         background-repeat: no-repeat;
         position: relative;
@@ -363,7 +387,7 @@
         left: -13px;
         width: 70px;
         height: 70px;
-        background-image: url("/images/location.png");
+        background-image: url("/images/location.webp");
         background-size: contain;
         background-repeat: no-repeat;
     }
@@ -473,16 +497,26 @@
     }
 
     .blue-game-button:before {
-         background-color: initial;
-         background-image: linear-gradient(#ffffff 0, rgba(122, 204, 220, 0) 120%);
-         border-radius: 8px;
-         content: "";
-         height: 50%;
-         top: 4%;
-         left: 4%;
-         opacity: .7;
-         position: absolute;
-         transition: all .3s;
-         width: 92%;
-     }
+        background-color: initial;
+        background-image: linear-gradient(#ffffff 0, rgba(122, 204, 220, 0) 120%);
+        border-radius: 8px;
+        content: "";
+        height: 50%;
+        top: 4%;
+        left: 4%;
+        opacity: .7;
+        position: absolute;
+        transition: all .3s;
+        width: 92%;
+    }
+
+    .move-selected {
+        border: 3px;
+        border-style: solid;
+        border-color: black;
+    }
+
+    .custom-radio input[type='radio'] {
+        appearance: none;
+    }
 }

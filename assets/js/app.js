@@ -17,22 +17,20 @@
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
-// import "flowbite/dist/flowbite.phoenix.js";
 
 // Establish Phoenix Socket and LiveView configuration.
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
-import { createLiveJsonHooks } from 'live_json';
-import { createViewportResizeHooks } from "./viewport_resize_hook"
-const liveJsonHooks = createLiveJsonHooks();
-const viewportResizeHooks = createViewportResizeHooks();
 import topbar from "../vendor/topbar"
 import $ from "../vendor/jquery.3.7.1.min"
-import "../../node_modules/flowbite/dist/flowbite.phoenix.js"
+import {createPlayerScreenHooks} from "./player_screen_hooks";
+const playerScreenHooks = createPlayerScreenHooks();
+import { createViewportResizeHooks } from "./viewport_resize_hook"
+const viewportResizeHooks = createViewportResizeHooks();
 
 const Hooks = {
-    ...liveJsonHooks,
-    ...viewportResizeHooks
+    ...playerScreenHooks,
+    ...viewportResizeHooks,
 };
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

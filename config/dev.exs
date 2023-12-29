@@ -20,6 +20,8 @@ config :tarragon, TarragonWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
+  compress: true,
+  protocol_options: [max_keepalive: 5_000_000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
@@ -67,6 +69,7 @@ config :tarragon, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
+config :logger, :level, :info
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

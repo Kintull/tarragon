@@ -53,7 +53,9 @@ defmodule Tarragon.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:comeonin, "~> 2.5"},
       {:phoenix_storybook, "~> 0.5.0"},
-      {:live_json, "~> 0.4.3"}
+      {:live_json, "~> 0.4.3"},
+      {:ex_machina, "~> 2.7.0", only: :test},
+      {:hammox, "~> 0.7.0", only: :test}
     ]
   end
 

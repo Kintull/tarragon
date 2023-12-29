@@ -1,7 +1,18 @@
 <component name="libraryTable">
   <library name="mox" type="mix">
-    <CLASSES />
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/_build/test/lib/mox/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/mox/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/mox/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/mox/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/mox/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/mox/ebin" />
+    </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/mox/lib" />
+      <root url="file://$PROJECT_DIR$/deps/mox/lib" />
+      <root url="file://$PROJECT_DIR$/deps/mox/lib" />
+    </SOURCES>
   </library>
 </component>

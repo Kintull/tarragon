@@ -1,0 +1,77 @@
+<div
+  id={[@modal_id]}
+  tabindex="-2"
+  aria-hidden="true"
+  class={[
+    "fixed flex flex-col justify-center backdrop-blur-sm backdrop-brightness-[0.2]",
+    "top-0 left-0 right-0 z-50 w-screen h-screen md:inset-0",
+    "rounded select-none font-metropolis-regular",
+    if(@hidden, do: "hidden")
+  ]}
+>
+  <!--  users component-->
+  <div class="relative grow flex flex-col-reverse w-full">
+    <div
+      class="relative z-10 h-[70px] w-full bg-sand-dark"
+      style="clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 100%, 0 100%, 0 25%);"
+    >
+      <div
+        class="absolute h-[60px] w-full bg-sand-dark"
+        style="clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 100%, 0 100%, 0 25%);"
+      >
+        &nbsp;
+      </div>
+      <div class="relative z-10 w-full flex justify-center">
+        <p class="text-[3rem] font-metropolis-regular font-semibold text-pale-orange">Defeat</p>
+      </div>
+    </div>
+    <div class="relative w-[120px] mx-auto">
+      <div class="absolute flex w-[120px] h-full">
+        <div
+          class="m-auto w-[20px] aspect-square animate-versus-cup-glow"
+          style="box-shadow: 0px 0px 70px 70px #660909;"
+        >
+          &nbsp;
+        </div>
+      </div>
+      <img class="relative z-10" src="/images/trophy-defeat.png" />
+    </div>
+  </div>
+
+  <div class="w-full flex flex-col bg-gun-powder min-h-[400px] h-[60vh]">
+    <div class="w-full my-[20px] flex flex-row items-center justify-center gap-[30px]">
+      <div class="flex flex-col">
+        <.action_badge class="w-[60px] aspect-square border-white border-[2px]">
+          <img src="/images/female-character-avatar.webp" />
+        </.action_badge>
+        <span class="mx-auto text-golden-glow font-semibold">Amber</span>
+      </div>
+      <span class="text-[2rem] font-semibold text-golden-glow -mt-[25px]">VS</span>
+      <div class="flex flex-col">
+        <.action_badge class="w-[60px] aspect-square border-white border-[2px]">
+          <img src="/images/male-character-avatar.png" />
+        </.action_badge>
+        <span class="mx-auto text-golden-glow font-semibold">Kintull</span>
+      </div>
+    </div>
+
+    <p class="mx-auto mt-[20px] text-golden-glow font-semibold">Reward preview</p>
+    <div class="w-auto mx-[5%] h-[20px] wave-separator bg-hazel-green">&nbsp;</div>
+    <div class=" w-full h-full mx-auto p-[10px] mb-[10px]">
+      <div class="mx-[5%] py-[10px] grid grid-cols-4 place-items-center">
+        <%= for _ <- 1..4 do %>
+          <.equipment_item rarity="rare" img_url="images/bow.webp" level={0} class="w-[70px]" />
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full grow flex flex-col-reverse"
+    phx-click={JS.push("versus_closure_modal_closed")}
+  >
+    <span class="mx-auto mb-[30px] text-golden-glow font-metropolis-regular">
+      tap here to collect
+    </span>
+  </div>
+</div>

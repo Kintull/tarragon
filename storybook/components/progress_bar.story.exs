@@ -6,8 +6,23 @@ defmodule Storybook.Components.ProgressBar do
   def variations do
     [
       %Variation{
-        id: :default
+        id: :default,
+        attributes: %{
+          img_url: "/images/blood-drop.webp",
+          collapsable: false,
+          class: "w-[100px]"
+        }
+      },
+
+      %Variation{
+        id: :collapsable,
+        attributes: %{
+          img_url: "/images/blood-drop.webp",
+          collapsable: true,
+          class: "w-[100px]"
+        }
       }
+
     ]
   end
 end

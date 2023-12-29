@@ -24,6 +24,7 @@ defmodule Tarragon.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Tarragon.DataCase
+      import Tarragon.Factory
     end
   end
 
