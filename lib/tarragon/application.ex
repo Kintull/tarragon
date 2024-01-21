@@ -34,7 +34,8 @@ defmodule Tarragon.Application do
         [
           {Tarragon.Battles.BattleRoom, name: Tarragon.Battles.BattleRoom},
           {Tarragon.Battles.BattleBots, name: Tarragon.Battles.BattleBots},
-          {Tarragon.Battles.LobbyTracker, name: Tarragon.Battles.LobbyTracker}
+          {Tarragon.Battles.LobbyTracker, name: Tarragon.Battles.LobbyTracker},
+          {Tarragon.Accounts.CharacterHealer, name: Tarragon.Accounts.CharacterHealer}
         ]
 
       false ->

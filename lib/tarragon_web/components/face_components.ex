@@ -42,6 +42,7 @@ defmodule TarragonWeb.FaceComponents do
 
   attr :class, :string, default: nil
   attr :reversed, :boolean, default: false
+  attr :user_character, Tarragon.Accounts.UserCharacter
   def health_bar(assigns)
 
   attr :class, :string, default: nil
@@ -98,5 +99,14 @@ defmodule TarragonWeb.FaceComponents do
   attr :total_players_cnt, :integer, default: 6
   attr :seconds_left, :integer, default: 59
   attr :disabled, :boolean, default: false
+  attr :waiting, :boolean, default: false
   def battle_confirm_component(assigns)
+
+  attr :class, :string, default: nil
+  attr :modal_id, :string
+  attr :items, :list, default: []
+  attr :selected_items, :map, default: %{}
+  attr :action, :string, default: nil
+  attr :requires_confirmation, :boolean, default: false
+  def gear_container(assigns)
 end

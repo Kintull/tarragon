@@ -5,7 +5,7 @@ defmodule Tarragon.Repo.Migrations.CreateGameItems do
     create table(:game_items) do
       add :title, :string
       add :description, :string
-      add :base_item_condition, :integer
+      add :initial_condition, :integer
       add :image, :string
       add :purpose, :string
       add :base_damage_bonus, :integer

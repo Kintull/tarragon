@@ -112,9 +112,9 @@ defmodule TarragonWeb.PageLive.GameScreen do
         {x_min, x_max} = old_grid_map.x_range
         {y_min, y_max} = old_grid_map.y_range
 
-        x_relative = ((x - x_min) / (x_max - x_min) * 100) |> IO.inspect()
-        y_relative = ((y - y_min) / (y_max - y_min) * 100) |> IO.inspect()
-        x_relative > 85 or x_relative < 15 or (y_relative > 85 or y_relative < 15) |> IO.inspect()
+        x_relative = (x - x_min) / (x_max - x_min) * 100
+        y_relative = (y - y_min) / (y_max - y_min) * 100
+        x_relative > 85 or x_relative < 15 or (y_relative > 85 or y_relative < 15)
       else
         true
       end

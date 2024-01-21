@@ -65,7 +65,7 @@ defmodule Tarragon.Factory do
     %Tarragon.Inventory.GameItem{
       description: "A test item",
       image: "test_image.png",
-      base_item_condition: 100,
+      initial_condition: 100,
       title: "Test Item",
       # Assuming you have predefined purposes
       purpose: :head_gear,

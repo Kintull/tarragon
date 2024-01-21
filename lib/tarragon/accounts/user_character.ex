@@ -16,6 +16,7 @@ defmodule Tarragon.Accounts.UserCharacter do
     field :max_health, :integer, default: 10
     field :active, :boolean, default: false
     field :avatar_url, :string
+    field :avatar_background_url, :string
 
     belongs_to :user, User
     has_one :primary_weapon_slot, ItemContainer, foreign_key: :primary_weapon_slot_id

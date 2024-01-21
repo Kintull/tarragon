@@ -67,9 +67,27 @@ defmodule Tarragon.Accounts.Impl do
   def get_user_character!(id) do
     UserCharacter
     |> Repo.get!(id)
-    |> Repo.preload(primary_weapon: [items: [:game_item]])
+    |> Repo.preload(primary_weapon_slot: [item: [:game_item]])
+    |> Repo.preload(head_gear_slot: [item: [:game_item]])
+    |> Repo.preload(chest_gear_slot: [item: [:game_item]])
+    |> Repo.preload(knee_gear_slot: [item: [:game_item]])
+    |> Repo.preload(foot_gear_slot: [item: [:game_item]])
     |> Repo.preload(backpack: [items: [:game_item]])
     |> Repo.preload([:user])
+  end
+
+  alias Tarragon.Battles.Participant
+  @impl true
+  def list_all_healing_user_characters! do
+    q =
+      from uc in UserCharacter,
+        left_join: p in Participant,
+        on: uc.id == p.user_character_id and p.eliminated == false,
+        where: uc.active == true and uc.current_health < uc.max_health,
+        where: is_nil(p.id),
+        group_by: uc.id
+
+    Repo.all(q)
   end
 
   @doc """

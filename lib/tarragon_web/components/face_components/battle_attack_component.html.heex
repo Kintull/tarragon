@@ -15,8 +15,9 @@ disabled_class = if @disabled, do: "bg-gray-300" %>
       class="h-2/3 w-full grid grid-cols-3 grid-flow-row"
       style="grid-auto-rows: 1fr"
     >
-      <div
+      <button
         phx-click="attack-left"
+        disabled={@disabled}
         class={[
           enabled_class,
           disabled_class,
@@ -39,10 +40,11 @@ disabled_class = if @disabled, do: "bg-gray-300" %>
             />
           </svg>
         </label>
-      </div>
+      </button>
 
-      <div
+      <button
         phx-click="attack-center"
+        disabled={@disabled}
         class={[
           enabled_class,
           disabled_class,
@@ -60,10 +62,11 @@ disabled_class = if @disabled, do: "bg-gray-300" %>
         <label for="attack-center" class="flex w-full h-full peer-checked:bg-green-600">
           <span class="m-auto">o</span>
         </label>
-      </div>
+      </button>
 
-      <div
+      <button
         phx-click="attack-right"
+        disabled={@disabled}
         class={[
           enabled_class,
           disabled_class,
@@ -86,7 +89,7 @@ disabled_class = if @disabled, do: "bg-gray-300" %>
             />
           </svg>
         </label>
-      </div>
+      </button>
     </div>
   </div>
 </div>

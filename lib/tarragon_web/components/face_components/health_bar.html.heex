@@ -1,8 +1,8 @@
 <.progress_bar
   class={"w-[200px] #{@class}"}
   img_url="/images/blood-drop.webp"
-  max={100}
-  current={10}
-  percentage={0.1}
+  max={@user_character.max_health}
+  current={@user_character.current_health}
+  percentage={round(@user_character.current_health * 100 / @user_character.max_health)}
   reversed={@reversed}
 />

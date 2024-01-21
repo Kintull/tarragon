@@ -11,21 +11,24 @@
   <div class="relative w-screen h-screen overflow-hidden">
     <div class="z-10 absolute top-0 left-0 md:py-[3vh] md:pl-[3vh] p-[3px] w-[100vw] bg-gun-powder md:bg-transparent border-obsidian-black border-b-[1.5px] md:border-0 md:backdrop-blur-none pointer-events-none">
       <div class="w-min flex flex-row gap-2 md:gap-3 justify-between items-center pointer-events-auto">
-        <.experience_badge />
-        <.chrono_link_timer />
+        <.experience_badge avatar_url={@user_character.avatar_url} />
+        <div class="hidden"><.chrono_link_timer /></div>
         <.health_bar
           user_character={@user_character}
           class="md:justify-self-start lg:justify-self-auto"
         />
-        <.drone_bar reversed={false} class="md:justify-self-end lg:justify-self-auto" />
+        <div class="hidden">
+          <.drone_bar reversed={false} class="md:justify-self-end lg:justify-self-auto" />
+        </div>
       </div>
     </div>
 
     <div class="flex flex-col absolute gap-4 bottom-[10vh] md:bottom-[3vh] left-[3vh] z-20 ">
+      <.backpack_badge />
       <.battle_badge />
     </div>
 
-    <div class="flex flex-col absolute gap-4 bottom-[10vh] md:bottom-[3vh] right-[3vh] z-20 ">
+    <div class="hidden flex-col absolute gap-4 bottom-[10vh] md:bottom-[3vh] right-[3vh] z-20 ">
       <.shop_badge />
     </div>
 

@@ -13,12 +13,15 @@
             </div>
           </div>
         </div>
+
         <div class="font-metropolis-regular shadow-play-button outline-play-button-text play-button bg-obsidian-black w-60">
-          <div class="relative w-full h-5 flex flex-row justify-center">
-            <div class="absolute -top-2">
-              <.link class="text-3xl" navigate={~p"/game_screen"}>Next</.link>
+          <.link class="text-3xl w-full h-full" onclick="openAsWindow();">
+            <div class="relative w-full h-5 flex flex-row justify-center">
+              <div class="absolute -top-2 w-full h-full">
+                Next
+              </div>
             </div>
-          </div>
+          </.link>
         </div>
       </div>
     </div>
@@ -26,30 +29,49 @@
 </div>
 
 <script>
-  function toggleFullScreenAndRedirect() {
-      var doc = window.document;
-      var docEl = doc.documentElement;
-
-      var requestFullScreen =
-          docEl.requestFullscreen ||
-          docEl.mozRequestFullScreen ||
-          docEl.webkitRequestFullScreen ||
-          docEl.msRequestFullscreen;
-      var cancelFullScreen =
-          doc.exitFullscreen ||
-          doc.mozCancelFullScreen ||
-          doc.webkitExitFullscreen ||
-          doc.msExitFullscreen;
-
-      if (
-          !doc.fullscreenElement &&
-          !doc.mozFullScreenElement &&
-          !doc.webkitFullscreenElement &&
-          !doc.msFullscreenElement
-      ) {
-          requestFullScreen.call(docEl);
-      } else {
-          cancelFullScreen.call(doc);
+    function isMobile(){
+      if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        return true
       }
-  }
+      else{
+        return false
+      }
+    }
+    function openAsWindow() {
+      if (isMobile()) {
+        window.location.replace('/game_screen');
+      }
+      else {
+        let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+  width=412,height=915,left=100,top=100`;
+
+        open('/game_screen', 'Tarragon Client', params);
+      }
+    }
+    function toggleFullScreenAndRedirect() {
+        var doc = window.document;
+        var docEl = doc.documentElement;
+
+        var requestFullScreen =
+            docEl.requestFullscreen ||
+            docEl.mozRequestFullScreen ||
+            docEl.webkitRequestFullScreen ||
+            docEl.msRequestFullscreen;
+        var cancelFullScreen =
+            doc.exitFullscreen ||
+            doc.mozCancelFullScreen ||
+            doc.webkitExitFullscreen ||
+            doc.msExitFullscreen;
+
+        if (
+            !doc.fullscreenElement &&
+            !doc.mozFullScreenElement &&
+            !doc.webkitFullscreenElement &&
+            !doc.msFullscreenElement
+        ) {
+            requestFullScreen.call(docEl);
+        } else {
+            cancelFullScreen.call(doc);
+        }
+    }
 </script>

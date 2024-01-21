@@ -1,23 +1,52 @@
 defmodule TarragonWeb.PageLive.PlayerScreen do
   use TarragonWeb, :live_view
 
-  def mount(_params, %{}, socket) do
+  alias Tarragon.Accounts
+  alias Tarragon.Battles
+  alias Tarragon.Inventory
+  alias Tarragon.Battles.CharacterBattleBonuses
+  alias Tarragon.Accounts.GearItem
+  import Tarragon.Accounts.GearItem
+
+  def mount(_params, %{"user_id" => user_id}, socket) do
+    user_character = Accounts.impl().get_character_by_user_id!(user_id)
+    user_character_bonuses = Battles.impl().build_character_bonuses(user_character.id)
+
+    all_items = Inventory.impl().get_user_character_items(user_character.id)
+
+    backpack = all_items.backpack
+    head_gear = all_items.head_gear
+    chest_gear = all_items.chest_gear
+    primary_weapon = all_items.primary_weapon
+    foot_gear = all_items.foot_gear
+
     equipped_items = %{
-      generate_item(:head_gear).id => :head_gear,
-      generate_item(:chest_gear).id => :chest_gear,
-      generate_item(:primary_weapon).id => :primary_weapon,
-      generate_item(:knee_gear).id => :knee_gear,
-      generate_item(:foot_gear).id => :foot_gear,
-      :head_gear => generate_item(:head_gear),
-      :chest_gear => generate_item(:chest_gear),
-      :primary_weapon => generate_item(:primary_weapon),
-      :knee_gear => generate_item(:knee_gear),
-      :foot_gear => generate_item(:foot_gear)
+      :head_gear => all_items.head_gear,
+      :chest_gear => all_items.chest_gear,
+      :primary_weapon => all_items.primary_weapon,
+      :foot_gear => all_items.foot_gear
     }
+
+    equipped_items =
+      if head_gear, do: Map.put(equipped_items, head_gear.id, :head_gear), else: equipped_items
+
+    equipped_items =
+      if chest_gear, do: Map.put(equipped_items, chest_gear.id, :chest_gear), else: equipped_items
+
+    equipped_items =
+      if primary_weapon,
+        do: Map.put(equipped_items, primary_weapon.id, :primary_weapon),
+        else: equipped_items
+
+    equipped_items =
+      if foot_gear, do: Map.put(equipped_items, foot_gear.id, :foot_gear), else: equipped_items
 
     socket =
       socket
+      |> assign(:user_character, user_character)
+      |> assign(:user_character_bonuses, user_character_bonuses)
       |> assign(:equipped_items, equipped_items)
+      |> assign(:all_backpack_items, backpack)
       |> assign(:preloaded_items, [])
       |> assign(:action, nil)
       |> assign(:target_id, nil)
@@ -42,57 +71,25 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
     {:noreply, socket}
   end
 
-  def handle_event("equipping_item_initialize", %{"slot_id" => slot_id_binary}, socket) do
-    slot_id = String.to_atom(slot_id_binary)
-
-    items = [
-      generate_item(socket.assigns.equipped_items[slot_id], %{
-        id: 101,
-        quantity: 3,
-        condition: "10/10",
-        is_broken: false,
-        is_repairable: true,
-        rarity: "common"
-      }),
-      generate_item(socket.assigns.equipped_items[slot_id], %{
-        id: 100,
-        quantity: 3,
-        condition: "40/40",
-        is_broken: false,
-        is_repairable: true,
-        rarity: "rare"
-      })
-    ]
+  def handle_event("equipping_item_initialize", %{"slot_kind" => slot_kind_binary}, socket) do
+    slot_kind = String.to_atom(slot_kind_binary)
+    items = Enum.filter(socket.assigns.all_backpack_items, fn i -> i.kind == slot_kind end)
+    items = sort_items(items)
 
     socket =
       socket
       |> assign(:preloaded_items, items)
       |> assign(:action, :equipping_item)
-      |> assign(:target_id, slot_id)
+      |> assign(:target_id, slot_kind)
       |> assign(:requires_confirmation, false)
 
     {:noreply, socket}
   end
 
   def handle_event("replacing_item_initialize", %{"item_id" => id}, socket) do
-    items = [
-      generate_item(socket.assigns.equipped_items[id], %{
-        id: 101,
-        quantity: 3,
-        condition: "10/10",
-        is_broken: false,
-        is_repairable: true,
-        rarity: "common"
-      }),
-      generate_item(socket.assigns.equipped_items[id], %{
-        id: 100,
-        quantity: 3,
-        condition: "20/20",
-        is_broken: false,
-        is_repairable: true,
-        rarity: "uncommon"
-      })
-    ]
+    kind = socket.assigns.equipped_items[id]
+    items = Enum.filter(socket.assigns.all_backpack_items, fn i -> i.kind == kind end)
+    items = sort_items(items)
 
     socket =
       socket
@@ -105,21 +102,17 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
   end
 
   def handle_event("upgrading_item_initialize", %{"item_id" => id}, socket) do
-    kind = socket.assigns.equipped_items[id] |> IO.inspect()
-    target_item = socket.assigns.equipped_items[kind] |> IO.inspect()
+    kind = socket.assigns.equipped_items[id]
+    items = Enum.filter(socket.assigns.all_backpack_items, fn i -> i.kind == kind end)
+    items = sort_items(items)
+    target_item = socket.assigns.equipped_items[kind]
 
-    items = [
-      generate_item(kind),
-      generate_item(kind, %{id: 100}),
-      generate_item(kind, %{
-        id: 101,
-        quantity: 3,
-        condition: "10/10",
-        is_broken: false,
-        is_repairable: true,
-        rarity: "common"
-      })
-    ]
+    %{
+      right_xp_boundary: right_xp_boundary,
+      xp_current: xp_current,
+      percentage_till_next_level: percentage_till_next_level,
+      current_level: current_level
+    } = GearItem.calculate_upgrade_stats(target_item, 0)
 
     socket =
       socket
@@ -129,36 +122,39 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
       |> assign(:target_item, target_item)
       |> assign(:requires_confirmation, true)
       |> assign(:confirmation_button_text, "Confirm upgrade")
-      |> assign(:xp_with_selected, target_item.xp_current)
-      |> assign(:lvl_with_xp_selected, target_item.level)
-      |> assign(
-        :xp_till_next_level,
-        calculate_xp_on_level(target_item.level + 1, target_item.rarity)
-      )
-
-    calculate_xp_on_level(target_item.level + 1, target_item.rarity)
+      |> assign(:xp_with_selected, xp_current)
+      |> assign(:lvl_with_xp_selected, current_level)
+      |> assign(:xp_till_next_level, right_xp_boundary)
+      |> assign(:percentage_till_next_level, percentage_till_next_level)
 
     {:noreply, socket}
   end
 
   def handle_event("upgrading_item_finalize", _, socket) do
+    user_character = socket.assigns.user_character
     equipped_items = socket.assigns[:equipped_items]
     target_item_kind = equipped_items[socket.assigns.target_id]
     target_item = equipped_items[target_item_kind]
     selected_items = socket.assigns[:selected_items]
 
-    xp_selected =
-      Enum.map(selected_items, fn {_id, i} -> i.selected_xp * i.quantity end) |> Enum.sum()
+    xp_selected = Enum.map(selected_items, fn {_id, i} -> i.selected_xp end) |> Enum.sum()
 
     xp_total = target_item.xp_current + xp_selected
-    lvl_with_xp_selected = calculate_level_by_xp(xp_total, target_item.rarity)
+    lvl_with_xp_selected = GearItem.calculate_level_by_xp(xp_total, target_item.rarity)
 
     target_item = %{target_item | level: lvl_with_xp_selected, xp_current: xp_total}
     equipped_items = Map.put(equipped_items, target_item_kind, target_item)
 
+    selected_items_ids = Enum.map(selected_items, fn {id, _i} -> id end)
+    Inventory.impl().upgrade_item_with_items(target_item.id, selected_items_ids, xp_selected)
+
+    all_items = Inventory.impl().get_user_character_items(user_character.id)
+    backpack = all_items.backpack
+
     socket =
       socket
       |> assign(:equipped_items, equipped_items)
+      |> assign(:all_backpack_items, backpack)
 
     {:noreply, socket}
   end
@@ -223,6 +219,7 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
       when action in ["equipping_item"] do
     items = socket.assigns.preloaded_items
     equipped_items = socket.assigns.equipped_items
+    user_character = socket.assigns.user_character
     item_to_equip = Enum.find(items, &(&1.id == id))
 
     item_to_equip = %{item_to_equip | quantity: 1}
@@ -233,9 +230,14 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
         item_to_equip.id => item_to_equip.kind
       })
 
+    Inventory.impl().equip_item(user_character.id, item_to_equip.id)
+
+    all_items = Inventory.impl().get_user_character_items(user_character.id)
+
     socket =
       socket
       |> assign(:equipped_items, equipped_items)
+      |> assign(:all_backpack_items, all_items.backpack)
 
     {:noreply, socket}
   end
@@ -244,6 +246,7 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
       when action in ["replacing_item"] do
     items = socket.assigns.preloaded_items
     equipped_items = socket.assigns.equipped_items
+    user_character = socket.assigns.user_character
     item_to_equip = Enum.find(items, &(&1.id == id))
     item_to_equip = %{item_to_equip | quantity: 1}
 
@@ -254,30 +257,37 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
       |> Map.drop([item_to_remove.id, item_to_remove.kind])
       |> Map.merge(%{item_to_equip.kind => item_to_equip, item_to_equip.id => item_to_equip.kind})
 
+    Inventory.impl().equip_item(user_character.id, item_to_equip.id)
+
+    all_items = Inventory.impl().get_user_character_items(user_character.id)
+
     socket =
       socket
       |> assign(:equipped_items, equipped_items)
+      |> assign(:all_backpack_items, all_items.backpack)
 
     {:noreply, socket}
   end
 
   def handle_event("selecting_item", %{"item_id" => id, "action" => action}, socket)
-      when action in ["upgrading_item", "repairing_item"] do
+      when action in ["upgrading_item"] do
     items = socket.assigns.preloaded_items
 
     selected_item_full = Enum.find(items, &(&1.id == id))
-    max_quantity = selected_item_full[:quantity] || 0
+    max_quantity = selected_item_full.quantity || 0
 
     selected_items = socket.assigns[:selected_items]
 
     selected_items =
       cond do
         selected_items[id] && selected_items[id].quantity < max_quantity ->
+          quantity = selected_items[id].quantity + 1
+
           %{
             selected_items
             | id => %{
-                quantity: selected_items[id].quantity + 1,
-                selected_xp: selected_items[id].selected_xp
+                quantity: quantity,
+                selected_xp: selected_items[id].selected_xp * quantity
               }
           }
 
@@ -296,157 +306,62 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
     xp_selected =
       Enum.map(selected_items, fn {_id, i} -> i.selected_xp * i.quantity end) |> Enum.sum()
 
-    {target_item.xp_current, xp_selected}
-    xp_selected_total = target_item.xp_current + xp_selected
-    lvl_with_xp_selected = calculate_level_by_xp(xp_selected_total, target_item.rarity)
-    xp_next_level = calculate_xp_on_level(lvl_with_xp_selected, target_item.rarity)
+    %{
+      right_xp_boundary: right_xp_boundary,
+      xp_current: xp_current,
+      percentage_till_next_level: percentage_till_next_level,
+      current_level: current_level
+    } = GearItem.calculate_upgrade_stats(target_item, xp_selected)
 
     socket =
       socket
       |> assign(:selected_items, selected_items)
-      |> assign(:xp_with_selected, xp_selected_total)
-      |> assign(:lvl_with_xp_selected, lvl_with_xp_selected)
-      |> assign(:xp_till_next_level, xp_next_level)
+      |> assign(:xp_with_selected, xp_current)
+      |> assign(:lvl_with_xp_selected, current_level)
+      |> assign(:xp_till_next_level, right_xp_boundary)
+      |> assign(:percentage_till_next_level, percentage_till_next_level)
 
     {:noreply, socket}
   end
 
-  def handle_event("deselecting_item", %{"item_id" => id}, socket) do
+  def handle_event("deselecting_item", %{"item_id" => id, "action" => action}, socket)
+      when action in ["upgrading_item"] do
+    target_item = socket.assigns.target_item
     selected_items = Map.drop(socket.assigns[:selected_items], [id])
-    socket = assign(socket, :selected_items, selected_items)
+
+    xp_selected =
+      Enum.map(selected_items, fn {_id, i} -> i.selected_xp * i.quantity end) |> Enum.sum()
+
+    %{
+      right_xp_boundary: right_xp_boundary,
+      xp_current: xp_current,
+      percentage_till_next_level: percentage_till_next_level,
+      current_level: current_level
+    } = GearItem.calculate_upgrade_stats(target_item, xp_selected)
+
+    socket =
+      socket
+      |> assign(:selected_items, selected_items)
+      |> assign(:xp_with_selected, xp_current)
+      |> assign(:lvl_with_xp_selected, current_level)
+      |> assign(:xp_till_next_level, right_xp_boundary)
+      |> assign(:percentage_till_next_level, percentage_till_next_level)
+
     {:noreply, socket}
   end
 
-  defp generate_item(kind, opts \\ %{}) do
-    id = opts[:id]
-    quantity = opts[:quantity] || 1
-    rarity = opts[:rarity] || "common"
-    level = opts[:level] || 0
-    condition_current = opts[:condition_current] || 10
-    condition_max = opts[:condition_max] || 10
+  defp sort_items(gear_items) do
+    rarity_index = %{
+      "common" => 1,
+      "uncommon" => 2,
+      "rare" => 3,
+      "epic" => 4,
+      "legendary" => 5
+    }
 
-    base =
-      case kind do
-        :head_gear ->
-          %{
-            kind: :head_gear,
-            id: id || 1,
-            img_url: "/images/helmet.webp",
-            rarity: rarity || "rare",
-            level: level
-          }
-
-        :chest_gear ->
-          %{
-            kind: :chest_gear,
-            id: id || 2,
-            img_url: "/images/chest-plate-transparent.webp",
-            rarity: rarity || "uncommon",
-            level: level
-          }
-
-        :primary_weapon ->
-          %{
-            kind: :primary_weapon,
-            id: id || 3,
-            img_url: "/images/bow.webp",
-            rarity: rarity || "common",
-            level: level
-          }
-
-        :knee_gear ->
-          %{
-            kind: :knee_gear,
-            id: id || 46,
-            img_url: "/images/knee-pads-transparent.webp",
-            rarity: rarity || "epic",
-            level: level
-          }
-
-        :foot_gear ->
-          %{
-            kind: :foot_gear,
-            id: id || 5,
-            img_url: "/images/boot-transparent.webp",
-            rarity: rarity || "legendary",
-            level: level
-          }
-
-        :scrap_parts ->
-          %{
-            kind: :scrap_parts,
-            id: id || 7,
-            img_url: "/images/repair-pieces.png",
-            rarity: rarity || "uncommon",
-            level: level
-          }
-      end
-
-    init_condition = init_condition(rarity)
-    xp_current = 0
-    condition_initial = init_condition(rarity)
-    condition_current = condition_current || init_condition
-    condition_max = condition_max || init_condition
-
-    consume_xp_value =
-      calculate_consume_xp_value(
-        sell_xp_value(rarity),
-        xp_current,
-        condition_max,
-        condition_initial
-      )
-
-    level = calculate_level_by_xp(xp_current, rarity)
-    xp_till_next_level = calculate_xp_on_level(level, rarity)
-    reparation_cost = calculate_reparation_costs(rarity)
-
-    Map.merge(
-      base,
-      %{
-        level: level,
-        condition: "#{condition_current}/#{condition_max}",
-        condition_current: condition_current,
-        condition_max: condition_max,
-        condition_initial: condition_initial,
-        is_broken: condition_current == 0,
-        is_repairable: !(condition_current == 0 and condition_max == 1),
-        reparation_requirements: reparation_cost,
-        quantity: quantity,
-        consume_xp_value: consume_xp_value,
-        xp_till_next_level: xp_till_next_level,
-        xp_current: xp_current
-      }
-    )
-  end
-
-  def calculate_xp_on_level(level, rarity) do
-    # 0.0037 *  level^{3} - LVL 30 - x100 multiplier
-    xp_additional =
-      case rarity do
-        "common" -> sell_xp_value(rarity) * (Integer.pow(level, 3) * 0.4)
-        "uncommon" -> sell_xp_value(rarity) * (Integer.pow(level, 3) * 0.4)
-        "rare" -> sell_xp_value(rarity) * (Integer.pow(level, 3) * 0.4)
-        "epic" -> sell_xp_value(rarity) * (Integer.pow(level, 3) * 0.4)
-        "legendary" -> sell_xp_value(rarity) * (Integer.pow(level, 3) * 0.4)
-      end
-
-    xp = if level == 0, do: 0, else: xp_additional + sell_xp_value(rarity)
-    round(xp)
-  end
-
-  def calculate_level_by_xp(xp, rarity) do
-    0..30
-    |> Enum.map(fn lvl -> {lvl, calculate_xp_on_level(lvl, rarity)} end)
-    |> Enum.find(fn {_lvl, xp_on_level} -> xp_on_level >= xp end)
-    |> elem(0)
-  end
-
-  def calculate_consume_xp_value(initial_exp, xp_current, condition_max, condition_initial) do
-    # once used - devaluates by 20%
-    # when 0/1 devaluation is 33% + 20% = 55%
-    xp = initial_exp + xp_current
-    devaluation = 0.8 * xp - xp * (1 - condition_max / condition_initial) * 0.3
-    round(devaluation)
+    Enum.sort_by(gear_items, fn i ->
+      rarity_index["#{i.rarity}"]
+    end)
   end
 
   defmodule Resources do
@@ -480,102 +395,6 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
       field :time_boost_1d, :integer, default: 0
 
       field :driving_boost, :integer, default: 0
-    end
-  end
-
-  def calculate_reparation_costs(rarity) do
-    case rarity do
-      "common" ->
-        calculate_resources_per_hour(3, [:scrap_parts, :chrono_link_time_1m])
-
-      "uncommon" ->
-        calculate_resources_per_hour(6, [:scrap_parts, :chrono_link_time_1m, :energy_cells])
-
-      "rare" ->
-        calculate_resources_per_hour(12, [
-          :scrap_parts,
-          :chrono_link_time_1m,
-          :energy_cells,
-          :uranium
-        ])
-
-      "epic" ->
-        calculate_resources_per_hour(246, [
-          :scrap_parts,
-          :chrono_link_time_1m,
-          :energy_cells,
-          :uranium
-        ])
-
-      "legendary" ->
-        calculate_resources_per_hour(48, [
-          :scrap_parts,
-          :chrono_link_time_1m,
-          :energy_cells,
-          :uranium
-        ])
-    end
-  end
-
-  defp calculate_resources_per_hour(hours, resources) do
-    per_minute = %{
-      uranium: 10,
-      energy_cells: 20,
-      # needed for upgrading
-      upgrade_chips: 0.1,
-      # needed for repairing
-      scrap_parts: 1,
-      time_shards: 0.1,
-      chrono_link_time_1m: 1,
-      upgrade_booster_1m: 1,
-      reparation_booster_1m: 1,
-      driving_booster_1m: 1
-    }
-
-    resources = resources || Map.keys(per_minute)
-
-    all = Enum.reduce(resources, 0, fn resource, acc -> acc + per_minute[resource] end)
-
-    Enum.map(resources, fn resource ->
-      quantity = round(per_minute[resource] / all * hours * 60) |> ceil_nearest()
-      {resource, quantity}
-    end)
-    |> Enum.into(%{})
-  end
-
-  def ceil_nearest(num) when num > 10, do: ceil(num / 10) * 10
-  def ceil_nearest(num), do: num
-
-  def rarity_drop_chance(rarity) do
-    %{
-      "common" => 0.8,
-      "uncommon" => 0.2,
-      # 1 in 25 days
-      "rare" => 0.0013,
-      # 1 in 50 days
-      "epic" => 0.00066,
-      # 1 in 100 days
-      "legendary" => 0.00033
-    }[rarity]
-  end
-
-  def sell_xp_value(rarity) do
-    %{
-      "common" => 10,
-      "uncommon" => 40,
-      "rare" => 1_400,
-      "epic" => 9_800,
-      "legendary" => 14_000
-    }[rarity]
-  end
-
-  defp init_condition(rarity) do
-    case rarity do
-      "common" -> 10
-      "uncommon" -> 20
-      "rare" -> 30
-      "epic" -> 40
-      "legendary" -> 50
     end
   end
 end

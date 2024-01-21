@@ -24,8 +24,6 @@ defmodule TarragonWeb.PageLive.BattleScreen do
           show_defeat = show_defeat?(room, participant)
           seconds_left = Battles.impl().battle_turn_seconds_left(room.id)
 
-          #          require IEx; IEx.pry()
-
           socket
           |> assign(battle_room_id: room.id)
           |> assign(ally_team: ally_team)
@@ -171,11 +169,11 @@ defmodule TarragonWeb.PageLive.BattleScreen do
   def handle_event("versus_closure_modal_closed", _, socket) do
     # update participant closure_shown
     character_id = socket.assigns.current_player_character_id
+    IO.inspect("versus_closure_modal_closed for #{character_id}")
     room = Battles.impl().get_character_active_room(character_id)
     current_participant = Enum.find(room.participants, &(&1.user_character_id == character_id))
 
     Battles.impl().update_participant(current_participant, %{closure_shown: true})
-    |> IO.inspect()
 
     {:noreply, push_redirect(socket, to: "/game_screen")}
   end

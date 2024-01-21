@@ -12,9 +12,9 @@ is_dying = @current_hp < @max_hp / 3
 
 border_color =
   if !is_dead do
-    "bg-gradient-to-t to-black from-transparent from-10%"
+    "bg-gradient-to-r from-sky-500 to-indigo-700"
   else
-    "bg-gradient-to-t to-red-900 from-transparent from-10%"
+    "bg-gradient-to-r from-purple-500 to-pink-700"
   end %>
 <div class={["aspect-square w-[120px] h-[120px]  p-[4px] rounded-[10px]", border_color, @class]}>
   <div class="relative aspect-square bg-gray-200 font-metropolis-regular rounded-[6px] overflow-hidden">

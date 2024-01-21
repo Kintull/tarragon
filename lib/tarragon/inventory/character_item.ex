@@ -9,7 +9,15 @@ defmodule Tarragon.Inventory.CharacterItem do
   @type t :: %__MODULE__{}
 
   schema "character_items" do
+    field :rarity, Ecto.Enum,
+      values: [:common, :uncommon, :rare, :epic, :legendary],
+      default: :common
+
+    field :level, :integer, default: 0
+    field :xp_current, :integer, default: 0
     field :current_condition, :integer, default: 0
+    field :current_max_condition, :integer, default: 0
+    field :quantity, :integer, default: 1
 
     belongs_to :game_item, GameItem
     belongs_to :item_container, ItemContainer, on_replace: :nilify

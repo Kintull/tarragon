@@ -15,7 +15,9 @@ defmodule Tarragon.Inventory.ItemContainer do
     belongs_to :foot_gear_slot, UserCharacter, foreign_key: :foot_gear_slot_id
     belongs_to :primary_weapon_slot, UserCharacter, foreign_key: :primary_weapon_slot_id
     belongs_to :backpack, UserCharacter, foreign_key: :backpack_id
+    belongs_to :item_container, ItemContainer, foreign_key: :parent_container_id
     has_many :items, CharacterItem
+    has_one :item, CharacterItem
 
     timestamps()
   end

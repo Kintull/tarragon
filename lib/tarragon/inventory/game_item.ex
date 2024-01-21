@@ -9,7 +9,7 @@ defmodule Tarragon.Inventory.GameItem do
   schema "game_items" do
     field :description, :string
     field :image, :string
-    field :base_item_condition, :integer
+    field :initial_condition, :integer
     field :title, :string
     field :purpose, Ecto.Enum, values: @purposes
     field :base_damage_bonus, :integer
@@ -27,7 +27,7 @@ defmodule Tarragon.Inventory.GameItem do
     |> cast(attrs, [
       :title,
       :description,
-      :base_item_condition,
+      :initial_condition,
       :purpose,
       :image,
       :base_damage_bonus,
@@ -35,7 +35,7 @@ defmodule Tarragon.Inventory.GameItem do
       :base_health_bonus,
       :base_range_bonus
     ])
-    |> validate_required([:title, :description, :base_item_condition, :purpose])
+    |> validate_required([:title, :description, :initial_condition, :purpose])
   end
 
   def get_purposes do

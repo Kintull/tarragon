@@ -388,31 +388,31 @@ defmodule Tarragon.Battles.Impl do
 
     Inventory.impl().create_character_item(%{
       game_item_id: bow.id,
-      current_condition: bow.base_item_condition,
+      current_condition: bow.initial_condition,
       item_container_id: pw_container.id
     })
 
     Inventory.impl().create_character_item(%{
       game_item_id: chest_plate.id,
-      current_condition: chest_plate.base_item_condition,
+      current_condition: chest_plate.initial_condition,
       item_container_id: cg_container.id
     })
 
     Inventory.impl().create_character_item(%{
       game_item_id: boots.id,
-      current_condition: boots.base_item_condition,
+      current_condition: boots.initial_condition,
       item_container_id: fg_container.id
     })
 
     Inventory.impl().create_character_item(%{
       game_item_id: knee_pads.id,
-      current_condition: knee_pads.base_item_condition,
+      current_condition: knee_pads.initial_condition,
       item_container_id: kg_container.id
     })
 
     Inventory.impl().create_character_item(%{
       game_item_id: helmet.id,
-      current_condition: helmet.base_item_condition,
+      current_condition: helmet.initial_condition,
       item_container_id: hg_container.id
     })
 

@@ -23,7 +23,7 @@
         ally_character_ids={Enum.map(@ally_team, & &1.id)}
       />
     <% else %>
-      <div class="flex flex-row justify-center gap-[5%] mt-[20px]">
+      <div class="flex flex-row justify-center gap-[2%] mt-[20px]">
         <!--      add phx-click => "target_id-enemy_id" to each enemy -->
         <%= for char <- @enemy_team do %>
           <.battle_player_component
@@ -39,6 +39,7 @@
       />
       <.battle_move_component move={@current_move_action} />
       <.battle_confirm_component
+        waiting={@current_action_confirmed}
         seconds_left={@seconds_left}
         total_players_cnt={length(@ally_team ++ @enemy_team)}
         submitted_players_cnt={@submitted_players_count}

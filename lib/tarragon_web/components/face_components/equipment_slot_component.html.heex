@@ -74,7 +74,7 @@
     <div
       class="w-full h-full relative z-10"
       phx-click={
-        JS.push("equipping_item_initialize", value: %{slot_id: @id})
+        JS.push("equipping_item_initialize", value: %{slot_kind: @id})
         |> JS.hide(to: "#equipment-actions-#{@myself}")
         |> JS.show(to: "#equipmentBagModal")
       }

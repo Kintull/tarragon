@@ -1,0 +1,28 @@
+<div id="player_screen" class="w-screen h-screen overflow-hidden bg-gun-powder">
+  <div class="p-[3px] w-[100vw] bg-gun-powder md:bg-transparent border-obsidian-black md:backdrop-blur-none">
+    <div class="flex flex-row items-center">
+      <.return_badge />
+      <p class="text-2xl w-full text-center font-jotione-regular text-golden-glow select-none">
+        Storage
+      </p>
+    </div>
+  </div>
+  <div class="rounded-xl h-full w-full border-[0.19rem] border-gun-powder">
+    <div class="h-full bg-hazel-green w-full flex flex-col justify-items-start rounded-[8px]">
+      <div class="h-full mt-[3%] mb-[15%] mx-auto flex flex-col justify-center">
+        <div class="w-full h-[40px] flex flex-col">
+          <div class="flex w-[30%] h-full rounded-t-xl bg-gun-powder">
+            <div class="m-auto text-golden-glow text-xl font-jotione-regular">
+              <p>Gear</p>
+            </div>
+          </div>
+        </div>
+        <.gear_container
+          modal_id="equipmentBagModal"
+          items={@preloaded_items}
+          class="border-obsidian-black bg-golden-glow h-full rounded-t-[0px] border-gun-powder"
+        />
+      </div>
+    </div>
+  </div>
+</div>

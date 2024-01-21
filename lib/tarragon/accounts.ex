@@ -17,6 +17,7 @@ defmodule Tarragon.Accounts do
 
   @callback get_character_by_user_id!(user_id) :: UserCharacter.t()
   @callback get_user_character!(id) :: UserCharacter.t()
+  @callback list_all_healing_user_characters! :: [UserCharacter.t()]
   @callback create_user_character(attrs) :: {:ok, UserCharacter.t()} | {:error, Ecto.Changeset}
   @callback update_user_character(user_character, attrs) ::
               {:ok, UserCharacter.t()} | {:error, Ecto.Changeset}

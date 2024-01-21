@@ -4,6 +4,7 @@ defmodule Tarragon.Repo.Migrations.CreateItemContainers do
   def change do
     create table(:item_containers) do
       add :capacity, :integer
+      add :quantity, :integer
 
       add :head_gear_slot_id, references(:user_characters, on_delete: :delete_all)
       add :chest_gear_slot_id, references(:user_characters, on_delete: :delete_all)
@@ -11,6 +12,7 @@ defmodule Tarragon.Repo.Migrations.CreateItemContainers do
       add :foot_gear_slot_id, references(:user_characters, on_delete: :delete_all)
       add :primary_weapon_slot_id, references(:user_characters, on_delete: :delete_all)
       add :backpack_id, references(:user_characters, on_delete: :delete_all)
+      add :parent_container_id, references(:item_containers, on_delete: :delete_all)
 
       timestamps()
     end

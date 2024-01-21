@@ -232,7 +232,6 @@ defmodule Tarragon.Battles.BattleRoom do
       battle_room.room
     )
     |> Repo.transaction()
-    |> IO.inspect(label: "multi")
 
     room = Battles.impl().get_room!(battle_room_id)
 
@@ -401,6 +400,7 @@ defmodule Tarragon.Battles.BattleRoom do
         "attack-left" -> :left
         "attack-center" -> :center
         "attack-right" -> :right
+        nil -> nil
       end
 
     Map.put(

@@ -20,7 +20,9 @@
           <div class="relative">
             <div class="absolute z-20 -top-[10px] -left-[10px] aspect-square w-[1.3rem] h-[1.3rem] rounded-full bg-white border-[0.19rem] border-gun-powder">
               <div
-                phx-click={JS.push("deselecting_item", value: %{item_id: item.id})}
+                phx-click={
+                  JS.push("deselecting_item", value: %{item_id: item.id, action: @action})
+                }
                 class="absolute z-30 w-min-[0.06rem] h-min-[0.06rem] h-[200%] w-[200%] -left-[50%] -top-[50%] rounded-full"
               >
               </div>
