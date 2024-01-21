@@ -35,19 +35,19 @@ bg_rarity_map = %{
       border_rarity_map["broken"]
 
     true ->
-      border_rarity_map[@rarity]
+      border_rarity_map["uncommon"]
   end
 
 bg_condition_info =
   cond do
     !@is_repairable ->
-      bg_rarity_map["trash"]
+      "bg-gray-100"
 
     @is_broken ->
-      bg_rarity_map["broken"]
+      "bg-gray-100"
 
     true ->
-      bg_rarity_map[@rarity]
+      "bg-gray-100"
   end %>
 
 <div class={[

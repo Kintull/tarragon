@@ -105,6 +105,7 @@ defmodule TarragonWeb.FaceComponents do
   attr :class, :string, default: nil
   attr :modal_id, :string
   attr :items, :list, default: []
+  attr :inactive_items, :list, default: []
   attr :selected_items, :map, default: %{}
   attr :action, :string, default: nil
   attr :requires_confirmation, :boolean, default: false

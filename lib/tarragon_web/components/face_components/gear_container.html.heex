@@ -1,5 +1,16 @@
 <div class={["gap-5 border-[0.19rem] rounded-2xl overflow-y-auto scrollbar-y-hidden", @class]}>
   <div class="w-full grid grid-cols-5 gap-5 p-5">
+    <%= for inactive_item <- @inactive_items do %>
+      <.equipment_item
+        condition={inactive_item.condition}
+        rarity={inactive_item.rarity}
+        img_url={inactive_item.img_url}
+        level={inactive_item.level}
+        quantity={inactive_item.quantity}
+        is_broken={inactive_item.is_broken}
+        is_repairable={inactive_item.is_repairable}
+      />
+    <% end %>
     <%= for item <- @items do %>
       <div
         phx-click={
