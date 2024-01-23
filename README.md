@@ -1,18 +1,67 @@
 # Tarragon
 
-To start your Phoenix server:
+To start your Tarragon server:
 
+* Run postgres with username/password: postgres/postgres
 * Run `mix setup` to install and setup dependencies
 * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+Visit `localhost:4000/login/1` to authenticate yourself.
 
 ## Learn more
 
 * Optimizing loading pictures https://css-tricks.com/the-blur-up-technique-for-loading-background-images/
 * Passing Viewport dimensions on mount https://gist.github.com/cblavier/0e227de6fd1dfa00814b88642cdcb2a9
+
+## Project plans
+
+### Currency
+
+* Time Shards are introduces as a currency (S)
+* Time Shards are given for every battle as an item of 1, 1k, 10k, 100k (M)
+* Time Shards are subtracted for every 10 minutes of being offline/online (S)
+
+### Shop system
+
+* in-game resource/item exchange is created with one tab (Time Shards shop) (M)
+* bundle store is created (Time Shard bundles) (M)
+
+### Battling system
+
+* distance mechanic is implemented (L)
+* multiplayer is working (>1 player per team) (M)
+* equipment condition is decreased after the battle (S)
+* rewards are given after the battle (more if win, less if loss) (S)
+
+### Main Screen
+
+* health is updated in real time (S-M)
+* datetime in UTC (XS)
+* absolute player power is calculated and displayed (S)
+* currency (Time Shards) is displayed (S)
+
+### World chat
+
+* world chat with history is available (L)
+    * translation per message (L)
+    * spam bot (M)
+
+### Equipment system
+
+* similar items are batched together (M)
+* broken items can be fixed with "components" (S)
+* resources and currency bundles can be "used" to be transfered to the player's account (M)
+
+### Map system
+
+* transition from tile to tile (connected tiles) (M)
+    * navigation from tile to tile (distant tiles) (S)
+* a map objective details can be previewed (L)
+
+## Resource Buldings System
+
+* resource buildings are available on the map (L)
+* player can collect resources from buildings (M)
 
 ## Character backpack relationships
 
