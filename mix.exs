@@ -32,30 +32,29 @@ defmodule Tarragon.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.7.8"},
+      {:phoenix, "~> 1.7"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, "~> 0.17"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.20.1"},
-      {:floki, ">= 0.30.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.8.2"},
+      {:phoenix_live_view, "~> 0.20"},
+      {:floki, "~> 0.30", only: :test},
+      {:phoenix_live_dashboard, "~> 0.8"},
       {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:dns_cluster, "~> 0.1.1"},
+      {:dns_cluster, "~> 0.1"},
       {:plug_cowboy, "~> 2.5"},
       {:comeonin, "~> 2.5"},
-      {:phoenix_storybook, "~> 0.5.0"},
-      {:live_json, "~> 0.4.3"},
-      {:ex_machina, "~> 2.7.0", only: :test},
-      {:hammox, "~> 0.7.0", only: :test}
+      {:phoenix_storybook, "~> 0.5"},
+      {:ex_machina, "~> 2.7", only: :test},
+      {:hammox, "~> 0.7", only: :test}
     ]
   end
 
