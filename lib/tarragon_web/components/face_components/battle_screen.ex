@@ -10,7 +10,7 @@ defmodule TarragonWeb.PageLive.BattleScreen do
     socket =
       case Battles.impl().get_active_participant(character) do
         nil ->
-          push_redirect(socket, to: "/game_screen")
+          push_redirect(socket, to: ~p"/game_screen")
 
         %{user_character_id: character_id} = participant ->
           room = Battles.impl().get_character_active_room(character_id)
@@ -175,7 +175,7 @@ defmodule TarragonWeb.PageLive.BattleScreen do
 
     Battles.impl().update_participant(current_participant, %{closure_shown: true})
 
-    {:noreply, push_redirect(socket, to: "/game_screen")}
+    {:noreply, push_redirect(socket, to: ~p"/game_screen")}
   end
 
   defp team_a_characters(participants) do
