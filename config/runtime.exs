@@ -54,6 +54,7 @@ if config_env() == :prod do
   config :tarragon, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :tarragon, TarragonWeb.Endpoint,
+    check_origin: false,
     url: [host: host, port: 443, scheme: "https"],
     http: [
       # Enable IPv6 and bind on all interfaces.
