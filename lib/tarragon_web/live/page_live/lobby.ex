@@ -15,7 +15,7 @@ defmodule TarragonWeb.PageLive.Lobby do
     socket =
       case participant do
         %{battle_room_id: battle_room_id} when battle_room_id != nil ->
-          push_redirect(socket, to: "/battle_screen")
+          push_redirect(socket, to: ~p"/battle_screen")
 
         nil ->
           assign(socket, %{participant: nil})
@@ -29,7 +29,7 @@ defmodule TarragonWeb.PageLive.Lobby do
 
   def mount(_params, _session, socket) do
     socket = put_flash(socket, :error, "Please sign in")
-    {:ok, push_redirect(socket, to: "/"), layout: false}
+    {:ok, push_redirect(socket, to: ~p"/"), layout: false}
   end
 
   @impl true
@@ -64,7 +64,7 @@ defmodule TarragonWeb.PageLive.Lobby do
     Phoenix.PubSub.unsubscribe(Tarragon.PubSub, "awaiting_participant:#{participant.id}")
 
     {:noreply,
-     socket |> assign(%{participant: participant}) |> push_redirect(to: "/battle_screen")}
+     socket |> assign(%{participant: participant}) |> push_redirect(to: ~p"/battle_screen")}
   end
 
   def handle_info(:tick_timer, %{assigns: assigns} = socket) do
