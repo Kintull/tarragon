@@ -51,6 +51,11 @@
             current_hp={char.current_health}
             max_hp={char.max_health}
             player_name={char.nickname}
+            atk_value={@character_id_to_bonuses[char.id].attack_bonus}
+            def_value={@character_id_to_bonuses[char.id].defence_bonus}
+            range_value={@character_id_to_bonuses[char.id].range_bonus}
+            is_current_player={char.id == @current_player_character_id}
+            is_ally={true}
           />
         <% end %>
       </div>

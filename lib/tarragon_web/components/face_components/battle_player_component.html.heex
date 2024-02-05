@@ -32,41 +32,41 @@ border_color =
           "aspect-square mx-auto w-auto border-[1px] border-black",
           bg_rarity_map[@hg_rarity]
         ]}>
-          <img class="w-full h-full p-[2px]" src="/images/helm.png" />
+          <img class="w-full h-full p-[2px]" src="/images/sword.png" />
         </div>
         <div class={[
           "aspect-square mx-auto w-auto border-[1px] border-black",
           bg_rarity_map[@cg_rarity]
         ]}>
-          <img class="w-full h-full p-[2px]" src="/images/armor.png" />
+          <img class="w-full h-full p-[2px]" src="/images/shield.png" />
         </div>
         <div class={[
           "aspect-square mx-auto w-auto border-[1px] border-black",
           bg_rarity_map[@pw_rarity]
         ]}>
-          <img class="w-full h-full p-[2px]" src="/images/archery.png" />
-        </div>
-        <div class={[
-          "aspect-square mx-auto w-auto border-[1px] border-black",
-          bg_rarity_map[@fg_rarity]
-        ]}>
-          <img class="w-full h-full p-[2px]" src="/images/boot-1.png" />
+          <img class="w-full h-full p-[2px]" src="/images/target_2.png" />
         </div>
       </div>
       <div class="flex flex-row justify-center w-full ">
-        <div class="text-[0.8rem] mx-auto">A-<%= @atk_value %></div>
-        <div class="text-[0.8rem] mx-auto">D-<%= @def_value %></div>
-        <div class="text-[0.8rem] mx-auto">R-<%= @range_value %></div>
+        <div class="text-[0.8rem] mx-auto"><%= @atk_value %></div>
+        <div class="text-[0.8rem] mx-auto"><%= @def_value %></div>
+        <div class="text-[0.8rem] mx-auto"><%= @range_value %></div>
       </div>
 
       <div class="flex flex-row justify-center w-full ">
         <div class="flex flex-row justify-center items-center">
-          <%= if is_dead do %>
+          <%= cond do %>
+          <% is_dead -> %>
             <img class="w-5 h-5 p-[2px]" src="/images/die.png" />
             <div class="text-[1rem] mx-auto">dead</div>
-          <% else %>
-            <img class="w-5 h-5 p-[2px]" src="/images/target (1).png" />
+          <% @is_current_player -> %>
+            <img class="w-5 h-5 p-[2px]" src="/images/person.png" />
+          <% true -> %>
+            <img class="w-5 h-5 p-[2px]" src="/images/keep-distance.png" />
             <div class="text-[1rem] mx-auto"><%= @distance_to_value %></div>
+            <%= if !@is_reachable do %>
+            <p></p>
+            <% end %>
           <% end %>
         </div>
       </div>

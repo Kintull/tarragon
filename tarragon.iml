@@ -222,5 +222,7 @@
     <orderEntry type="library" name="phoenix" level="project" />
     <orderEntry type="library" name="hammox" level="project" />
     <orderEntry type="library" name="ordinal" level="project" />
+    <orderEntry type="library" name="benchee_html" level="project" />
+    <orderEntry type="library" name="req" level="project" />
   </component>
 </module>

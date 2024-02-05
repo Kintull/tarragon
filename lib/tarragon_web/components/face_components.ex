@@ -75,6 +75,9 @@ defmodule TarragonWeb.FaceComponents do
   attr :distance_to_value, :integer, default: 40
   attr :max_hp, :integer, default: 100
   attr :current_hp, :integer, default: 50
+  attr :is_current_player, :boolean, default: false
+  attr :is_reachable, :boolean, default: false
+  attr :is_ally, :boolean, default: false
   def battle_player_component(assigns)
 
   attr :class, :string, default: nil

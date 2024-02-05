@@ -14,7 +14,21 @@ defmodule TarragonWeb.PageLive.BattleScreen do
 
         %{user_character_id: character_id} = participant ->
           room = Battles.impl().get_character_active_room(character_id)
+
           {ally_team, enemy_team} = split_ally_enemy_teams(character.id, room.participants)
+
+          character_id_to_bonuses = for char <- ally_team ++ enemy_team do
+            {char.id, Battles.impl().build_character_bonuses(char.id)}
+          end
+
+          character_id_to_initial_position = for {_, b} <- character_id_to_bonuses do
+
+            #team a - A10 A5 A3 Team b - B10 B6 B0
+            # -10 -9 -8 -7 -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6  7  8  9  10
+            # A10             A5    A3        B0       B6          B10
+            {b.character_id, b.range_bonus}
+          end
+
           submitted_players_count = Battles.impl().count_submitted(room.id)
 
           current_player_eliminated =
@@ -28,6 +42,7 @@ defmodule TarragonWeb.PageLive.BattleScreen do
           |> assign(battle_room_id: room.id)
           |> assign(ally_team: ally_team)
           |> assign(enemy_team: enemy_team)
+          |> assign(character_id_to_bonuses: character_id_to_bonuses)
           |> assign(current_turn: room.current_turn)
           |> assign(turn_duration_sec: seconds_left)
           |> assign(seconds_left: seconds_left)
