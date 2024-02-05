@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :tarragon, Tarragon.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "welcome2",
   hostname: "localhost",
   database: "tarragon_dev",
   stacktrace: true,
@@ -19,7 +19,7 @@ config :tarragon, Tarragon.Repo,
 config :tarragon, TarragonWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {127, 0, 0, 1}, port: 5000],
   compress: true,
   protocol_options: [max_keepalive: 5_000_000],
   check_origin: false,
