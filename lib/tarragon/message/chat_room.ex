@@ -7,7 +7,7 @@ defmodule Tarragon.Message.ChatRoom do
 
     field :title,:string
     has_many :chat_room_member, ChatRoomMember
-    has_many :user_character_message, UserCharacterMessage
+    has_many :user_character_messages, UserCharacterMessage
 
   timestamps()
   end

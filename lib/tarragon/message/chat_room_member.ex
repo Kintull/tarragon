@@ -8,7 +8,7 @@ defmodule Tarragon.Message.ChatRoomMember do
 
     belongs_to :chat_room, ChatRoom
     belongs_to :user_characters, UserCharacter
-    has_many :user_character_message, UserCharacterMessage
+    has_many :user_character_messages, UserCharacterMessage
 
   timestamps()
 
