@@ -1,0 +1,34 @@
+<div id="healing_demo" class="w-full">
+  <div>
+    <.button class="mt-4 text-red-300" phx-click="delete-characters">
+      Delete Characters
+    </.button>
+    
+    <.button class="mt-4 text-green-300" phx-click="generate-characters" phx-value-count="25">
+      Add Characters
+    </.button>
+    
+    <.button class="mt-4 text-green-300" phx-click="randomize-health" phx-value-count="10">
+      🎲 Health Points
+    </.button>
+    
+    <.button
+      class="mt-4 text-green-red"
+      phx-click="randomize_damage_over_time"
+      phx-value-percent="25"
+    >
+      🎲 DOT
+    </.button>
+  </div>
+  
+  <div><%= length(@characters) %> Characters</div>
+  
+  <div class="mt-4 grid grid-cols-3 gap-8">
+    <.live_component
+      :for={character <- @characters}
+      module={TarragonWeb.CharacterComponent}
+      character={character}
+      id={character.entity}
+    />
+  </div>
+</div>

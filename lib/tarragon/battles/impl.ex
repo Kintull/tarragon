@@ -15,6 +15,9 @@ defmodule Tarragon.Battles.Impl do
   alias Tarragon.Accounts
 
   @impl true
+  def get_participant(_id), do: nil
+
+  @impl true
   defdelegate build_character_bonuses(integer), to: Tarragon.Battles.CharacterBattleBonuses
 
   @doc """

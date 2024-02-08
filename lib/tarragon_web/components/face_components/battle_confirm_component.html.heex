@@ -4,7 +4,6 @@
   else
     "Submit"
   end %>
-
 <div class={[
   "flex flex-col justify-center items-center w-[180px] h-[90px] font-metropolis-regular",
   @class
@@ -20,6 +19,7 @@
 
   <div class="w-full flex flex-row justify-center items-center space-x-[5%] h-1/2 text-[1rem]">
     <p><%= @submitted_players_cnt %>/<%= @total_players_cnt %> moved</p>
+
     <p><%= @seconds_left %>s left</p>
   </div>
 </div>

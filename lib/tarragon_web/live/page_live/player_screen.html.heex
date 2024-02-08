@@ -7,7 +7,6 @@
     requires_confirmation={@requires_confirmation}
     class="border-gun-powder bg-golden-glow h-[50vh]"
   />
-
   <%= if @action == :upgrading_item do %>
     <div class="flex flex-row justify-center items-center gap-[0.5rem]">
       <span class="text-md font-semibold text-white face-screen-stroke-experimental">
@@ -48,6 +47,7 @@
       </p>
     </div>
   </div>
+
   <div class="w-full h-full flex flex-row justify-center items-start">
     <div class="md:w-5/6 bg-gun-powder flex flex-row justify-center items-center bg-gun-powder md:gap-4 md:py-[1vh]">
       <div
@@ -56,9 +56,11 @@
       >
         <div class="relative right-[3vh] md:static w-full h-full grid grid-cols-7 gap-2 place-items-center">
           <div class="col-span-1"></div>
+
           <div class="col-span-3 flex justify-center">
             <.player_screen_battle_stats user_character_bonuses={@user_character_bonuses} />
           </div>
+
           <div class="col-span-2">
             <.live_component
               module={EquipmentSlotComponent}
@@ -67,9 +69,11 @@
               target_component="#player_screen"
             />
           </div>
+
           <div class=""></div>
 
           <div class="col-span-4"></div>
+
           <div class="col-span-2">
             <.live_component
               module={EquipmentSlotComponent}
@@ -78,9 +82,11 @@
               target_component="#player_screen"
             />
           </div>
+
           <div class=""></div>
 
           <div class="col-span-4"></div>
+
           <div class="col-span-2">
             <.live_component
               module={EquipmentSlotComponent}
@@ -89,9 +95,11 @@
               target_component="#player_screen"
             />
           </div>
+
           <div class=""></div>
 
           <div class="col-span-4"></div>
+
           <div class="col-span-2">
             <div class="hidden">
               <.live_component
@@ -102,9 +110,11 @@
               />
             </div>
           </div>
+
           <div class=""></div>
 
           <div class="col-span-4"></div>
+
           <div class="col-span-2">
             <.live_component
               module={EquipmentSlotComponent}
@@ -113,6 +123,7 @@
               target_component="#player_screen"
             />
           </div>
+
           <div class=""></div>
         </div>
       </div>
@@ -124,6 +135,7 @@
               Gear list
             </div>
           </div>
+
           <div class="h-[80%] flex flex-col justify-center items-center">
             <.gear_container
               modal_id="equipmentBagModal"

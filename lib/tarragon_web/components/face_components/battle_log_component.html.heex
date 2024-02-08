@@ -27,10 +27,10 @@ player_name = fn log, id_key when id_key in [:target_id, :attacker_id] ->
     |> Tarragon.Accounts.UserCharacter.truncate_nickname()
   end
 end %>
-
 <div class={["w-[300px] h-[150px] bg-gray-300 font-metropolis-regular", @class]}>
   <div class="w-full h-full px-[0.7rem] flex flex-col justify-between items-center">
     <p class="font-bold my-[0.1rem]">Battle log</p>
+
     <div class="relative bg-white w-full h-full overflow-y-auto">
       <div class="absolute w-full h-full top-0 left-0">
         <div class="relative px-[0.7rem] pt-[0.1rem] flex flex-col-reverse space-y-[0.7rem] text-[0.7rem]">
@@ -54,7 +54,6 @@ end %>
                   if log.attacker_id == @current_character_id,
                     do: "skip a turn",
                     else: "skips a turn" %>
-
                 <%= cond  do %>
                   <% log.event == :hit && is_ally.(log.target_id)-> %>
                     <p>

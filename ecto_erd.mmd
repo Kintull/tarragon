@@ -1,0 +1,114 @@
+erDiagram
+  schema_migrations {
+    integer version PK
+    timestamp inserted_at
+  }
+  users {
+    integer id PK
+    varchar email
+    varchar name
+    boolean is_bot
+    varchar password_hash
+    timestamp inserted_at
+    timestamp updated_at
+  }
+  user_characters {
+    integer id PK
+    varchar nickname
+    integer current_health
+    integer max_health
+    boolean active
+    varchar avatar_url
+    varchar avatar_background_url
+    integer user_id
+    timestamp inserted_at
+    timestamp updated_at
+  }
+  battle_log_entries {
+    integer id PK
+    varchar message
+    integer turn
+    timestamp inserted_at
+    timestamp updated_at
+  }
+  battle_room_participants {
+    integer id PK
+    boolean team_a
+    boolean team_b
+    boolean is_bot
+    boolean eliminated
+    boolean closure_shown
+    integer user_character_id
+    integer battle_room_id
+    timestamp inserted_at
+    timestamp updated_at
+  }
+  battle_rooms {
+    integer id PK
+    timestamp ended_at
+    timestamp started_at
+    integer current_turn
+    integer turn_duration_sec
+    boolean awaiting_start
+    integer max_participants
+    varchar winner_team
+    jsonb logs
+    timestamp inserted_at
+    timestamp updated_at
+  }
+  game_items {
+    integer id PK
+    varchar description
+    varchar image
+    integer initial_condition
+    varchar title
+    varchar purpose
+    integer base_damage_bonus
+    integer base_defence_bonus
+    integer base_health_bonus
+    integer base_range_bonus
+    timestamp inserted_at
+    timestamp updated_at
+  }
+  item_containers {
+    integer id PK
+    integer capacity
+    integer head_gear_slot_id
+    integer chest_gear_slot_id
+    integer knee_gear_slot_id
+    integer foot_gear_slot_id
+    integer primary_weapon_slot_id
+    integer backpack_id
+    integer parent_container_id
+    timestamp inserted_at
+    timestamp updated_at
+  }
+  character_items {
+    integer id PK
+    varchar purpose
+    integer user_id
+    integer character_item_id
+    timestamp inserted_at
+    timestamp updated_at
+    varchar rarity
+    integer level
+    integer xp_current
+    integer current_condition
+    integer current_max_condition
+    integer quantity
+    integer game_item_id
+    integer item_container_id
+  }
+  battle_rooms ||--|{ battle_room_participants : ""
+  character_items ||--|{ character_items : ""
+  game_items ||--o| character_items : ""
+  item_containers ||--o| character_items : ""
+  user_characters ||--|{ battle_room_participants : ""
+  user_characters ||--o| item_containers : ""
+  user_characters ||--o| item_containers : ""
+  user_characters ||--o| item_containers : ""
+  user_characters ||--o| item_containers : ""
+  user_characters ||--o| item_containers : ""
+  user_characters ||--o| item_containers : ""
+  users ||--|{ character_items : ""
+  users ||--|{ user_characters : ""

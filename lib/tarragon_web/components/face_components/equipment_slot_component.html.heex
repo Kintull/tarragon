@@ -15,7 +15,6 @@
         is_repairable={@item.is_repairable}
         class="min-w-[60px]"
       />
-
       <div id={"equipment-actions-#{@myself}"} class="hidden">
         <%= if !@item.is_repairable do %>
           <div
@@ -39,6 +38,7 @@
               <.icon name="hero-arrow-path-bold" class="text-white w-[1.3rem] h-[1.3rem]" />
             </div>
           </div>
+
           <%= if @item.is_broken do %>
             <div
               class="absolute -right-[24px] -bottom-[0.35rem] z-20 w-[30px] h-[30px] rounded bg-amber-700 border border-[0.19rem] border-amber-300"

@@ -71,3 +71,11 @@ config :tarragon, :start_versus_immediately, true
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :ecsx,
+  tick_rate: 20,
+  manager: Tarragon.Manager,
+  persist_interval: :timer.seconds(15),
+  persistence_adapter: ECSx.Persistence.Ecto
+
+config :ecsx_persistence_ecto, repo: Tarragon.Repo

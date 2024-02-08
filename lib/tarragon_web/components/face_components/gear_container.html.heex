@@ -11,6 +11,7 @@
         is_repairable={inactive_item.is_repairable}
       />
     <% end %>
+
     <%= for item <- @items do %>
       <div
         phx-click={
@@ -23,10 +24,8 @@
         }
         class="w-full h-full"
       >
-        <% is_selected = !!@selected_items[item.id] %>
-        <% quantity_selected =
+        <% is_selected = !!@selected_items[item.id] %> <% quantity_selected =
           if !!@selected_items[item.id], do: @selected_items[item.id][:quantity], else: 0 %>
-
         <%= if is_selected do %>
           <div class="relative">
             <div class="absolute z-20 -top-[10px] -left-[10px] aspect-square w-[1.3rem] h-[1.3rem] rounded-full bg-white border-[0.19rem] border-gun-powder">
@@ -37,6 +36,7 @@
                 class="absolute z-30 w-min-[0.06rem] h-min-[0.06rem] h-[200%] w-[200%] -left-[50%] -top-[50%] rounded-full"
               >
               </div>
+
               <div class="h-full flex justify-center items-center">
                 <.icon name="hero-minus-bold" class="text-red-500 w-full h-full" />
               </div>

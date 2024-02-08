@@ -54,7 +54,12 @@ defmodule Tarragon.MixProject do
       {:comeonin, "~> 2.5"},
       {:phoenix_storybook, "~> 0.5"},
       {:ex_machina, "~> 2.7", only: :test},
-      {:hammox, "~> 0.7", only: :test}
+      {:hammox, "~> 0.7", only: :test},
+      {:ecsx, "~> 0.5"},
+      {:ecsx_persistence_ecto, "~> 0.1.1"},
+      {:ecsx_live_dashboard, "~> 0.1.0"},
+      {:mnemonic_slugs, "~> 0.0.3"},
+      {:typedstruct, "~> 0.5.2"}
     ]
   end
 

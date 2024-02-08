@@ -15,6 +15,7 @@
           <% seconds = String.pad_leading(inspect(rem(@counter_sec, 60)), 2, "0")
           minutes = String.pad_leading(inspect(div(@counter_sec, 60)), 2, "0") %> 3 vs 3 00:<%= minutes %>:<%= seconds %>
         </div>
+
         <div phx-click="stop_searching_for_battles">
           <.action_badge
             class="font-metropolis-regular font-semibold text-gun-powder text-xl w-[200px] h-[50px]"

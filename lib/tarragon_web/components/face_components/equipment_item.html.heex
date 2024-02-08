@@ -25,7 +25,6 @@ bg_rarity_map = %{
   "broken" => "bg-amber-300",
   "trash" => "bg-red-300"
 } %>
-
 <% border_condition_info =
   cond do
     !@is_repairable ->
@@ -49,7 +48,6 @@ bg_condition_info =
     true ->
       "bg-gray-100"
   end %>
-
 <div class={[
   "min-w-[50px] md:w-[5vw] max-w-[100px]",
   "aspect-square rounded-xl text-center text-[1rem]",
@@ -61,14 +59,17 @@ bg_condition_info =
     <div class="absolute z-20 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
       <%= if @level > 0, do: "+#{@level}" %>
     </div>
+
     <div class="absolute z-20 bottom-0 right-[10%] font-jotione-regular text-white face-screen-stroke-small text-sm">
       <%= if @quantity > 1, do: "#{@quantity}" %>
     </div>
+
     <div class="absolute z-10 top-0 left-0 h-full flex flex-col justify-center items-center">
       <div class="h-full flex flex-col justify-center items-center p-[9%]">
         <img class="w-full h-full" src={@img_url} />
       </div>
     </div>
+
     <%= if @condition do %>
       <div class="absolute z-20 -bottom-[20%] h-[20%] w-full flex justify-center items-center ">
         <div class={[
@@ -78,7 +79,6 @@ bg_condition_info =
         </div>
       </div>
     <% end %>
-
     <div class="w-full h-full rounded-[10px]" />
   </div>
 </div>

@@ -4,6 +4,7 @@
     <div class="md:hidden w-[1.3rem] md:w-[6vw] bg-transparent rounded-sm">
       <img class="min-w-[1.3rem] m-auto w-full" src={@img_url} alt="icon for a progress bar" />
     </div>
+
     <div class="block md:hidden font-jotione-regular text-white text-[1rem] face-screen-stroke-small">
       <%= @current %>/<%= @max %>
     </div>
@@ -30,11 +31,13 @@
         <div class="relative mx-auto bg-transparent opacity-70 z-10 h-1/2 top-[0.06rem] md:top-[0.35rem] top-[0.05rem] w-[98%] md:w-[96%] rounded-[1.3rem] bg-gradient-to-b from-white to-transparent">
         </div>
       </div>
+
       <div
         class={["absolute rounded-[0.19rem] h-full #{@bg_color}"]}
         style={"width: #{5 + 95/100 * @percentage}%"}
       >
       </div>
+
       <div class="z-20 relative m-auto">
         <%= @current %>/<%= @max %>
       </div>

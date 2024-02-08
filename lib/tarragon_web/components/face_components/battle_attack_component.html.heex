@@ -1,6 +1,5 @@
 <% enabled_class = if !@disabled, do: "hover:scale-[105%] hover:border-[3px]"
 disabled_class = if @disabled, do: "bg-gray-300" %>
-
 <div class={["w-[300px] h-[75px] font-metropolis-regular", @class]}>
   <div class="w-full h-full flex flex-col items-center justify-center text-center align-middle">
     <%= if @disabled do %>
