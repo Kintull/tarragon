@@ -4,7 +4,7 @@ defmodule TarragonWeb.PageLive.PlayerScreen do
   alias Tarragon.Accounts
   alias Tarragon.Battles
   alias Tarragon.Inventory
-  alias Tarragon.Battles.CharacterBattleBonuses
+  # alias Tarragon.Battles.CharacterBattleBonuses
   alias Tarragon.Accounts.GearItem
   import Tarragon.Accounts.GearItem
 

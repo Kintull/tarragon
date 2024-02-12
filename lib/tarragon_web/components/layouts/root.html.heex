@@ -7,12 +7,13 @@
     <.live_title suffix=" · Phoenix Framework">
       <%= assigns[:page_title] || "Tarragon" %>
     </.live_title>
-    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
     <link rel="manifest" href="/assets/manifest.json">
   </head>
-  <body class="bg-[#FAE8C7] antialiased overflow-hidden">
+  
+  <body class="bg-[#FAE8C7] antialiased ">
     <%= @inner_content %>
   </body>
 </html>

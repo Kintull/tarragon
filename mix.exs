@@ -19,7 +19,7 @@ defmodule Tarragon.MixProject do
   def application do
     [
       mod: {Tarragon.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :observer, :wx]
     ]
   end
 
@@ -54,7 +54,11 @@ defmodule Tarragon.MixProject do
       {:comeonin, "~> 2.5"},
       {:phoenix_storybook, "~> 0.5"},
       {:ex_machina, "~> 2.7", only: :test},
-      {:hammox, "~> 0.7", only: :test}
+      {:hammox, "~> 0.7", only: :test},
+      {:ecspanse, "~> 0.8.0"},
+      {:mnemonic_slugs, "~> 0.0.3"},
+      {:typedstruct, "~> 0.5.2"},
+      {:faker, "~> 0.17"}
     ]
   end
 

@@ -19,7 +19,8 @@ defmodule Tarragon.Application do
         # {Tarragon.Worker, arg},
         # Start to serve requests, typically the last entry,
 
-        TarragonWeb.Endpoint
+        TarragonWeb.Endpoint,
+        Tarragon.Ecspanse.Manager
       ] ++ workers()
 
     # See https://hexdocs.pm/elixir/Supervisor.html

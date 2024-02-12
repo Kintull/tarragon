@@ -32,6 +32,7 @@ defmodule TarragonWeb.Router do
     live "/backpack_screen", PageLive.BackpackScreen, :backpack_screen
     live "/lobby", PageLive.Lobby, :lobby
     live_storybook("/storybook", backend_module: TarragonWeb.Storybook)
+    live "/demo", PageLive.Ecspanse.Demo
   end
 
   # Other scopes may use custom stacks.
@@ -51,7 +52,12 @@ defmodule TarragonWeb.Router do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: TarragonWeb.Telemetry
+      live_dashboard "/dashboard",
+        metrics: TarragonWeb.Telemetry,
+        additional_pages: [
+          route_name: {TarragonWeb.PageLive.Ecspanse.DashboardPage, refresher?: true}
+        ]
+
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
