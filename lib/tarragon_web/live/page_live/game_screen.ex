@@ -19,6 +19,7 @@ defmodule TarragonWeb.PageLive.GameScreen do
                       |> Enum.into(%{})
                     end).()
 
+
   def mount(_params, %{"user_id" => user_id}, socket) do
     socket =
       if connected?(socket) do
@@ -56,6 +57,10 @@ defmodule TarragonWeb.PageLive.GameScreen do
       end
 
     {:ok, socket, layout: false}
+  end
+
+  def mount(_params, _, socket) do
+    {:ok, push_redirect(socket, to: ~p"/login/1")}
   end
 
   def handle_event("resized", params, socket) do

@@ -38,3 +38,7 @@ npm-debug.log
 
 # Ignore env file
 .env
+
+.DS_Store
+
+.idea
