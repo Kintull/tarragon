@@ -4,8 +4,8 @@ defmodule Tarragon.Ecspanse.Api do
   """
 
   alias Tarragon.Ecspanse.MapUtils
-  alias Tarragon.Ecspanse.Entities
-  alias Tarragon.Ecspanse.Events
+  alias Tarragon.Ecspanse.Demo.Entities
+  alias Tarragon.Ecspanse.Demo.Events
 
   @spec list_heroes() :: list(map())
   @doc """

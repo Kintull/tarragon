@@ -2,7 +2,7 @@ defmodule Tarragon.Ecspanse.Manager do
   @moduledoc """
   The main module used to configure and interact with Ecspanse.
   """
-  alias Tarragon.Ecspanse.Systems
+  alias Tarragon.Ecspanse.Demo.Systems
   use Ecspanse
 
   @impl Ecspanse
