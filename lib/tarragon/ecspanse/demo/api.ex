@@ -1,9 +1,9 @@
-defmodule Tarragon.Ecspanse.Api do
+defmodule Tarragon.Ecspanse.Demo.Api do
   @moduledoc """
   App for code outside of the Ecspanse system
   """
 
-  alias Tarragon.Ecspanse.MapUtils
+  alias Tarragon.Ecspanse.ProjectionUtils
   alias Tarragon.Ecspanse.Demo.Entities
   alias Tarragon.Ecspanse.Demo.Events
 
@@ -14,7 +14,7 @@ defmodule Tarragon.Ecspanse.Api do
   """
   def list_heroes() do
     Entities.HeroApi.list_heroes()
-    |> MapUtils.project()
+    |> ProjectionUtils.project()
   end
 
   @spec list_hero!(String.t()) :: map()
@@ -23,7 +23,7 @@ defmodule Tarragon.Ecspanse.Api do
   """
   def list_hero!(entity_id) do
     Entities.HeroApi.list_hero!(entity_id)
-    |> MapUtils.project()
+    |> ProjectionUtils.project()
   end
 
   @spec list_markets() :: list(map())
@@ -33,7 +33,7 @@ defmodule Tarragon.Ecspanse.Api do
   """
   def list_markets() do
     Entities.MarketApi.list_markets()
-    |> MapUtils.project()
+    |> ProjectionUtils.project()
   end
 
   @spec list_market!(String.t()) :: map()
@@ -42,7 +42,7 @@ defmodule Tarragon.Ecspanse.Api do
   """
   def list_market!(entity_id) do
     Entities.MarketApi.list_market!(entity_id)
-    |> MapUtils.project()
+    |> ProjectionUtils.project()
   end
 
   @spec move_hero(Ecspanse.Entity.id(), direction :: :up | :down | :left | :right) :: :ok
