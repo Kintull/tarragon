@@ -1,4 +1,4 @@
-defmodule Tarragon.Ecspanse.MapUtils do
+defmodule Tarragon.Ecspanse.ProjectionUtils do
   @moduledoc """
   Utilities to create maps without ECS internals
   """

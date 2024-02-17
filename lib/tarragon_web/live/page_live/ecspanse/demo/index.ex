@@ -2,7 +2,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Demo.IndexLive do
   @moduledoc """
   The hero screen
   """
-  alias Tarragon.Ecspanse.Api
+  alias Tarragon.Ecspanse.Demo.Api
   use TarragonWeb, :live_view
 
   defp fetch_and_assign_heroes(socket) do
