@@ -32,7 +32,7 @@ defmodule TarragonWeb.Router do
     live "/backpack_screen", PageLive.BackpackScreen, :backpack_screen
     live "/lobby", PageLive.Lobby, :lobby
     live_storybook("/storybook", backend_module: TarragonWeb.Storybook)
-    live "/demo", PageLive.Ecspanse.Demo
+    live "/ecspanse/demo/index", PageLive.Ecspanse.Demo.IndexLive
   end
 
   # Other scopes may use custom stacks.
