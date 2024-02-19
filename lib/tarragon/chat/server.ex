@@ -22,8 +22,8 @@ defmodule Tarragon.Chat.Server do
   end
 
 
-def start_link  do
-  GenServer.start_link(__MODULE__,  [], name: __MODULE__)
+def start_link(messages_in_db)  do
+  GenServer.start_link(__MODULE__,  messages_in_db, name: __MODULE__)
 end
 
 # for sending messages to db
@@ -39,15 +39,15 @@ end
 
 
 
-def init(_) do
+def init(messages_in_db) do
 
-  {:ok, %{}}
+  {:ok, messages_in_db}
 end
 
 # this will send messages to db
 def handle_cast({:messages_to_db, message}, _from, message) do
   messages = [message | messages() ]
-  {:noreply, messages, message}
+  {:noreply, messages}
 end
 
 # search messages from db
