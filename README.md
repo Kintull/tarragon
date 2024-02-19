@@ -1,6 +1,13 @@
 # Tarragon
 
-To start your Tarragon server:
+To start your Tarragon server you can either use Docker or run it locally.
+
+## Running with Docker
+
+* Copy `env/.env.dev` to `.env` and fill in the values
+* Run `docker-compose up` to start the server
+
+## Running locally
 
 * Run postgres with username/password: postgres/postgres
 * Run `mix setup` to install and setup dependencies
