@@ -30,6 +30,7 @@ defmodule TarragonWeb.Router do
     live "/player_screen", PageLive.PlayerScreen, :player_screen
     live "/battle_screen", PageLive.BattleScreen, :battle_screen
     live "/backpack_screen", PageLive.BackpackScreen, :backpack_screen
+    live "/chat_screen", PageLive.ChatScreen, :chat_screen
     live "/lobby", PageLive.Lobby, :lobby
     live_storybook("/storybook", backend_module: TarragonWeb.Storybook)
   end

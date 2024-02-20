@@ -1,0 +1,69 @@
+<main class="bg-white h-[95vh] md:max-w-[30vw] mx-auto">
+  <div class="relative  w-full h-full mx-auto">
+    <%!-- the header bar --%>
+    <div class=" flex items-center bg-gun-powder py-4 px-2 justify-between">
+      <div>
+        <.message_screen />
+      </div>
+
+      <div>
+        <h1 class="text-2xl w-full text-center font-jotione-regular text-golden-glow select-none">
+          World Chart
+        </h1>
+      </div>
+    </div>
+
+    <hr />
+
+    <%!-- the recieving message bar here it will disply--%>
+    <div class=" flex flex-col gap-5 mt-5">
+    <%= for message <- @message_inbox do%>
+      <div  class="flex items-center justify-start relative ml-2">
+        <%!-- this is the profile picture part --%>
+        <span class="bg-gun-powder w-8 h-8 flex items-center justify-center text-white top-0 absolute rounded-full">
+          0
+        </span>
+        <p class=" flex flex-col w-1/2 rounded-br-2xl font-[.6rem]  border border-3 border-golden-glow ml-10 py-2 px-2">
+        <span class="font-extrabold">@<%=message.sender%></span>
+          <%=message.message %>
+        </p>
+      </div>
+      <% end %>
+      <%!-- this is displayed after sending the message to the user --%>
+      <div>
+      <%= for sent_message <- @sent_messages do %>
+        <div class="flex flex-row-reverse items-center justify-start relative mr-2">
+          <%!-- this is the profile picture part --%>
+          <span class="bg-golden-glow  w-8 h-8 flex items-center justify-center text-black top-0 absolute rounded-full ">
+            0
+          </span>
+          <p class="w-1/2 rounded-br-2xl  border border-3 border-gun-powder mr-10 py-2 px-2">
+            <%= sent_message %>
+          </p>
+        </div>
+        <% end %>
+      </div>
+    </div>
+
+
+    <%!-- typing of the message --%>
+    <div class="w-full bg-red-300 ">
+      <form
+        phx-submit="send_message"
+        class="absolute mx-auto left-20  w-3/4 gap-4 bottom-0 flex items-center justify-center mb-5 "
+      >
+        <%!-- <div class="flex-1"> --%>
+        <input
+          
+          type="text"
+          placeholder="Text the world..."
+          class="w-full outline-none border-b-1 "
+        />
+        <%!-- </div> --%>
+        <button class="bg-gun-powder py-2 px-4 text-golden-glow rounded-md font-bold text-2xl">
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
