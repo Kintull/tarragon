@@ -1,12 +1,14 @@
 defmodule Tarragon.Chat.Server do
   use GenServer
 
+  alias Tarragon.Message.Impl
+
   # example messages
   def messages do
     [
       %{
         sender: "moses",
-        message: "welcom eto this fight i won the last match"
+        message: "welcom to this fight i won the last match"
       },
 
       %{
@@ -21,11 +23,10 @@ defmodule Tarragon.Chat.Server do
     ]
   end
 
-
-def start_link(messages_in_db)  do
+def start_link  do
+  messages_in_db = Impl.get_messages()
   GenServer.start_link(__MODULE__,  messages_in_db, name: __MODULE__)
 end
-
 # for sending messages to db
 def  messages_to_db(pid, message) do
   GenServer.cast(pid,{ :messages_to_db, message})
@@ -40,7 +41,7 @@ end
 
 
 def init(messages_in_db) do
-
+  IO.inspect(messages_in_db)
   {:ok, messages_in_db}
 end
 
@@ -51,9 +52,8 @@ def handle_cast({:messages_to_db, message}, _from, message) do
 end
 
 # search messages from db
-def handle_call(:messages_from_db, _from, message) do
-  messages = messages()
-  {:reply, messages, message}
+def handle_call(:messages_from_db, _from, messages) do
+  {:reply, messages, messages}
 end
 
 end
