@@ -3,28 +3,8 @@ defmodule Tarragon.Chat.Server do
 
   alias Tarragon.Message.Impl
 
-  # example messages
-  def messages do
-    [
-      %{
-        sender: "moses",
-        message: "welcom to this fight i won the last match"
-      },
-
-      %{
-        sender: "kim",
-        message: "am doing it again"
-      },
-
-      %{
-        sender: "Tara",
-        message: "i am not loosing the fight again"
-      }
-    ]
-  end
-
-def start_link  do
-  messages_in_db = Impl.get_messages()
+def start_link(_) do
+  messages_in_db = Impl.get_all_messages_senders()
   GenServer.start_link(__MODULE__,  messages_in_db, name: __MODULE__)
 end
 # for sending messages to db
@@ -47,7 +27,8 @@ end
 
 # this will send messages to db
 def handle_cast({:messages_to_db, message}, _from, message) do
-  messages = [message | messages() ]
+  # messages = [message | messages() ]
+  messages = Impl.insert_message(message.sender_id, message.message)
   {:noreply, messages}
 end
 

@@ -22,10 +22,17 @@ defmodule Tarragon.Message.Impl do
      
     query = from u in UserCharacterMessage,
       join: c in UserCharacter , on: c.id == u.user_character_id, 
-      select: [u.message, c.nickname, c.avatat_url]
+      select: [c.nickname, u.message, c.avatar_url]
 
     Repo.all(query)
-    
+    |> Enum.map(fn x ->
+      # x
+      %{
+        sender: Enum.at(x,0),
+        message: Enum.at(x,1)
+      } 
+    end)
+
 
   end
 

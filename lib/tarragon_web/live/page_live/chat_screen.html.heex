@@ -17,7 +17,7 @@
 
     <%!-- the recieving message bar here it will disply--%>
     <div class=" flex flex-col gap-5 mt-5">
-    <%= for message <- @message_inbox do%>
+  <%= for message <- @message_inbox do%>
       <div  class="flex items-center justify-start relative ml-2">
         <%!-- this is the profile picture part --%>
         <span class="bg-gun-powder w-8 h-8 flex items-center justify-center text-white top-0 absolute rounded-full">
@@ -48,12 +48,12 @@
 
     <%!-- typing of the message --%>
     <div class="w-full bg-red-300 ">
-      <form
+      <.form
         phx-submit="send_message"
         class="absolute mx-auto left-20  w-3/4 gap-4 bottom-0 flex items-center justify-center mb-5 "
       >
         <%!-- <div class="flex-1"> --%>
-        <input
+        <.input
           
           type="text"
           placeholder="Text the world..."
@@ -63,7 +63,7 @@
         <button class="bg-gun-powder py-2 px-4 text-golden-glow rounded-md font-bold text-2xl">
           Send
         </button>
-      </form>
+      </.form>
     </div>
   </div>
 </main>

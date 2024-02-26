@@ -1,7 +1,10 @@
 defmodule TarragonWeb.PageLive.ChatScreen do
   use TarragonWeb, :live_view
 
+  use GenServer
+  alias Tarragon.Chat.Server
   # sample of message to be sent
+  @doc """
   def messages do
     [
       %{
@@ -20,14 +23,17 @@ defmodule TarragonWeb.PageLive.ChatScreen do
       }
     ]
   end
+  """
 
   # this will hold the message that will you will send to the chat
   def sent_messages do
     []
   end
   def mount(_params, _session, socket) do
+    message_inbox =  GenServer.call(Server, :messages_from_db)
+    IO.inspect(message_inbox)
     socket = assign(socket,
-      message_inbox: messages(),
+      message_inbox: message_inbox,
       sent_messages: sent_messages(),
       the_message: "")
     {:ok, socket, layout: false}
