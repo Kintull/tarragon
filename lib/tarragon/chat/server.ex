@@ -26,7 +26,7 @@ def init(messages_in_db) do
 end
 
 # this will send messages to db
-def handle_cast({:messages_to_db, message}, _from, messages_in_db) do
+def handle_cast({:messages_to_db, message}, messages_in_db) do
   # messages = [message | messages() ]
   Impl.insert_message(message.sender_id, message.message)
   
