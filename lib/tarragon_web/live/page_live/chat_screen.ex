@@ -30,9 +30,12 @@ defmodule TarragonWeb.PageLive.ChatScreen do
   """
 
   # this will hold the message that will you will send to the chat
-  def sent_messages do
-    []
+  def send_message_to_db(user_id, message) do
+    message = %{sender_id: user_id, message: message}
+    GenServer.cast(Server, {:messages_to_db, message})
+  
   end
+
   # query the sender of the message
   def mount(_params, %{"user_id" => user_id}, socket) do
     message_inbox =  GenServer.call(Server, :messages_from_db)
@@ -40,7 +43,7 @@ defmodule TarragonWeb.PageLive.ChatScreen do
     # i have to insert the message of this given id
     socket = assign(socket,
       message_inbox: message_inbox,
-      sent_messages: sent_messages(),
+      sent_messages: [],
       the_message: "",
       user_id: user_id
     )
@@ -52,18 +55,17 @@ defmodule TarragonWeb.PageLive.ChatScreen do
   # the event in the input should be passed  then to be displayed on the sent message tag
 
   def handle_event("send_message", %{"message" => message}, socket) do
-    %Phoenix.LiveView.Socket{assigns: %{user_id: user_id}} = socket
+   # %Phoenix.LiveView.Socket{assigns: %{user_id: user_id}} = socket
+    user_id = socket.assigns[:user_id]
 
-    
-
+    # send message
+    send_message_to_db(user_id, message)
 
     IO.puts("clicked")
     IO.inspect(message)
     IO.inspect(socket)
 
-    # insert the message
-    Impl.insert_message(user_id, message)
-    IO.put("message sent")
+      
     {:noreply, socket}
   end
 

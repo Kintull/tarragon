@@ -26,15 +26,17 @@ def init(messages_in_db) do
 end
 
 # this will send messages to db
-def handle_cast({:messages_to_db, message}, _from, message) do
+def handle_cast({:messages_to_db, message}, _from, messages_in_db) do
   # messages = [message | messages() ]
-  messages = Impl.insert_message(message.sender_id, message.message)
-  {:noreply, messages}
+  Impl.insert_message(message.sender_id, message.message)
+  
+  {:noreply, messages_in_db}
 end
 
 # search messages from db
 def handle_call(:messages_from_db, _from, messages) do
-  {:reply, messages, messages}
+ messages_in_db =  Impl.get_all_messages_senders()
+  {:reply, messages, messages_in_db}
 end
 
 end
