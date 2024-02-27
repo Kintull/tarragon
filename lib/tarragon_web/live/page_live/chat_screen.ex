@@ -3,6 +3,10 @@ defmodule TarragonWeb.PageLive.ChatScreen do
 
   use GenServer
   alias Tarragon.Chat.Server
+
+  alias Tarragon.Accounts
+
+  alias Tarragon.Message.Impl
   # sample of message to be sent
   @doc """
   def messages do
@@ -29,13 +33,18 @@ defmodule TarragonWeb.PageLive.ChatScreen do
   def sent_messages do
     []
   end
-  def mount(_params, _session, socket) do
+  # query the sender of the message
+  def mount(_params, %{"user_id" => user_id}, socket) do
     message_inbox =  GenServer.call(Server, :messages_from_db)
     IO.inspect(message_inbox)
+    # i have to insert the message of this given id
     socket = assign(socket,
       message_inbox: message_inbox,
       sent_messages: sent_messages(),
-      the_message: "")
+      the_message: "",
+      user_id: user_id
+    )
+    
     {:ok, socket, layout: false}
   end
 
@@ -43,15 +52,23 @@ defmodule TarragonWeb.PageLive.ChatScreen do
   # the event in the input should be passed  then to be displayed on the sent message tag
 
   def handle_event("send_message", %{"message" => message}, socket) do
+    %Phoenix.LiveView.Socket{assigns: %{user_id: user_id}} = socket
+
+    
+
+
     IO.puts("clicked")
     IO.inspect(message)
-    socket = assign(socket, the_message: sent_messages() ++ message)
+    IO.inspect(socket)
+
+    # insert the message
+    Impl.insert_message(user_id, message)
+    IO.put("message sent")
     {:noreply, socket}
   end
 
-  def handle_event("send_message", _unsigned_params, socket) do
-    IO.puts("clicked no message sent")
-    socket = assign(socket, the_message: "empty")
+  def handle_event("send_message", _params, socket) do
+    # insert the 
 
     {:noreply, socket}
   end
