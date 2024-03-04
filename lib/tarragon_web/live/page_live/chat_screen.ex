@@ -7,6 +7,7 @@ defmodule TarragonWeb.PageLive.ChatScreen do
   alias Tarragon.Accounts
 
   alias Tarragon.Message.Impl
+
   # sample of message to be sent
   @doc """
   def messages do
@@ -36,14 +37,26 @@ defmodule TarragonWeb.PageLive.ChatScreen do
   
   end
 
+  defp message_from_db do 
+
+    GenServer.call(Server, :messages_from_db)
+
+  end
+  
+  def my_messages(user_id) do
+    GenServer.call(Server, {:user_messages, user_id})
+  end
+
   # query the sender of the message
   def mount(_params, %{"user_id" => user_id}, socket) do
-    message_inbox =  GenServer.call(Server, :messages_from_db)
+    
+    message_inbox =  message_from_db()
     IO.inspect(message_inbox)
+
     # i have to insert the message of this given id
     socket = assign(socket,
       message_inbox: message_inbox,
-      sent_messages: [],
+      sent_messages: my_messages(user_id),
       the_message: "",
       user_id: user_id
     )
@@ -70,8 +83,8 @@ defmodule TarragonWeb.PageLive.ChatScreen do
   end
 
   def handle_event("send_message", _params, socket) do
-    # insert the 
 
     {:noreply, socket}
   end
+  
 end

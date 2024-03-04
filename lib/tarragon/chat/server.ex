@@ -18,6 +18,10 @@ def messages_from_db(pid) do
   GenServer.call(pid, :messages_from_db)
 end
 
+def get_user_messages(pid, user_id) do
+  GenServer.call(pid, {:user_messages, user_id})
+
+end
 
 
 def init(messages_in_db) do
@@ -39,4 +43,11 @@ def handle_call(:messages_from_db, _from, messages) do
   {:reply, messages, messages_in_db}
 end
 
+
+# this should get messages you set
+def handle_call({:user_messages, user_id}, _from, message) do
+   # messages = Impl.
+    user_message = Impl.get_my_messages(user_id)
+  {:reply, message, user_message}
+end
 end

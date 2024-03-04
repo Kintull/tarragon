@@ -5,19 +5,14 @@ defmodule Tarragon.Message.Impl do
   alias Tarragon.Repo
   alias Tarragon.Accounts.UserCharacter 
   import Ecto.Query
+
+
+
   
-
-
-  # get all messages
-  def get_messages do
-    UserCharacterMessage
-    |> Repo.all()
-  
-  end
-
-  # get user message based on character
+    # get user message based on character
   # geting specific messages and sender
   #
+  @spec get_all_messages_senders() :: list(%{message: String.t(), sender: String.t()})
   def get_all_messages_senders do
      
     query = from u in UserCharacterMessage,
@@ -44,7 +39,11 @@ defmodule Tarragon.Message.Impl do
     so the sender id should will act as foreign key to the userCharactermessge table
     """
 
-    def insert_message(sender_id, message) do
+   # @spec insert_message(sender_id: integer, message: string) :: {:ok, %UserCharacterMessage.t())
+   
+ # @spec insert_message(sender_id: integer, message: string) :: {:ok, %UserCharacterMessage.t()}
+   def insert_message(sender_id, message) do
+      
       %UserCharacterMessage{
         message: message,
         user_character_id: sender_id
@@ -53,5 +52,25 @@ defmodule Tarragon.Message.Impl do
 
     end 
 
+    @doc """
+      
+   
+     
+    """
+  @spec get_my_messages(integer()) :: {:ok, list(%{sender: String.t(), message: String.t()})} 
+    def get_my_messages(user_id) do
+  
+
+      query = from u in UserCharacterMessage,
+        join: c in UserCharacter, on: c.id == ^user_id,
+        select: [c.nickname, u.message]
+      Repo.all(query)
+      |> Enum.map(fn x ->
+        %{
+          sender: Enum.at(x, 0),
+          message: Enum.at(x, 1)
+        }
+        end)
+    end
   
 end
