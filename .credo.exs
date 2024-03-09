@@ -70,7 +70,7 @@
           ## Consistency Checks
           #
           {Credo.Check.Consistency.ExceptionNames, []},
-          #{Credo.Check.Consistency.LineEndings, []},
+          # {Credo.Check.Consistency.LineEndings, []},
           {Credo.Check.Consistency.ParameterPatternMatching, []},
           {Credo.Check.Consistency.SpaceAroundOperators, []},
           {Credo.Check.Consistency.SpaceInParentheses, []},

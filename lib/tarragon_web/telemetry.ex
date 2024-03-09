@@ -21,7 +21,6 @@ defmodule TarragonWeb.Telemetry do
 
   def metrics do
     [
-      # Phoenix Metrics
       summary("phoenix.endpoint.start.system_time",
         unit: {:native, :millisecond}
       ),
@@ -50,8 +49,6 @@ defmodule TarragonWeb.Telemetry do
         tags: [:event],
         unit: {:native, :millisecond}
       ),
-
-      # Database Metrics
       summary("tarragon.repo.query.total_time",
         unit: {:native, :millisecond},
         description: "The sum of the other measurements"
@@ -73,8 +70,6 @@ defmodule TarragonWeb.Telemetry do
         description:
           "The time the connection spent waiting before being checked out for the query"
       ),
-
-      # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),
       summary("vm.total_run_queue_lengths.cpu"),

@@ -3,20 +3,43 @@ defmodule Tarragon.Ecspanse.ProjectionUtils do
   Utilities to create maps without ECS internals
   """
 
-  @doc """
-  Takes an entity struct, i.e. a map whose values are components,
-  and returns a map with the Ecspanse internals removed
-  """
-  def project(%{} = map) do
+  def project_timer(map) do
     map
     |> Map.keys()
     |> Enum.reject(&is_ecspanse_internal?/1)
-    # |> IO.inspect(label: "public keys")
+    |> Enum.into(%{}, fn key ->
+      if key == :time do
+        {key, ceil(Map.get(map, key) / 1000.0) * 1000.0}
+      else
+        {key, project(Map.get(map, key))}
+      end
+    end)
+
+    # |> IO.inspect(label: "projected timer")
+  end
+
+  def project_generic_map(map) do
+    map
+    |> Map.keys()
+    |> Enum.reject(&is_ecspanse_internal?/1)
     |> Enum.into(%{}, fn key ->
       {key, project(Map.get(map, key))}
     end)
+  end
 
-    # |> IO.inspect(label: "filtered")
+  # @doc """
+  # Takes an entity struct, i.e. a map whose values are components,
+  # and returns a map with the Ecspanse internals removed
+  # """
+  def project(%{} = map) when is_map(map) do
+    is_timer =
+      Map.get(map, :__meta__, %{}) |> Map.get(:tags, MapSet.new()) |> MapSet.member?(:ecs_timer)
+
+    if is_timer do
+      project_timer(map)
+    else
+      project_generic_map(map)
+    end
   end
 
   def project(list) when is_list(list) do

@@ -1,8 +1,23 @@
 # Custom Dictionary Words
+autofocus
+dasharray
+dashoffset
+despawn
 Ecspanse
 EcspanseManager
+Escpanse
+evenodd
+focusable
 keydown
+linecap
+linejoin
 noreply
+Pistolero
+prewalk
 Regen
+Relators
 stackable
+tabindex
 Tarragon
+Viewbox
+Withables

@@ -8,7 +8,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Demo.HealthComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <div class="flex justify-between gap-2">
+      <div class="flex justify-between items-start gap-2">
         <h3 class="font-semibold">Health</h3>
          <span><%= @health.current %> / <%= @health.max %></span>
       </div>
