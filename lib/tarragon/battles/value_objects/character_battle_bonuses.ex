@@ -9,6 +9,8 @@ defmodule Tarragon.Battles.CharacterBattleBonuses do
   @type t :: %__MODULE__{}
 
   embedded_schema do
+    field :character_id, :integer, default: 0
+    field :nickname, :string, default: ""
     field :player_id, :integer, default: 0
     field :attack_bonus, :integer, default: 0
     field :defence_bonus, :integer, default: 0
@@ -32,7 +34,7 @@ defmodule Tarragon.Battles.CharacterBattleBonuses do
     )
     |> join(:left, [uc, iw, ih, ic, ik, if, item], gi in GameItem, on: gi.id == item.game_item_id)
     |> group_by([uc], uc.id)
-    |> select([uc, iw, ih, ic, ik, if, items, gi], %{
+    |> select([uc, iw, ih, ic, ik, if, items, gi], %__MODULE__{
       character_id: uc.id,
       nickname: uc.nickname,
       attack_bonus: sum(gi.base_damage_bonus),

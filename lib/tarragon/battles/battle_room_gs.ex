@@ -596,8 +596,10 @@ defmodule Tarragon.Battles.BattleRoom do
 
   def build_character_battle_bonuses_map(participants) do
     Enum.map(participants, fn participant ->
-      {participant.user_character.id,
-       Battles.impl().build_character_bonuses(participant.user_character.id)}
+      {
+        participant.user_character.id,
+        Battles.impl().build_character_bonuses(participant.user_character.id) |> Map.from_struct()
+      }
     end)
     |> Enum.into(%{})
   end

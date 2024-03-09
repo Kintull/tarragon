@@ -1,0 +1,12 @@
+
+
+<div class={[@class]}>
+    <div class="Health w-full w-full flex flex-col justify-between items-center">
+        <p class="HealthNumber mx-auto text-gun-powder font-metropolis-regular text-[10px]"><%="#{@current_health}/#{@max_health}"%></p>
+        <div class="HealthBar w-full relative">
+            <div class="Rectangle76 h-[10px] w-full left-0 top-0 bg-zinc-300 rounded-[5px] border border-black"></div>
+            <div class="Rectangle77 h-[10px] absolute left-0 top-0 bg-green-400 rounded-[5px] border border-black"
+                 style={"width: #{round(5 + 95/100 * (@current_health * 100 / @max_health))}%"} ></div>
+        </div>
+    </div>
+</div>

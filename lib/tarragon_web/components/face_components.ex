@@ -7,7 +7,7 @@ defmodule TarragonWeb.FaceComponents do
   alias Phoenix.LiveView.JS
 
   import TarragonWeb.CoreComponents
-  embed_templates "face_components/*"
+  embed_templates "face_components/**/*"
 
   attr :bg_color, :string, default: "bg-transparent"
   attr :class, :string, default: "min-h-[40px] min-w-[40px]"

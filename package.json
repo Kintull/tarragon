@@ -6,6 +6,8 @@
   },
   "dependencies": {
     "live_json": "file:./deps/live_json",
-    "sprity": "^1.0.8"
+    "sprity": "^1.0.8",
+    "three": "^0.161.0",
+    "three-addons": "^1.2.0"
   }
 }
