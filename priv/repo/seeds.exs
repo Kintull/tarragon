@@ -93,6 +93,7 @@ apple_game_item =
 
 watermelon_game_item =
   Tarragon.Repo.insert!(%Tarragon.Inventory.GameItem{
+    purpose: :primary_weapon,
     title: "Watermelon",
     description: "large fruit",
     initial_condition: 10,
@@ -102,6 +103,7 @@ watermelon_game_item =
 
 grape_game_item =
   Tarragon.Repo.insert!(%Tarragon.Inventory.GameItem{
+    purpose: :primary_weapon,
     title: "A grape",
     description: "small fruit",
     initial_condition: 5,
@@ -206,3 +208,5 @@ create_bag(alisa_character, [
 ])
 
 create_equipment(alisa_character, [bow, chest_plate, kneepads, helmet])
+
+hard_reset_battles()

@@ -4,6 +4,22 @@ defmodule Tarragon.Battles.Room do
 
   alias Tarragon.Battles.Participant
 
+  @type t :: %__MODULE__{}
+  schema "battle_rooms" do
+    field :ended_at, :utc_datetime
+    field :started_at, :utc_datetime
+    field :current_turn, :integer, default: 0
+    field :turn_duration_sec, :integer, default: 30
+    field :awaiting_start, :boolean, default: true
+    field :max_participants, :integer, default: 2
+    field :winner_team, Ecto.Enum, values: [:team_a, :team_b, :draw]
+    embeds_many :logs, __MODULE__.BattleLogEntry
+
+    has_many :participants, Participant, foreign_key: :battle_room_id
+
+    timestamps()
+  end
+
   defmodule BattleLogEntry do
     use Ecto.Schema
     @type t :: %__MODULE__{}
@@ -60,21 +76,6 @@ defmodule Tarragon.Battles.Room do
     end
   end
 
-  @type t :: %__MODULE__{}
-  schema "battle_rooms" do
-    field :ended_at, :utc_datetime
-    field :started_at, :utc_datetime
-    field :current_turn, :integer, default: 0
-    field :turn_duration_sec, :integer, default: 30
-    field :awaiting_start, :boolean, default: true
-    field :max_participants, :integer, default: 2
-    field :winner_team, Ecto.Enum, values: [:team_a, :team_b, :draw]
-    embeds_many :logs, __MODULE__.BattleLogEntry
-
-    has_many :participants, Participant, foreign_key: :battle_room_id
-
-    timestamps()
-  end
 
   @doc false
   def changeset(room, attrs) do

@@ -24,26 +24,32 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import $ from "../vendor/jquery.3.7.1.min"
 import {createPlayerScreenHooks} from "./player_screen_hooks";
+import {createViewportResizeHooks} from "./viewport_resize_hook"
+import {createBattleScreenHooks} from "./battle_screen_hooks"
+
 
 const playerScreenHooks = createPlayerScreenHooks();
-import {createViewportResizeHooks} from "./viewport_resize_hook"
-
 const viewportResizeHooks = createViewportResizeHooks();
+const battleScreenHooks = createBattleScreenHooks();
 
 const Hooks = {
     ...playerScreenHooks,
     ...viewportResizeHooks,
+    ...battleScreenHooks,
 };
 
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
     params: {
-        _csrf_token: csrfToken, a: 1, viewport: {
+        _csrf_token: csrfToken,
+        a: 1,
+        viewport: {
             width: window.innerWidth,
             height: window.innerHeight
         }
-    }, hooks: Hooks
+    },
+    hooks: Hooks
 })
 
 window.sendData = LiveSocket.sendData

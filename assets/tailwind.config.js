@@ -66,6 +66,7 @@ module.exports = {
                 "crimson-red-dark": "#530101",
                 "sand-dark": "#8C7150",
                 "sand": "#D2B076",
+                "light-blue": "#8dc3ef",
             },
             fontFamily: {
                 'cwisdom': ['Conventional-Wisdom', 'sans-serif'],
