@@ -7,7 +7,6 @@ defmodule Tarragon.Ecspanse.Manager do
   @impl Ecspanse
   def setup(data) do
     data
-    |> Tarragon.Ecspanse.Demo.DemoManager.setup()
     #
     # system startup
     #
@@ -23,5 +22,7 @@ defmodule Tarragon.Ecspanse.Manager do
     # frame end
     #
     |> Ecspanse.add_frame_end_system(Ecspanse.System.Timer)
+    # |> Tarragon.Ecspanse.Demo.DemoManager.setup()
+    |> Tarragon.Ecspanse.Battles.BattlesManager.setup()
   end
 end

@@ -33,6 +33,11 @@ defmodule TarragonWeb.Router do
     live "/lobby", PageLive.Lobby, :lobby
     live_storybook("/storybook", backend_module: TarragonWeb.Storybook)
     live "/ecspanse/demo/index", PageLive.Ecspanse.Demo.IndexLive
+
+    live "/ecspanse/battles/dump/index", PageLive.Ecspanse.Battles.Dump.IndexLive
+
+    live "/ecspanse/battles/play/index/:battle_entity_id",
+         PageLive.Ecspanse.Battles.Play.IndexLive
   end
 
   # Other scopes may use custom stacks.
@@ -55,7 +60,7 @@ defmodule TarragonWeb.Router do
       live_dashboard "/dashboard",
         metrics: TarragonWeb.Telemetry,
         additional_pages: [
-          route_name: {TarragonWeb.PageLive.Ecspanse.DashboardPage, refresher?: true}
+          ECSpanse: {EcspanseLiveDashboard.Dashboard, refresher?: true}
         ]
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
