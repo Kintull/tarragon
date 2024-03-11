@@ -39,29 +39,53 @@ defmodule TarragonWeb.PageLive.ChatScreen do
 
   defp message_from_db do 
 
-    GenServer.call(Server, :messages_from_db)
+    messages = GenServer.call(Server, :messages_from_db)
 
+    broadcast(messages)
+    messages
   end
-  
-  def my_messages(user_id) do
-    GenServer.call(Server, {:user_messages, user_id})
+
+  defp messages_from_sender do
+
+    GenServer.call(Server, :messages_from_db)
   end
 
   # query the sender of the message
+  # on mount this should subscribe
   def mount(_params, %{"user_id" => user_id}, socket) do
-    
+    Phoenix.PubSub.subscribe(Tarragon.PubSub, "all_messages")
+
     message_inbox =  message_from_db()
     IO.inspect(message_inbox)
 
     # i have to insert the message of this given id
     socket = assign(socket,
       message_inbox: message_inbox,
-      sent_messages: my_messages(user_id),
+      sent_messages: message_from_db(),
       the_message: "",
       user_id: user_id
     )
     
     {:ok, socket, layout: false}
+  end
+
+  #hangling the subscription of the messages
+  @impl true
+  def handle_info({:all_messages, all_messages}, socket) do
+  
+
+    socket = assign(socket, 
+
+      sent_messages: all_messages
+    )
+    IO.inspect(socket)
+    {:noreply, socket}
+
+  end
+
+  defp broadcast(messages) do
+    
+    Phoenix.PubSub.broadcast(Tarragon.PubSub, "all_messages", {:all_messages, messages})
   end
 
   # event for sending message
@@ -71,12 +95,13 @@ defmodule TarragonWeb.PageLive.ChatScreen do
    # %Phoenix.LiveView.Socket{assigns: %{user_id: user_id}} = socket
     user_id = socket.assigns[:user_id]
 
+    
     # send message
     send_message_to_db(user_id, message)
+    messages = message_from_db
+    broadcast(messages)
 
     IO.puts("clicked")
-    IO.inspect(message)
-    IO.inspect(socket)
 
       
     {:noreply, socket}

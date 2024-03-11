@@ -11,7 +11,7 @@ defmodule Tarragon.Message.Impl do
   
     # get user message based on character
   # geting specific messages and sender
-  #
+  # and broadcasting all the messages
   @spec get_all_messages_senders() :: list(%{message: String.t(), sender: String.t()})
   def get_all_messages_senders do
      
@@ -19,7 +19,7 @@ defmodule Tarragon.Message.Impl do
       join: c in UserCharacter , on: c.id == u.user_character_id, 
       select: [c.nickname, u.message, c.avatar_url]
 
-    Repo.all(query)
+ all_messages =  Repo.all(query)
     |> Enum.map(fn x ->
       # x
       %{
@@ -27,6 +27,9 @@ defmodule Tarragon.Message.Impl do
         message: Enum.at(x,1)
       } 
     end)
+
+    #Phoenix.PubSub.broadcast(Tarragon.PubSub, "all_messages", {:all_messages, all_messages})
+    all_messages
 
 
   end
@@ -41,7 +44,7 @@ defmodule Tarragon.Message.Impl do
 
    # @spec insert_message(sender_id: integer, message: string) :: {:ok, %UserCharacterMessage.t())
    
- # @spec insert_message(sender_id: integer, message: string) :: {:ok, %UserCharacterMessage.t()}
+ #@spec insert_message(sender_id: integer, message: string) :: {:ok, %UserCharacterMessage.t()}
    def insert_message(sender_id, message) do
       
       %UserCharacterMessage{
@@ -72,5 +75,7 @@ defmodule Tarragon.Message.Impl do
         }
         end)
     end
+    # getting message
+  
   
 end
