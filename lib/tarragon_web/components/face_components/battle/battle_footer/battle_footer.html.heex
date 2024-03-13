@@ -3,16 +3,16 @@
         <div class="flex flex-col pb-[20px] justify-between items-center relative w-full bg-zinc-300 border border-black">
             <!-- Action Buttons -->
             <div class="top-0 left-[90px] flex justify-between items-center translate-y-[-20px] w-[212px] h-[93px]">
-                <.action_button_v2 state={@step_card_state} action="step" icon="/images/step-forward.png" energy_cost="3" class="" />
-                <.action_button_v2 state={@attack_card_state} action="attack" icon="/images/bullet-single.png" energy_cost="3" class="" />
-                <.action_button_v2 state={@dodge_card_state} action="dodge" icon="/images/shield.png" energy_cost="3" class="" />
+                <.action_button_v2 state={@step_card_state} action="step" icon="/images/step-forward.png" energy_cost={1} class="" />
+                <.action_button_v2 state={@attack_card_state} action="attack" icon="/images/bullet-single.png" energy_cost={1} class="" />
+                <.action_button_v2 state={@dodge_card_state} action="dodge" icon="/images/shield.png" energy_cost={1} class="" />
             </div>
 
             <!-- Energy Bar Component -->
-            <.battle_energy_bar class=""/>
+            <.battle_energy_bar_v2 class="" energy_state={@energy_state}/>
 
             <!-- Energy Info Component -->
-            <.energy_info />
+<!--            <.energy_info energy_state={@energy_state} />-->
         </div>
     </div>
 </div>

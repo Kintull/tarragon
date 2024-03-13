@@ -1,0 +1,20 @@
+<div class={["EnergyBar w-[200px] flex flex-col justify-start items-center ", @class]}>
+        <div class={
+             ["Rectangle47 flex flex-row m-auto mx-auto w-[200px] h-[25px]",
+            "bg-gradient-to-b from-white via-zinc-300 to-stone-300 rounded-[5px] border border-black"]}>
+            <div class="Energyicon m-auto w-[14px] h-[14px] flex-col justify-center items-center inline-flex">
+                <img src="/images/energy.png" />
+            </div>
+            <div class="Bar m-auto w-[160.46px] h-[13.89px] bg-neutral-500 border border-black flex flex-row gap-[4px] p-[2px]">
+                <%= for i <- 1..@energy_state.max_energy do %>
+                    <%= if i <= @energy_state.current_energy do %>
+                        <div class="Rectangle91 bg-amber-200 border border-yellow-200 h-full w-full"></div>
+                    <% else %>
+                        <div class="Rectangle91 bg-transparent border border-yellow-200 h-full w-full"></div>
+                    <% end %>
+                <% end %>
+            </div>
+        </div>
+
+        <.energy_info energy_state={@energy_state} />
+</div>

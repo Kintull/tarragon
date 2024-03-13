@@ -1,0 +1,16 @@
+<%
+style_outer = "width: #{@width}; height: #{@height}"
+width
+height
+border_color
+bg_inner
+bg_outer
+ring_inner_color
+ring_outer_color
+%>
+<div class={["p-[2px] rounded-[6px]", @bg_outer]} style={style_outer}>
+    <div class={"relative w-full h-full border-[1px] rounded-[5px]", @bg_inner, @border_color}>
+        <div></div>
+        <%= render_slot(@inner_block) %>l
+    </div>
+</div>

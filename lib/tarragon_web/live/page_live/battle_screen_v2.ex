@@ -6,7 +6,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
   alias Tarragon.Battles
 
   def mount(_params, _, socket) do
-
     {c_loc, e_loc, r_loc} =
       if connected?(socket) do
         viewport_width = socket.private.connect_params["viewport"]["width"]
@@ -24,12 +23,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
     room = Battles.impl().get_character_active_room(character.id)
     {ally_team, enemy_team} = split_ally_enemy_teams(character.id, room.participants)
     selected_enemy = hd(enemy_team)
-
-#    submitted_players_count = Battles.impl().count_submitted(room.id)
-#    current_player_eliminated =
-#      Enum.find(room.participants, &(&1.user_character_id == character.id)).eliminated
-#    show_victory = show_victory?(room, participant)
-#    show_defeat = show_defeat?(room, participant)
 
     seconds_left = 20
 
@@ -64,10 +57,12 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
       |> assign(avatars_by_ids: avatars_by_ids)
       |> assign(current_health_points_by_ids: current_health_points_by_ids)
       |> assign(max_health_points_by_ids: max_health_points_by_ids)
-      |> assign(step_card_state: :idle)
-      |> assign(attack_card_state: :idle)
-      |> assign(dodge_card_state: :idle)
+      |> assign(action_related_keys: [:action_to_state_name, :attack_action_state, :dodge_action_state, :step_action_state, :energy_state])
+      |> assign(action_to_state_name: %{"attack" => :attack_action_state, "dodge" => :dodge_action_state, "step" => :step_action_state})
       |> assign(attack_action_state: init_attack_action_state())
+      |> assign(dodge_action_state: init_dodge_action_state())
+      |> assign(step_action_state: init_step_action_state())
+      |> assign(energy_state: init_energy_state())
       |> assign(c_loc: c_loc)
       |> assign(e_loc: e_loc)
       |> assign(r_loc: r_loc)
@@ -89,108 +84,189 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
     {:noreply, socket}
   end
 
-  def handle_event("action_click", %{"action" => action} = params, socket) do
-    case action do
-      "step" ->
-        new_state = if socket.assigns[:step_card_state] == "idle", do: "selected", else: socket.assigns[:step_card_state]
-        {:noreply, assign(socket, step_card_state: new_state)}
+  def handle_event("action_click" = event, %{"action" => action} = params, socket) do
+    if action not in Map.keys(socket.assigns.action_to_state_name), do: raise("Unknown action")
 
-      "attack" ->
-        socket = assign(socket, attack_action_state: update_attack_state("action_click", socket.assigns.attack_action_state))
-        {:noreply, socket}
-
-      "dodge" ->
-        new_state = if socket.assigns[:dodge_card_state] == "idle", do: "selected", else: socket.assigns[:step_card_state]
-        {:noreply, assign(socket, dodge_card_state: new_state)}
-    end
-  end
-
-  def handle_event("cancel_action", %{"action" => action}, socket) do
-    case action do
-      "step" -> {:noreply, assign(socket, step_card_state: "idle")}
-      "attack" ->
-        socket = assign(socket, attack_action_state: update_attack_state("cancel_action", socket.assigns.attack_action_state))
-        {:noreply, socket}
-      "dodge" -> {:noreply, assign(socket, dodge_card_state: "idle")}
-    end
-  end
-
-  def handle_event("attack_option_click", %{"option_id" => option_id}, socket) do
-    attack_action_state = socket.assigns.attack_action_state
-    socket = assign(socket, attack_action_state: update_attack_state("attack_option_click", option_id, attack_action_state))
+    state_name = socket.assigns.action_to_state_name[action]
+    updated_states = process_action_event(event, state_name, Map.take(socket.assigns, socket.assigns.action_related_keys))
+    socket = Enum.reduce(updated_states, socket, fn {k, v}, acc -> assign(acc, k, v) end)
     {:noreply, socket}
   end
 
-  def handle_event("attack_option_select", %{"option_id" => option_id}, socket) do
-    attack_action_state = socket.assigns.attack_action_state
-    socket = assign(socket, attack_action_state: update_attack_state("attack_option_select", option_id, attack_action_state))
+  def handle_event("cancel_action" = event, %{"action" => action}, socket) do
+    if action not in Map.keys(socket.assigns.action_to_state_name), do: raise("Unknown action")
+
+    state_name = socket.assigns.action_to_state_name[action]
+    updated_states = process_action_event(event, state_name, Map.take(socket.assigns, socket.assigns.action_related_keys))
+    socket = Enum.reduce(updated_states, socket, fn {k, v}, acc -> assign(acc, k, v) end)
+    IO.inspect(socket.assigns.energy_state)
+    {:noreply, socket}
+  end
+
+  def handle_event("attack_option_click" = event, %{"option_id" => option_id}, socket) do
+    updated_states = process_action_event(event, :attack_action_state, Map.take(socket.assigns, socket.assigns.action_related_keys), %{option_id: option_id})
+    socket = Enum.reduce(updated_states, socket, fn {k, v}, acc -> assign(acc, k, v) end)
+    {:noreply, socket}
+  end
+
+  def handle_event("attack_option_select" = event, %{"option_id" => option_id}, socket) do
+    updated_states = process_action_event(event, :attack_action_state, Map.take(socket.assigns, socket.assigns.action_related_keys), %{option_id: option_id})
+    socket = Enum.reduce(updated_states, socket, fn {k, v}, acc -> assign(acc, k, v) end)
+    IO.inspect(socket.assigns.energy_state)
     {:noreply, socket}
   end
 
   def init_attack_action_state() do
     %{
+      name: :attack_action_state,
       state: :idle,
       options: %{
         1 => %{id: 1, name: "Head", state: :hidden},
         2 => %{id: 2, name: "Body", state: :hidden},
         3 => %{id: 3, name: "Legs", state: :hidden}
-      }
+      },
+      energy_cost: 1
     }
   end
 
-  def update_attack_state("action_click", %{state: state} = action_state) do
-    case state do
-      :idle ->
-        options = Enum.into(action_state.options, %{}, fn {i, option} ->
-          {i, %{option | state: :idle}}
-        end)
-        %{ action_state | state: :selected, options: options }
-      :selected -> action_state
-      :active -> action_state
-    end
+  def init_dodge_action_state() do
+    %{
+      name: :dodge_action_state,
+      state: :idle,
+      energy_cost: 1
+    }
   end
 
-  def update_attack_state("cancel_action", %{state: state}) do
-    case state do
-      :idle -> init_attack_action_state()
-      :selected -> init_attack_action_state()
-      :active -> init_attack_action_state()
-    end
+  def init_step_action_state() do
+    %{
+      name: :step_action_state,
+      state: :idle,
+      energy_cost: 1
+    }
   end
 
-  def update_attack_state("attack_option_click", id, %{state: state} = action_state) do
-    case state do
-      :selected ->
-        updated_options = Enum.into(action_state.options, %{}, fn {i, option} ->
-          if "#{i}" == id do
-            {i, %{option | state: :selected}}
-          else
-            {i, %{option | state: :idle}}
-          end
-        end) |> IO.inspect()
-
-        %{action_state | options: updated_options}
-
-      :idle -> action_state
-      :active -> action_state
-    end
+  def init_energy_state do
+    %{
+      name: :energy_state,
+      max_energy: 3,
+      current_energy: 3,
+      energy_regen: 2
+    }
   end
 
-  def update_attack_state("attack_option_select", id, %{state: state} = action_state) do
-    case state do
-      :selected ->
-        updated_options = Enum.into(action_state.options, %{}, fn {i, option} ->
-          if "#{i}" == id do
-            {i, %{option | state: :active}}
-          else
-            {i, %{option | state: :translucent}}
-          end
-        end) |> IO.inspect()
+  def process_action_event(event, state_name, assigns, params \\ %{}) do
+    new_states =
+      case state_name do
+        :attack_action_state -> process_attack_action_event(event, state_name, assigns, params)
+        :dodge_action_state -> process_step_and_dodge_action_event(event, state_name, assigns)
+        :step_action_state -> process_step_and_dodge_action_event(event, state_name, assigns)
+      end
 
-        %{action_state | options: updated_options, state: :active}
+    # based on new energy state, update action states, enable/disable actions
+    new_energy_state = new_states.energy_state
+    all_action_state_keys = Map.values(assigns.action_to_state_name)
+    Enum.into(
+      all_action_state_keys,
+      new_states,
+      fn action_name -> {action_name, maybe_make_action_unavailable(new_states[action_name], new_energy_state)} end
+    )
+  end
 
-      :idle -> action_state
-      :active -> action_state
+  def process_step_and_dodge_action_event(event, state_name, assigns) do
+    energy_state = assigns.energy_state
+    old_state = assigns[state_name]
+
+    new_state = cond do
+      event == "action_click" and old_state.state == :idle ->
+        %{old_state | state: :active}
+      event == "cancel_action" and old_state.state == :active ->
+        %{old_state | state: :idle}
+      true ->
+        old_state
+    end
+
+    new_energy_state =
+      case {old_state.state, new_state.state} do
+        {:idle, :active} ->
+          %{energy_state | current_energy: energy_state.current_energy - assigns[state_name].energy_cost}
+        {:active, :idle} ->
+          %{energy_state | current_energy: energy_state.current_energy + assigns[state_name].energy_cost}
+        _ ->
+          energy_state
+      end
+
+    Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state})
+  end
+
+  def process_attack_action_event(event, state_name, assigns, params) do
+    IO.inspect(event)
+    energy_state = assigns.energy_state
+    old_state = assigns[state_name]
+
+    new_state = cond do
+      event == "action_click" and old_state.state == :idle ->
+        new_options = process_click_attack_option(old_state.options, 1)
+        %{old_state | state: :selected, options: new_options}
+
+      event == "cancel_action" ->
+        init_attack_action_state()
+
+      event == "attack_option_click" and old_state.state == :selected ->
+        new_options = process_click_attack_option(old_state.options, params.option_id)
+        %{old_state | options: new_options}
+
+      event == "attack_option_select" and old_state.state == :selected ->
+        new_options = process_select_attack_option(old_state.options, params.option_id)
+        %{old_state | state: :active, options: new_options}
+
+      true ->
+        old_state
+    end
+
+    new_energy_state =
+      case {old_state.state, new_state.state} |> IO.inspect() do
+        {:selected, :active} ->
+          %{energy_state | current_energy: energy_state.current_energy - assigns[state_name].energy_cost}
+        {:active, :idle} ->
+          %{energy_state | current_energy: energy_state.current_energy + assigns[state_name].energy_cost}
+        _ ->
+          energy_state
+      end
+
+    Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state})
+  end
+
+  defp process_click_attack_option(options, id) do
+    Enum.into(options, %{}, fn {i, option} ->
+      if "#{i}" == id do
+        {i, %{option | state: :selected}}
+      else
+        {i, %{option | state: :idle}}
+      end
+    end)
+  end
+
+  defp process_select_attack_option(options, id) do
+    Enum.into(options, %{}, fn {i, option} ->
+      if "#{i}" == id do
+        {i, %{option | state: :active}}
+      else
+        {i, %{option | state: :translucent}}
+      end
+    end)
+  end
+
+  def maybe_make_action_unavailable(action_state, energy_state) do
+    IO.inspect("maybe_make_action_unavailable #{action_state.name} #{action_state.state} #{action_state.energy_cost} #{energy_state.current_energy}")
+    cond do
+      action_state.state == :idle and action_state.energy_cost > energy_state.current_energy ->
+        %{action_state | state: :unavailable}
+
+      action_state.state == :unavailable and action_state.energy_cost <= energy_state.current_energy ->
+        %{action_state | state: :idle}
+
+      true ->
+        action_state
     end
   end
 

@@ -34,6 +34,10 @@ module.exports = {
             // => @media (min-width: 1536px) { ... }
         },
         extend: {
+            transitionProperty: {
+                'min-height': 'min-height',
+                'spacing': 'margin, padding',
+            },
             animation: {
                 //cubic-bezier(0.4, 0, 0.6, 1)
                 "pulse-once": "pulse-once 1.5s cubic-bezier(.5,-0.01,.08,1.05)",
@@ -52,6 +56,24 @@ module.exports = {
             },
 
             colors: {
+                "brown-10": "#FBEEE9",
+                "brown-20": "#C28670",
+                "brown-30": "#A35133",
+                "brown-40": "#733B26",
+                "blue-10": "#E9F4FB",
+                "blue-20": "#7AA9B8",
+                "blue-30": "#326F95",
+                "blue-40": "#265573",
+                "dark-10": "#65819A",
+                "dark-20": "#51677B",
+                "dark-30": "#3C4E5D",
+                "dark-40": "#28343E",
+                "dark-50": "#181F25",
+                "beige-10": "#FFF4E5",
+                "beige-20": "#DDD3C5",
+                "beige-30": "#AD9E88",
+                "beige-40": "#796E5F",
+
                 "brand": "#FD4F00",
                 "oasis": "#FEF0CA",
                 "golden-glow": "#FDE295",
