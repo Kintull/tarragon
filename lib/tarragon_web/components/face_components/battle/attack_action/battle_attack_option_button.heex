@@ -1,19 +1,24 @@
 <%
 border_class = case @state do
-    :active -> "border-[4px] border-yellow-600"
-    :selected -> "border-[4px] border-green-700"
+    :active -> "border border-black bg-orange-100"
+    :selected -> "border border-black bg-orange-100"
     :translucent -> "border border-black opacity-[0.5]"
-    :idle -> "border border-black"
+    :idle -> "border border-black bg-gray-100"
     :hidden -> ""
 end
 
 option_hidden_class = if @state == :hidden, do: "hidden", else: "block"
 select_hidden_class = if @state == :selected, do: "block", else: "hidden"
 
+animate_height_class =
+if @state == :selected,
+    do: "linear duration-100 transition-[max-height] max-h-[115px]",
+    else: "linear duration-100 transition-[max-height] max-h-[75px]"
+
 header_text = @name
 %>
 
-<div class={["bg-zinc-300 rounded-[10px] font-metropolis-regular", border_class, option_hidden_class, @class]}
+<div class={["rounded-[10px] font-metropolis-regular", animate_height_class,  border_class, option_hidden_class, @class]}
     phx-click="attack_option_click" phx-value-option_id={@option_id}>
 
     <div class="w-full h-full flex flex-col gap-[9px] p-[10px] items-center justify-between">
