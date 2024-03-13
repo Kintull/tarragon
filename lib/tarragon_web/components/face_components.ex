@@ -10,7 +10,7 @@ defmodule TarragonWeb.FaceComponents do
   embed_templates "face_components/*"
 
   attr :bg_color, :string, default: "bg-transparent"
-  attr :class, :string, default: "min-h-[40px] min-w-[40px]"
+  attr :class, :string, default: "max-h-[10px]"
   slot :inner_block, required: true
   def action_badge(assigns)
 

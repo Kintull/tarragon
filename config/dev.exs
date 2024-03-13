@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :tarragon, Tarragon.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "welcome2",
   hostname: "localhost",
   database: "tarragon_dev",
   stacktrace: true,
