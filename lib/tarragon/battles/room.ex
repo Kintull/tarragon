@@ -76,7 +76,6 @@ defmodule Tarragon.Battles.Room do
     end
   end
 
-
   @doc false
   def changeset(room, attrs) do
     room

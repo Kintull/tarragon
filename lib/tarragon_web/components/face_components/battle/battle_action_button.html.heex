@@ -1,29 +1,32 @@
-<%
-variant_icons=%{
-    "step_one" => "/images/step-forward.png",
-    "attack" => "/images/bullet-single.png",
-    "shield" => "/images/shield.png"
+<% variant_icons = %{
+  "step_one" => "/images/step-forward.png",
+  "attack" => "/images/bullet-single.png",
+  "shield" => "/images/shield.png"
 }
 
-circle_sizes=%{"small" => "w-[73px] h-[73px]", "big" => "w-[91px] h-[91px]"}
-icon_sizes=%{"small" => "h-[11px]", "big" => "w-[38px] h-[38px]"}
-%>
+circle_sizes = %{"small" => "w-[73px] h-[73px]", "big" => "w-[91px] h-[91px]"}
+icon_sizes = %{"small" => "h-[11px]", "big" => "w-[38px] h-[38px]"} %>
 
-<%= if @size == "big" do%>
-<div class={["w-[91px] h-[91px] bg-gray-300 rounded-full border border-black flex flex-col p-[9px]", @class]}>
-    <img src={variant_icons[@action_option]} class="w-[38px] h-[38px] mx-auto my-auto">
+<%= if @size == "big" do %>
+  <div class={[
+    "w-[91px] h-[91px] bg-gray-300 rounded-full border border-black flex flex-col p-[9px]",
+    @class
+  ]}>
+    <img src={variant_icons[@action_option]} class="w-[38px] h-[38px] mx-auto my-auto" />
     <div class="flex flex-row items-center mx-auto text-white text-sm font-jotione-regular face-screen-stroke-small">
-        <img src="/images/energy.png" class="w-[11px] h-[11px]">
-        <span>3</span>
+      <img src="/images/energy.png" class="w-[11px] h-[11px]" />
+      <span>3</span>
     </div>
-</div>
+  </div>
 <% else %>
-<div class={["w-[73px] h-[73px] bg-gray-300 rounded-full border border-black flex flex-col p-[9px]", @class]}>
-    <img src={variant_icons[@action_option]} class="w-[31px] h-[31px] mx-auto my-auto">
+  <div class={[
+    "w-[73px] h-[73px] bg-gray-300 rounded-full border border-black flex flex-col p-[9px]",
+    @class
+  ]}>
+    <img src={variant_icons[@action_option]} class="w-[31px] h-[31px] mx-auto my-auto" />
     <div class="flex flex-row items-center mx-auto text-white text-sm font-jotione-regular face-screen-stroke-small">
-        <img src="/images/energy.png" class="w-[11px] h-[11px]">
-        <span>3</span>
+      <img src="/images/energy.png" class="w-[11px] h-[11px]" />
+      <span>3</span>
     </div>
-</div>
-
+  </div>
 <% end %>

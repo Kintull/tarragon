@@ -1,0 +1,16 @@
+<.bordered_rectangle
+border_color="border-beige-10"
+bg_outer={@bg_color}
+bg_inner={@bg_color}
+ring_border_color=""
+class="CharacterIcon w-[68px] h-[80px] flex"
+>
+    <div class="flex flex-col gap-[4px] justify-center items-center w-full h-full">
+        <div class="HealthBar relative overflow-hidden h-[9px] w-[50px] border border-dark-30 rounded-[3px] bg-green-40">
+            <div class="absolute w-full h-full bg-green-20" style={"width: #{5 + 95/100 * @percentage}%"}/>
+        </div>
+        <div class={["Avatar w-[50px] h-[50px] border-[2px] bg-dark-50 rounded-[5px] overflow-hidden", @border_color]}>
+            <img src={@img_url} />
+        </div>
+    </div>
+</.bordered_rectangle>

@@ -1,9 +1,12 @@
-<%
-style_outer = "width: #{@width}; height: #{@height}"
-%>
-<div class={["p-[2px] rounded-[6px]", @bg_outer]} style={style_outer}>
-    <div class={["relative w-full h-full border-[1px] rounded-[5px]", @bg_inner, @border_color]}>
-        <div class={["absolute bottom-[6px] left-[6px] w-[5px] aspect-square rounded-full border", @ring_border_color]}></div>
-        <%= render_slot(@inner_block) %>
-    </div>
+<div class={["p-[2px] rounded-[6px] w-min-[20px] h-min-[20px]", @class, @bg_outer]}>
+  <div class={["relative w-full h-full border-[1px] rounded-[5px]", @bg_inner, @border_color]}>
+    <%= if assigns[:show_ring] do %>
+      <div class={[
+        "absolute bottom-[4px] left-[5px] w-[5px] aspect-square rounded-full border",
+        @ring_border_color
+      ]}>
+      </div>
+    <% end %>
+    <%= render_slot(@inner_block) %>
+  </div>
 </div>

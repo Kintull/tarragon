@@ -19,7 +19,6 @@ defmodule TarragonWeb.PageLive.GameScreen do
                       |> Enum.into(%{})
                     end).()
 
-
   def mount(_params, %{"user_id" => user_id}, socket) do
     socket =
       if connected?(socket) do
