@@ -1,0 +1,41 @@
+<div class="relative w-[188px] h-[50px] px-[2px] pb-[2px] bg-dark-50 rounded-b-[11px]">
+    <div class="relative h-full w-full border-[2px] border-beige-30 border-t-transparent rounded-b-[10px] bg-dark-40">
+        <div class="flex flex-row gap-[17px] w-full h-full items-center justify-center">
+            <.bordered_rectangle
+            border_color="border-beige-10"
+            bg_outer="bg-blue-20"
+            bg_inner="bg-blue-30"
+            ring_border_color=""
+            class="w-[45px] h-[35px] flex"
+            >
+            <div class="flex w-full h-full">
+                <span class="ScoreLeft m-auto font-metropolis-regular text-beige-10 font-bold text-[16px]"><%=@blue_score%></span>
+            </div>
+            </.bordered_rectangle>
+
+            <.bordered_rectangle
+            border_color="border-dark-30"
+            bg_outer="bg-beige-10"
+            bg_inner="bg-beige-10"
+            ring_border_color=""
+            class="w-[45px] h-[35px]"
+            >
+            <div class="flex w-full h-full">
+                <span class="ScoreLeft m-auto font-metropolis-regular text-dark-30 font-bold text-[16px]"><%=@time_left%></span>
+            </div>
+            </.bordered_rectangle>
+
+            <.bordered_rectangle
+            border_color="border-beige-10"
+            bg_outer="bg-brown-20"
+            bg_inner="bg-brown-30"
+            ring_border_color=""
+            class="w-[45px] h-[35px]"
+            >
+            <div class="flex w-full h-full">
+                <span class="ScoreLeft m-auto font-metropolis-regular text-beige-10 font-bold text-[16px]"><%=@red_score%></span>
+            </div>
+            </.bordered_rectangle>
+        </div>
+    </div>
+</div>
