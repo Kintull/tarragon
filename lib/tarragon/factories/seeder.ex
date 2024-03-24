@@ -1,29 +1,34 @@
 defmodule Seeder do
   alias Tarragon.Battles
+
   def create_character do
-    random_number = :rand.uniform(1000000)
+    random_number = :rand.uniform(1_000_000)
     name = "Nick-#{random_number}"
     email = "email_#{random_number}@mail.com"
     password = "123"
 
-    user = Tarragon.Repo.insert!(%Tarragon.Accounts.User{name: name, email: email, password: password})
+    user =
+      Tarragon.Repo.insert!(%Tarragon.Accounts.User{name: name, email: email, password: password})
 
     character =
       Tarragon.Repo.insert!(%Tarragon.Accounts.UserCharacter{
         active: true,
         user: user,
         nickname: name,
-        avatar_url: Enum.random(["/images/male-character-avatar.png", "/images/female-character-avatar.png"]),
-        avatar_background_url: Enum.random(["/images/male-character.webp", "/images/female-character.webp"]),
+        avatar_url:
+          Enum.random(["/images/male-character-avatar.png", "/images/female-character-avatar.png"]),
+        avatar_background_url:
+          Enum.random(["/images/male-character.webp", "/images/female-character.webp"]),
         max_health: 10,
         current_health: 10
       })
 
-     character
+    character
   end
 
-def create_character_with_items do
+  def create_character_with_items do
     character = create_character()
+
     items =
       Tarragon.Repo.all(Tarragon.Inventory.GameItem)
       |> Enum.uniq_by(fn gi -> gi.purpose end)
@@ -36,7 +41,8 @@ def create_character_with_items do
     Ecto.Changeset.change(character, %{
       current_health: bonuses.max_health,
       max_health: bonuses.max_health
-    }) |> Tarragon.Repo.update!()
+    })
+    |> Tarragon.Repo.update!()
 
     character
   end

@@ -1,29 +1,41 @@
-
-<%
-border_class = case @state do
+<% border_class =
+  case @state do
     :selected -> "ease-out duration-200 transition-transform translate-y-[-30%] bg-orange-100"
     :active -> "ease-out duration-200 transition-transform translate-y-[-30%] bg-orange-100"
     :unavailable -> "ease-out duration-200 transition-transform bg-gray-200 border-red-700"
     _ -> "ease-out duration-200 transition-transform bg-gray-100"
-end
+  end
 
-cancel_hidden = if @state in [:idle, :unavailable], do: "hidden", else: "block"
-%>
+cancel_hidden = if @state in [:idle, :unavailable], do: "hidden", else: "block" %>
 <div class="flex flex-col items-center">
-    <div class={["border-[1px] border-black w-[60px] h-[93px] flex flex-col items-center justify-center rounded-[5px]", border_class, @class]} phx-click="action_click" phx-value-action={@action}>
-        <img src={@icon} class="w-[30px] h-[30px]">
-        <div class="flex items-center justify-center mt-[10px]">
-            <img src="/images/energy.png" class="w-[12px] h-[11px]">
-            <span class="text-black text-[13px] font-bold ml-1"><%= @energy_cost %></span>
-        </div>
+  <div
+    class={[
+      "border-[1px] border-black w-[60px] h-[93px] flex flex-col items-center justify-center rounded-[5px]",
+      border_class,
+      @class
+    ]}
+    phx-click="action_click"
+    phx-value-action={@action}
+  >
+    <img src={@icon} class="w-[30px] h-[30px]" />
+    <div class="flex items-center justify-center mt-[10px]">
+      <img src="/images/energy.png" class="w-[12px] h-[11px]" />
+      <span class="text-black text-[13px] font-bold ml-1"><%= @energy_cost %></span>
     </div>
+  </div>
 
-    <button class={["translate-y-[-15px] w-[60px] h-[20px] rounded bg-red-400 text-[10px] text-white border border-black", cancel_hidden]} phx-click="cancel_action" phx-value-action={@action}>
-        <div class="w-full h-full flex">
-            <div class="m-auto">
-                Cancel
-            </div>
-        </div>
-    </button>
+  <button
+    class={[
+      "translate-y-[-15px] w-[60px] h-[20px] rounded bg-red-400 text-[10px] text-white border border-black",
+      cancel_hidden
+    ]}
+    phx-click="cancel_action"
+    phx-value-action={@action}
+  >
+    <div class="w-full h-full flex">
+      <div class="m-auto">
+        Cancel
+      </div>
+    </div>
+  </button>
 </div>
-

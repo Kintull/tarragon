@@ -73,6 +73,10 @@ module.exports = {
                 "beige-20": "#DDD3C5",
                 "beige-30": "#AD9E88",
                 "beige-40": "#796E5F",
+                "green-10": "#F2F9EB",
+                "green-20": "#99C270",
+                "green-30": "#709749",
+                "green-40": "#48612F",
 
                 "brand": "#FD4F00",
                 "oasis": "#FEF0CA",
@@ -94,7 +98,7 @@ module.exports = {
                 'cwisdom': ['Conventional-Wisdom', 'sans-serif'],
                 'jotione-regular': ['JotiOne-Regular', 'sans-serif'],
                 'metropolis-regular': ['Metropolis-Regular', 'sans-serif'],
-                'futura': ['Futura', 'sans-serif']
+                'futura': ['Futura', 'sans-serif'],
             },
             gridTemplateColumns: {
                 '30': 'repeat(30, minmax(0, 1fr))'

@@ -32,10 +32,10 @@ defmodule Tarragon.Application do
     case Application.get_env(:tarragon, :start_workers) do
       true ->
         [
-#          {Tarragon.Battles.BattleRoom, name: Tarragon.Battles.BattleRoom},
-#          {Tarragon.Battles.BattleBots, name: Tarragon.Battles.BattleBots},
-#          {Tarragon.Battles.LobbyTracker, name: Tarragon.Battles.LobbyTracker},
-#          {Tarragon.Accounts.CharacterHealer, name: Tarragon.Accounts.CharacterHealer}
+          #          {Tarragon.Battles.BattleRoom, name: Tarragon.Battles.BattleRoom},
+          #          {Tarragon.Battles.BattleBots, name: Tarragon.Battles.BattleBots},
+          #          {Tarragon.Battles.LobbyTracker, name: Tarragon.Battles.LobbyTracker},
+          #          {Tarragon.Accounts.CharacterHealer, name: Tarragon.Accounts.CharacterHealer}
         ]
 
       false ->

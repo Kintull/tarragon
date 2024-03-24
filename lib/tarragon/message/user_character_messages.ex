@@ -5,12 +5,10 @@ defmodule Tarragon.Message.UserCharacterMessage do
   alias Tarragon.Message.ChatRoom
 
   schema "user_character_message" do
-
-  field :message, :string
-  belongs_to :user_character, UserCharacter
-  belongs_to :chat_room, ChatRoom
-  belongs_to :chat_member, ChatRoomMember
-  timestamps()
-
+    field :message, :string
+    belongs_to :user_character, UserCharacter
+    belongs_to :chat_room, ChatRoom
+    belongs_to :chat_member, ChatRoomMember
+    timestamps()
   end
 end

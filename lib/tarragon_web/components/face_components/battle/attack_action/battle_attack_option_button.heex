@@ -1,43 +1,55 @@
-<%
-border_class = case @state do
+<% border_class =
+  case @state do
     :active -> "border border-black bg-orange-100"
     :selected -> "border border-black bg-orange-100"
     :translucent -> "border border-black opacity-[0.5]"
     :idle -> "border border-black bg-gray-100"
     :hidden -> ""
-end
+  end
 
 option_hidden_class = if @state == :hidden, do: "hidden", else: "block"
 select_hidden_class = if @state == :selected, do: "block", else: "hidden"
 
 animate_height_class =
-if @state == :selected,
+  if @state == :selected,
     do: "linear duration-100 transition-[max-height] max-h-[115px]",
     else: "linear duration-100 transition-[max-height] max-h-[75px]"
 
-header_text = @name
-%>
+header_text = @name %>
 
-<div class={["rounded-[10px] font-metropolis-regular", animate_height_class,  border_class, option_hidden_class, @class]}
-    phx-click="attack_option_click" phx-value-option_id={@option_id}>
-
-    <div class="w-full h-full flex flex-col gap-[9px] p-[10px] items-center justify-between">
-        <div class="m-auto text-[16px] font-bold"><%= header_text %></div>
-        <div class="relative w-full h-full flex flex-row gap-[7px] justify-center">
-            <div class="flex items-center">
-                <img class="w-[14px] h-[14px]" src="/images/heart_damage.png" alt="" />
-                <span class="text-black text-[14px] font-bold ml-1">40</span>
-            </div>
-            <div class="flex items-center">
-                <img class="w-[14px] h-[14px]" src="/images/dice.png" alt="" />
-                <span class="text-black text-[14px] font-bold ml-1">10%</span>
-            </div>
-        </div>
-
-        <div class={["flex w-[80%] h-[30px] rounded bg-gun-powder text-golden-glow border border-black border-[1px]", select_hidden_class]}
-        phx-click="attack_option_select" phx-value-option_id={@option_id}
-        >
-            <div class="m-auto text-[14px]">Select</div>
-        </div>
+<div
+  class={[
+    "rounded-[10px] font-metropolis-regular",
+    animate_height_class,
+    border_class,
+    option_hidden_class,
+    @class
+  ]}
+  phx-click="attack_option_click"
+  phx-value-option_id={@option_id}
+>
+  <div class="w-full h-full flex flex-col gap-[9px] p-[10px] items-center justify-between">
+    <div class="m-auto text-[16px] font-bold"><%= header_text %></div>
+    <div class="relative w-full h-full flex flex-row gap-[7px] justify-center">
+      <div class="flex items-center">
+        <img class="w-[14px] h-[14px]" src="/images/heart_damage.png" alt="" />
+        <span class="text-black text-[14px] font-bold ml-1">40</span>
+      </div>
+      <div class="flex items-center">
+        <img class="w-[14px] h-[14px]" src="/images/dice.png" alt="" />
+        <span class="text-black text-[14px] font-bold ml-1">10%</span>
+      </div>
     </div>
+
+    <div
+      class={[
+        "flex w-[80%] h-[30px] rounded bg-gun-powder text-golden-glow border border-black border-[1px]",
+        select_hidden_class
+      ]}
+      phx-click="attack_option_select"
+      phx-value-option_id={@option_id}
+    >
+      <div class="m-auto text-[14px]">Select</div>
+    </div>
+  </div>
 </div>

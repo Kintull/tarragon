@@ -1,16 +1,26 @@
-<%
-main=%{"front"=>"/images/character-models-1.png", "back" => "/images/character-models-2.png"}
-shadow=%{"front"=>"/images/character-models-1-shadow.png", "back" => "/images/character-models-2-shadow.png"}
-%>
+<% main = %{
+  "front" => "/images/character-models-1.png",
+  "back" => "/images/character-models-2.png"
+}
+
+shadow = %{
+  "front" => "/images/character-models-1-shadow.png",
+  "back" => "/images/character-models-2-shadow.png"
+} %>
 
 <div class={["BattleCharacter", @class]} style={["width: #{@width}px;", @style]}>
-    <div class="flex flex-col justify-center items-center">
-        <.battle_character_health class="w-[80px] h-min grid-col-min" max_health={100} current_health={90}/>
+  <div class="flex flex-col justify-center items-center">
+    <.battle_character_health
+      class="w-[80px] h-min grid-col-min"
+      max_health={100}
+      current_health={90}
+    />
 
-        <div class="UserAvatar relative z-10 w-full aspect-[0.47] flex"  style={"height: #{@height}px"}>
-            <img class="AvatarF1 h-full mx-auto" src={main[@facing]} />
-        </div>
-
-        <div class="ShadowEllipse relative z-0 w-full aspect-[3] translate-y-[-100%] bg-zinc-500 rounded-[50%/60%_40%]"></div>
+    <div class="UserAvatar relative z-10 w-full aspect-[0.47] flex" style={"height: #{@height}px"}>
+      <img class="AvatarF1 h-full mx-auto" src={main[@facing]} />
     </div>
+
+    <div class="ShadowEllipse relative z-0 w-full aspect-[3] translate-y-[-100%] bg-zinc-500 rounded-[50%/60%_40%]">
+    </div>
+  </div>
 </div>

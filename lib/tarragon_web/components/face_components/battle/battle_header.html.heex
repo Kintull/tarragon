@@ -1,17 +1,38 @@
-<div class={["flex flex-row items-center justify-between bg-zinc-300 z-10 w-full h-[55px] border border-b-[1px] border-black py-[4px]", @class]}>
-    <div class="flex items-center justify-start gap-4 px-[4px] h-full">
-        <%= for id <- @ally_character_ids do %>
-            <.battle_header_character img_url={@avatars_by_ids[id]} max_hp={@max_health_points_by_ids[id]} current_hp={@current_health_points_by_ids[id]} is_ally={true} class="w-[28px]"/>
-        <% end %>
-        <div class="text-white text-[20px] font-jotione-regular face-screen-stroke-small"><%=@ally_score%></div>
+<div class={[
+  "flex flex-row items-center justify-between bg-zinc-300 z-10 w-full h-[55px] border border-b-[1px] border-black py-[4px]",
+  @class
+]}>
+  <div class="flex items-center justify-start gap-4 px-[4px] h-full">
+    <%= for id <- @ally_character_ids do %>
+      <.battle_header_character
+        img_url={@avatars_by_ids[id]}
+        max_hp={@max_health_points_by_ids[id]}
+        current_hp={@current_health_points_by_ids[id]}
+        is_ally={true}
+        class="w-[28px]"
+      />
+    <% end %>
+    <div class="text-white text-[20px] font-jotione-regular face-screen-stroke-small">
+      <%= @ally_score %>
     </div>
-    <div class="flex items-center justify-center h-[32px] bg-zinc-300 border-[1px] border-black rounded">
-        <div class="px-[5px] text-black text-[14px] font-metropolis-regular ">00:<%=@seconds_left%></div>
+  </div>
+  <div class="flex items-center justify-center h-[32px] bg-zinc-300 border-[1px] border-black rounded">
+    <div class="px-[5px] text-black text-[14px] font-metropolis-regular ">
+      00:<%= @seconds_left %>
     </div>
-    <div class="flex items-center justify-end gap-4 px-[4px] h-full">
-        <div class="text-white text-[20px] font-jotione-regular face-screen-stroke-small"><%=@enemy_score%></div>
-        <%= for id <- @enemy_character_ids do %>
-            <.battle_header_character img_url={@avatars_by_ids[id]} max_hp={@max_health_points_by_ids[id]} current_hp={@current_health_points_by_ids[id]} is_ally={false} class="w-[28px]"/>
-        <% end %>
+  </div>
+  <div class="flex items-center justify-end gap-4 px-[4px] h-full">
+    <div class="text-white text-[20px] font-jotione-regular face-screen-stroke-small">
+      <%= @enemy_score %>
     </div>
+    <%= for id <- @enemy_character_ids do %>
+      <.battle_header_character
+        img_url={@avatars_by_ids[id]}
+        max_hp={@max_health_points_by_ids[id]}
+        current_hp={@current_health_points_by_ids[id]}
+        is_ally={false}
+        class="w-[28px]"
+      />
+    <% end %>
+  </div>
 </div>

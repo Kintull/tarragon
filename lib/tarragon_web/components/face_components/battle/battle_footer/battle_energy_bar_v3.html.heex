@@ -1,25 +1,26 @@
-<div class="w-full h-[117px]">
-    <div class="w-full px-[4px] pt-[4px] h-[114px] bg-dark-40 w-full rounded-t-[11px]">
-        <div class="relative w-full border-[2px] border-beige-30 border-b-transparent rounded-t-[10px] h-[110px] bg-dark-40">
-            <div class="absolute top-[8px] left-[10px] w-[13px] h-[13px]">
-                <.ball_svg/>
-            </div>
-            <div class="absolute top-[8px] right-[10px] w-[13px] h-[13px]">
-                <.ball_svg/>
-            </div>
+<.bordered_rectangle
+  border_color="border-beige-40"
+  bg_outer="bg-beige-20"
+  bg_inner="bg-beige-10"
+  ring_border_color="border-beige-40"
+  class={@class}
+>
+  <div class="w-full h-full flex flex-col items-center justify-center px-[10px]">
+    <div class="Bars w-full h-[16px] bg-brown-10 rounded-full border border-dark-30 flex flex-row gap-[1px] p-[1px]">
+      <%= for i <- 1..@energy_state.max_energy do %>
+        <%
+          rounded_left = if i == 1, do: "rounded-l-full"
+          rounded_right = if i == @energy_state.max_energy, do: "rounded-r-full"
+        %>
 
-            <div class="flex flex-row w-full">
-                <.bordered_rectangle width="64px" height="54px" border_color="border-beige-40" bg_outer="bg-beige-20" bg_inner="bg-beige-10" ring_border_color="border-beige-40">
-                    <div class="w-full h-full flex flex-col items-center justify-center">
-                        <div class="w-min h-min text-[12px] font-semibold font-metropolis-regular">Reset</div>
-                    </div>
-                </.bordered_rectangle>
-
-                <.bordered_rectangle width="64px" height="54px" border_color="border-beige-40" bg_outer="bg-beige-20" bg_inner="bg-beige-10" ring_border_color="border-beige-40">
-                    <span class="my-auto ml-[5px] font-metropolis-regular">End</span>
-                    <span class="my-auto ml-[5px] font-metropolis-regular">turn</span>
-                </.bordered_rectangle>
-            </div>
-        </div>
+        <%= if i <= @energy_state.current_energy do %>
+          <div class={["bg-brown-30 h-full w-full", rounded_left, rounded_right]}></div>
+        <% else %>
+          <div class={["border border-brown-30 bg-transparent h-full w-full", rounded_left, rounded_right]}></div>
+        <% end %>
+      <% end %>
     </div>
-</div>
+
+    <.energy_info energy_state={@energy_state} />
+  </div>
+</.bordered_rectangle>
