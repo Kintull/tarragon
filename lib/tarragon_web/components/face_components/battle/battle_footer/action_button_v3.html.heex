@@ -1,0 +1,114 @@
+<%
+
+transform_class =
+  case @state do
+    :selected -> "ease-out duration-200 transition-transform translate-y-[-30%]"
+    :active -> "ease-out duration-200 transition-transform translate-y-[-30%]"
+    _ -> "ease-out duration-200 transition-transform"
+  end
+
+cancel_hidden = if @state in [:selected, :active], do: "block", else: "hidden"
+
+
+idle_styles = %{
+  outer_color: "bg-blue-20",
+  inner_color: "bg-blue-20",
+  outer_border_color: "border-beige-10",
+  icon_border_color: "border-beige-30",
+  energy_border_color: "border-beige-30",
+  text_color: "text-blue-30",
+  icon_color: "text-blue-30"
+}
+
+selected_and_active_styles = %{
+  outer_color: "bg-blue-20",
+  inner_color: "bg-blue-30",
+  outer_border_color: "border-beige-10",
+  icon_border_color: "border-beige-40",
+  energy_border_color: "border-beige-40",
+  text_color: "text-blue-30",
+  icon_color: "text-blue-30"
+}
+
+unavailable_styles = %{
+  outer_color: "bg-beige-20",
+  inner_color: "bg-beige-20",
+  outer_border_color: "border-brown-30",
+  icon_border_color: "border-transparent",
+  energy_border_color: "border-brown-30",
+  text_color: "text-brown-30",
+  icon_color: "text-beige-30"
+}
+
+style_set =
+case @state do
+  :selected -> selected_and_active_styles
+  :active -> selected_and_active_styles
+  :unavailable -> unavailable_styles
+  _ -> idle_styles
+end
+
+outer_color = style_set[:outer_color]
+inner_color = style_set[:inner_color]
+border_color = style_set[:border_color]
+outer_border_color = style_set[:outer_border_color]
+icon_border_color = style_set[:icon_border_color]
+energy_border_color = style_set[:energy_border_color]
+text_color = style_set[:text_color]
+icon_color = style_set[:icon_color]
+
+%>
+
+
+<div class="flex flex-col items-center" phx-click="action_click" phx-value-action={@action}>
+  <.bordered_rectangle
+    border_color={outer_border_color}
+    bg_outer={outer_color}
+    bg_inner={inner_color}
+    ring_border_color={outer_border_color}
+    show_ring={true}
+    class={"w-[64px] h-[97px] #{transform_class}"}
+  >
+  <div class="w-full h-full flex flex-col items-center gap-[15px]">
+    <div class={["ActionIcon w-[38px] h-[38px] mt-[10px] flex bg-beige-10 border rounded-[10px]", icon_border_color]}>
+      <div class={["m-auto w-[23px] h-[23px]", icon_color]}>
+
+        <%= case @action do %>
+          <% "attack" -> %>
+            <.bullet_svg/>
+
+          <% "dodge" -> %>
+            <.shield_svg/>
+
+          <% "step" -> %>
+            <.step_svg/>
+        <% end %>
+      </div>
+    </div>
+
+    <div class={["ActionEnergyCost flex w-[38px] h-[19px] bg-beige-10 border border-beige-30 rounded-[10px]", energy_border_color]}>
+      <div class="mx-auto h-full flex flex-row items-center justify-center ">
+        <span class="w-[10px]">
+          <.energy_svg/>
+        </span>
+        <p class={["text-black w-[10px] text-[13px] font-metropolis-regular font-semibold text-center", text_color]}><%= @energy_cost %></p>
+      </div>
+    </div>
+  </div>
+  </.bordered_rectangle>
+
+  <button
+    class={[
+      "translate-y-[-15px] w-[60px] h-[20px] rounded bg-brown-30 font-metropolis-regular text-[10px] text-beige-10 border border-brown-40",
+      cancel_hidden
+    ]}
+    phx-click="cancel_action"
+    phx-value-action={@action}
+  >
+    <div class="w-full h-full flex">
+      <div class="m-auto">
+        Cancel
+      </div>
+    </div>
+  </button>
+</div>
