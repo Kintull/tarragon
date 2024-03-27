@@ -1,5 +1,23 @@
-<div>
-<%= for {x, y, z} <- @grid do %>
-    <div class="absolute" style={"left"}
-
+<div class="relative w-full h-full translate-y-[120px] translate-x-[120px]">
+    <%= for hex <- @grid do %>
+        <%= cond do %>
+         <% hex.hex_coords.x == 0 -> %>
+            <div class="text-green-200">
+                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
+            </div>
+        <% hex.hex_coords.z == 0 -> %>
+            <div class="text-red-200">
+                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
+            </div>
+        <% hex.hex_coords.y == 0 -> %>
+            <div class="text-blue-200">
+                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
+            </div>
+        <% true -> %>
+            <div class="text-slate-100">
+                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
+            </div>
+        <% end %>
+<!--        <span class="absolute text-[5px]" style={"width: #{hex.width}px; height: #{hex.height}px; left: #{hex.left}px; top: #{hex.top}px"}><%=inspect(hex.coord)%></span>-->
+    <% end %>
 </div>
