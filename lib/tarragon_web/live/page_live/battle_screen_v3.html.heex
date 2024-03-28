@@ -1,23 +1,77 @@
-<div class="relative w-full h-full translate-y-[120px] translate-x-[120px]">
-    <%= for hex <- @grid do %>
-        <%= cond do %>
-         <% hex.hex_coords.x == 0 -> %>
-            <div class="text-green-200">
-                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
-            </div>
-        <% hex.hex_coords.z == 0 -> %>
-            <div class="text-red-200">
-                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
-            </div>
-        <% hex.hex_coords.y == 0 -> %>
-            <div class="text-blue-200">
-                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
-            </div>
-        <% true -> %>
-            <div class="text-slate-100">
-                <.hexagon_pointy width={hex.width} height={hex.height} left={hex.left} top={hex.top}/>
-            </div>
+<%
+text_color_fn =
+    fn hex ->
+        cond do
+             hex.hex_coords.x == 0 ->
+                "text-green-200"
+             hex.hex_coords.z == 0 ->
+                "text-red-200"
+             hex.hex_coords.y == 0 ->
+                "text-blue-200"
+             true ->
+                "text-slate-100"
+        end
+    end
+
+hex_height = hd(@grid.cells).height
+hex_width = hd(@grid.cells).width
+%>
+
+<div id="battle_screen" class="Battleview flex flex-col w-screen h-[100dvh] w-max-[500px] h-max-[1000px]">
+    <div id="reloader" phx-hook="ViewportResizeHooks" />
+
+    <div class="absolute top-0 w-full h-1/2" style={"background-size: #{@bg_tile_size}px #{@bg_tile_size}px; background-repeat:repeat; background-image: url('/images/battle-background-6-light.png');"}></div>
+<div class="absolute bottom-0 w-full h-1/2" style={"background-size: #{@bg_tile_size}px #{@bg_tile_size}px; background-repeat:repeat; background-image: url('/images/battle-background-5-light.png');"}></div>
+<.battle_map_button class="absolute left-[22px] top-[100px] "/>
+
+<.battle_header class="w-[393px] h-[55px]"
+ally_score={@ally_score}
+enemy_score={@enemy_score}
+seconds_left={@seconds_left}
+ally_character_ids={@ally_character_ids}
+enemy_character_ids={@enemy_character_ids}
+avatars_by_ids={@avatars_by_ids}
+max_health_points_by_ids={@max_health_points_by_ids}
+current_health_points_by_ids={@current_health_points_by_ids}
+/>
+
+<div class="grow relative">
+    <!-- Range Highlight component -->
+    <div id="threejsContainer" phx-hook="BattleScreenHooks" class="RangeHighlight absolute z-0"
+         style={"width: #{@r_loc.width}px; height: #{@r_loc.height}px; left: #{@r_loc.left}px; bottom: #{@r_loc.bottom}px"}
+    ></div>
+
+<div class="EnemyCharacterWithActions absolute flex flex-row items-center" style={"left: #{@e_loc.left}px; bottom: #{@e_loc.bottom}px;"}>
+<.battle_character avatar_url={@avatars_by_ids[@target_character_id]} facing="front" class="" width={@e_loc.width} height={@e_loc.height} style=""/>
+<div class="absolute top-0 flex flex-col gap-[20px] mix-w-max" style={"left: #{@e_loc.width + 10}px"}>
+<.battle_attack_option_button state={@attack_action_state.options[1].state} option_id={1} name={@attack_action_state.options[1].name} class="min-w-max"/>
+<.battle_attack_option_button state={@attack_action_state.options[2].state} option_id={2} name={@attack_action_state.options[2].name} class="min-w-max"/>
+<.battle_attack_option_button state={@attack_action_state.options[3].state} option_id={3} name={@attack_action_state.options[3].name} class="min-w-max"/>
+</div>
+</div>
+
+<.battle_character avatar_url={@user_character_avatar} facing="back" class="absolute" width={@e_loc.width} height={@e_loc.height}
+style={"left: #{@c_loc.left}px; bottom: #{@c_loc.bottom}px;"}/>
+</div>
+
+<.battle_footer
+class="z-10 relative"
+step_card_state={@step_action_state.state}
+attack_card_state={@attack_action_state.state}
+dodge_card_state={@dodge_action_state.state}
+energy_state={@energy_state}
+/>
+</div>
+
+
+<div class="flex w-full h-[100dvh] justify-center items-center">
+    <div class="relative" style={"width: #{hex_width}px; height: #{hex_height}px;"}>
+        <%= for hex <- @grid.cells do %>
+            <.hexagon_flat text_color={text_color_fn.(hex)} width={hex.width} height={hex.height} left={hex.left} top={hex.top}>
+                <%=  if hex.hex_coords.x == 0 && hex.hex_coords.y == 0 do %>
+                    <.battle_character facing="back" class="absolute bottom-0 z-20" width={100*0.47} height={100} style=""/>
+                <% end %>
+            </.hexagon_flat>
         <% end %>
-<!--        <span class="absolute text-[5px]" style={"width: #{hex.width}px; height: #{hex.height}px; left: #{hex.left}px; top: #{hex.top}px"}><%=inspect(hex.coord)%></span>-->
-    <% end %>
+    </div>
 </div>
