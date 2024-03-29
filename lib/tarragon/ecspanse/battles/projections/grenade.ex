@@ -1,4 +1,5 @@
 defmodule Tarragon.Ecspanse.Battles.Projections.Grenade do
+  alias Tarragon.Ecspanse.Battles.Projections
   alias Tarragon.Ecspanse.ProjectionUtils
   alias Tarragon.Ecspanse.Battles.Components
 
@@ -37,7 +38,7 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Grenade do
       struct!(__MODULE__,
         entity: ProjectionUtils.project(grenade_entity),
         grenade: ProjectionUtils.project(grenade),
-        position: ProjectionUtils.project(position)
+        position: Projections.Position.project_position(position)
       )
     end
   end

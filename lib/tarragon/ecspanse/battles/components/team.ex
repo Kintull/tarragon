@@ -4,12 +4,11 @@ defmodule Tarragon.Ecspanse.Battles.Components.Team do
 
   A team will have combatants as children
 
-  ## Fields
-  * field_side_factor: positive 1 when combatants are on the right and move left or negative -1 for the opposite
   """
   use Ecspanse.Component,
-    state: [
-      field_side_factor: 0
-    ],
+    state: [],
     tags: [:team]
+
+  @impl true
+  def validate(_component), do: :ok
 end

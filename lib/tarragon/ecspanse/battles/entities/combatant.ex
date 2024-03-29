@@ -4,51 +4,82 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Combatant do
   """
   alias Tarragon.Ecspanse.Battles.Components
 
-  # defp side_factor(side) when side == :left, do: -1
-  # defp side_factor(_side), do: 1
+  def new_pistolero(
+        name,
+        position,
+        direction,
+        team,
+        max_health,
+        frag_grenade,
+        main_weapon,
+        user_id
+      ) do
+    components = [
+      Components.ActionPoints,
+      {Components.Brand, [name: name, color: "#" <> Faker.Color.rgb_hex()]},
+      {Components.Combatant, [user_id: user_id]},
+      {Components.Direction, direction},
+      frag_grenade,
+      {Components.Health, [current: max_health, max: max_health]},
+      main_weapon,
+      {Components.Position, position},
+      Components.Profession.new_pistolero(),
+      Components.SmokeGrenade
+    ]
 
-  def pistolero_blueprint(name, starting_position, team) do
-    {Ecspanse.Entity,
-     components: [
-       Components.ActionPoints,
-       {Components.Brand, [name: name, color: "#" <> Faker.Color.rgb_hex()]},
-       Components.Combatant,
-       Components.Professions.Pistolero,
-       Components.Firearms.Pistol,
-       {Components.GrenadePouch, [smoke: 1, explosive: 1]},
-       Components.Health,
-       {Components.Position, [x: starting_position]}
-     ],
-     parents: [team]}
+    components =
+      components
+      |> prepend_if(user_id == nil, Components.BotBrain)
+
+    {Ecspanse.Entity, components: components, parents: [team]}
   end
 
-  def gunner_blueprint(name, starting_position, team) do
-    {Ecspanse.Entity,
-     components: [
-       Components.ActionPoints,
-       {Components.Brand, [name: name, color: "#" <> Faker.Color.rgb_hex()]},
-       Components.Combatant,
-       Components.Professions.MachineGunner,
-       Components.Firearms.MachineGun,
-       {Components.GrenadePouch, [smoke: 1, explosive: 1]},
-       Components.Health,
-       {Components.Position, [x: starting_position]}
-     ],
-     parents: [team]}
+  defp prepend_if(list, condition, component) do
+    case condition do
+      true -> [component | list]
+      false -> list
+    end
   end
 
-  def sniper_blueprint(name, starting_position, team) do
-    {Ecspanse.Entity,
-     components: [
-       Components.ActionPoints,
-       {Components.Brand, [name: name, color: "#" <> Faker.Color.rgb_hex()]},
-       Components.Combatant,
-       Components.Professions.Sniper,
-       Components.Firearms.SniperRifle,
-       {Components.GrenadePouch, [smoke: 1]},
-       Components.Health,
-       {Components.Position, [x: starting_position]}
-     ],
-     parents: [team]}
+  def new_gunner(name, position, direction, team, max_health, frag_grenade, main_weapon, user_id) do
+    components = [
+      Components.ActionPoints,
+      {Components.Brand, [name: name, color: "#" <> Faker.Color.rgb_hex()]},
+      {Components.Combatant, [user_id: user_id]},
+      {Components.Direction, direction},
+      frag_grenade,
+      {Components.Health, [current: max_health, max: max_health]},
+      main_weapon,
+      {Components.Position, position},
+      Components.Profession.new_machine_gunner(),
+      Components.SmokeGrenade
+    ]
+
+    components =
+      components
+      |> prepend_if(user_id == nil, Components.BotBrain)
+
+    {Ecspanse.Entity, components: components, parents: [team]}
+  end
+
+  def new_sniper(name, position, direction, team, max_health, frag_grenade, main_weapon, user_id) do
+    components = [
+      Components.ActionPoints,
+      {Components.Brand, [name: name, color: "#" <> Faker.Color.rgb_hex()]},
+      {Components.Combatant, [user_id: user_id]},
+      {Components.Direction, direction},
+      frag_grenade,
+      {Components.Health, [current: max_health, max: max_health]},
+      main_weapon,
+      {Components.Position, position},
+      Components.Profession.new_sniper(),
+      Components.SmokeGrenade
+    ]
+
+    components =
+      components
+      |> prepend_if(user_id == nil, Components.BotBrain)
+
+    {Ecspanse.Entity, components: components, parents: [team]}
   end
 end

@@ -93,6 +93,9 @@ defmodule TarragonWeb do
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
+
+      def ok(socket), do: {:ok, socket}
+      def noreply(socket), do: {:noreply, socket}
     end
   end
 

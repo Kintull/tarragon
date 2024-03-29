@@ -28,7 +28,11 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.OnLockIntentions do
         |> Enum.any?(& &1.waiting_for_intentions)
 
       unless waiting_on_any_living_combatant do
-        Ecspanse.event({Events.DecisionPhaseEnd, entity_id: battle_entity.id})
+        EcspanseStateMachine.transition_to_default_exit(
+          battle_entity.id,
+          "Decisions Phase",
+          "Intentions Locked"
+        )
       end
     end
   end

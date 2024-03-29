@@ -26,10 +26,21 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Dump.CombatantComponent do
           /> <CommonComponents.properties_table_from_map label="Entity" map={@combatant.entity} />
           <CommonComponents.properties_table_from_map label="Brand" map={@combatant.brand} />
           <CommonComponents.properties_table_from_map label="Combatant" map={@combatant.combatant} />
-          <CommonComponents.properties_table_from_map label="Grenades" map={@combatant.grenade_pouch} />
+          <CommonComponents.properties_table_from_map
+            label="Frag Grenades"
+            map={@combatant.frag_grenade}
+          />
           <CommonComponents.properties_table_from_map label="Health" map={@combatant.health} />
-          <CommonComponents.properties_table_from_map label="Firearm" map={@combatant.firearm} />
+          <CommonComponents.properties_table_from_map
+            label="Main Weapon"
+            map={@combatant.main_weapon}
+          />
+          <CommonComponents.properties_table_from_map label="Profession" map={@combatant.profession} />
           <CommonComponents.properties_table_from_map label="Position" map={@combatant.position} />
+          <CommonComponents.properties_table_from_map
+            label="Smoke Grenades"
+            map={@combatant.smoke_grenade}
+          />
           <FlexGridLayouts.auto_grid>
             <.live_component
               :for={aa <- @combatant.available_actions}

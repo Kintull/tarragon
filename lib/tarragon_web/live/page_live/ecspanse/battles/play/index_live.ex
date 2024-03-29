@@ -4,27 +4,65 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
 
   use TarragonWeb, :live_view
 
-  def mount(%{"battle_entity_id" => battle_entity_id}, _session, socket) do
-    if Api.battle_exists?(battle_entity_id) do
-      battle = Api.list_battle(battle_entity_id)
+  def mount(_params, _session, socket) do
+    socket |> assign(:battle_loaded, false) |> ok()
+  end
 
-      selected_combatant = hd(hd(battle.teams).combatants)
+  def handle_params(params, _uri, socket) do
+    socket =
+      case params do
+        %{"game_id" => game_id} ->
+          load_game(socket, game_id)
 
-      socket =
-        socket
-        |> assign(
-          battle: battle,
-          selected_combatant: selected_combatant,
-          selected_combatant_id: selected_combatant.entity.id
-        )
+        %{"battle_id" => battle_entity_id} ->
+          load_battle(socket, battle_entity_id)
 
-      if connected?(socket),
-        do: Projections.Battle.start!(%{entity_id: battle_entity_id, client_pid: self()})
+        _ ->
+          IO.inspect(params, label: "params")
+          socket |> push_navigate(to: ~p"/ecspanse/battles/dump")
+      end
 
-      {:ok, socket}
+    noreply(socket)
+  end
+
+  def load_game(socket, game_id) when is_binary(game_id),
+    do: load_game(socket, String.to_integer(game_id))
+
+  def load_game(socket, game_id) do
+    with {:ok, battle} <- Api.find_battle_by_game(game_id) do
+      assign_battle(socket, battle)
     else
-      {:ok, push_navigate(socket, to: ~p"/ecspanse/battles/dump/index")}
+      {:error, :not_found} ->
+        push_navigate(socket, to: ~p"/ecspanse/battles/dump")
     end
+  end
+
+  def load_battle(socket, battle_entity_id) do
+    case Api.list_battle(battle_entity_id) do
+      {:error, :not_found} ->
+        push_navigate(socket, to: ~p"/ecspanse/battles/dump")
+
+      battle ->
+        assign_battle(socket, battle)
+    end
+  end
+
+  defp assign_battle(socket, battle) do
+    selected_combatant = hd(hd(battle.teams).combatants)
+
+    socket =
+      socket
+      |> assign(
+        battle: battle,
+        selected_combatant: selected_combatant,
+        selected_combatant_id: selected_combatant.entity.id,
+        battle_loaded: true
+      )
+
+    if connected?(socket),
+      do: Projections.Battle.start!(%{entity_id: battle.entity.id, client_pid: self()})
+
+    socket
   end
 
   defp find_combatant(battle, combatant_entity_id) when is_nil(combatant_entity_id),

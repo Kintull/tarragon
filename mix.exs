@@ -60,8 +60,7 @@ defmodule Tarragon.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:struct_access, "~> 1.1"},
       {:typedstruct, "~> 0.5.2"},
-      {:ecspanse_live_dashboard, path: "../../ecspanse_live_dashboard"},
-      {:ecspanse_state_machine, path: "../../ecspanse_state_machine"}
+      {:ecspanse_state_machine, ">= 0.3.0"}
     ]
   end
 
