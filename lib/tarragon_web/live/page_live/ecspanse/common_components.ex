@@ -44,7 +44,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.CommonComponents do
   end
 
   attr :label, :string, default: nil
-  attr :timer, :any
+  attr :state_machine, :any
   attr :fg_color, :string, default: "bg-green-300"
   attr :class, :string, default: ""
 
@@ -52,9 +52,9 @@ defmodule TarragonWeb.PageLive.Ecspanse.CommonComponents do
     ~H"""
     <.horizontal_value_bar
       label={@label}
-      max={@timer.duration}
-      current={@timer.time}
-      class={@timer.paused && "opacity-10"}
+      max={@state_machine.duration}
+      current={@state_machine.time}
+      class={@state_machine.paused && "opacity-10"}
     />
     """
   end

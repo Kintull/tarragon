@@ -6,12 +6,15 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnExitDecisionsPhase do
   alias Tarragon.Ecspanse.Battles.Lookup
   alias Tarragon.Ecspanse.Battles.Components
   alias Tarragon.Ecspanse.Battles.Entities
+  use Entities.GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
 
+  @from_state @state_names.decisions_phase
+
   def run(
-        %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, from: "Decisions Phase"},
+        %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, from: @from_state},
         _frame
       ) do
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do

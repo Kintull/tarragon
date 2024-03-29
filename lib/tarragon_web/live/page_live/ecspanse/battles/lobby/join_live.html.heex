@@ -1,0 +1,43 @@
+<div class="border-2 border-black p-2">
+  <div class="bg-red-300 p-2">
+    <%= assigns.selected_lobby_game.game_parameters.red_team_name %>
+  </div>
+  <div class="grid grid-cols-3 gap-4 bg-red-300 p-2">
+    <pre>player_combatant_key: <%= inspect(assigns.player_combatant_key) %></pre>
+
+    <div :for={{:red, profession} <- @teams_and_professions}>
+      <%!-- <.button
+        :if={player_assignment == nil}
+        phx-click="assign_player"
+        phx-value-team="red"
+        phx-value-profession={profession}
+      >
+        be <%= profession %>
+      </.button>
+      <p :if={player != nil && player != self()}><%= inspect(player) %></p>
+      <p :if={player == self()}>You</p> --%>
+    </div>
+  </div>
+
+  <%!--<div class="bg-blue-300 p-2">
+    <%= assigns.lobby_game.game_parameters.blue_team_name %>
+  </div>
+  <div class="grid grid-cols-3 gap-4 bg-blue-300 p-2">
+    <div :for={{profession, player} <- Map.from_struct(@lobby_game.team_parameters.blue)}>
+      <.button
+        :if={player == nil}
+        phx-click="assign_player"
+        phx-value-team="blue"
+        phx-value-profession={profession}
+      >
+        be <%= profession %>
+      </.button>
+      <p :if={player != nil && player != self()}><%= inspect(player) %></p>
+      <p :if={player == self()}>You</p>
+    </div> 
+  </div>--%>
+  <%!-- <.button :if={@enrolled == @lobby_game.id} class="mt-8" phx-click="play">
+    Play
+  </.button> --%>
+</div>
+lobby_game <pre><%= inspect(assigns.lobby_game, pretty: true) %></pre>

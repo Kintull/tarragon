@@ -3,7 +3,8 @@ defmodule Tarragon.Ecspanse.Battles.Components.Actions.Movement.Template do
   the template for any form of movement
   """
   use Ecspanse.Template.Component,
-    state: [:name, icon: "m", steps: 1, action_point_cost: 1],
+    # use Tarragon.Ecspanse.Battles.Components.Actions.Template,
+    state: [steps: 1, action_group: :movement],
     tags: [:action, :movement]
 
   @impl true

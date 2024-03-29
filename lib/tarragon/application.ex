@@ -20,7 +20,8 @@ defmodule Tarragon.Application do
         # Start to serve requests, typically the last entry,
 
         TarragonWeb.Endpoint,
-        Tarragon.Ecspanse.Manager
+        Tarragon.Ecspanse.Manager,
+        {Tarragon.Ecspanse.Lobby.LobbyGamesAgent, %{}}
       ] ++ workers()
 
     # See https://hexdocs.pm/elixir/Supervisor.html

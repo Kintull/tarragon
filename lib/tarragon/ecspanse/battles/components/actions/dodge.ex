@@ -5,6 +5,7 @@ defmodule Tarragon.Ecspanse.Battles.Components.Actions.Dodge do
   use Tarragon.Ecspanse.Battles.Components.Actions.Template,
     state: [
       name: "Dodge",
+      action_group: :defense,
       icon: "🫣",
       action_point_cost: 2,
       incoming_miss_chance_modifier: 200.00

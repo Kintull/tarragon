@@ -34,11 +34,15 @@ defmodule TarragonWeb.Router do
     live "/battle_screen_v3", PageLive.BattleScreenV3, :battle_screen
     live "/lobby", PageLive.Lobby, :lobby
     live_storybook("/storybook", backend_module: TarragonWeb.Storybook)
-    live "/ecspanse/demo/index", PageLive.Ecspanse.Demo.IndexLive
 
-    live "/ecspanse/battles/dump/index", PageLive.Ecspanse.Battles.Dump.IndexLive
+    # ecspanse battles
+    live "/ecspanse/battles/new", PageLive.Ecspanse.Battles.New.IndexLive
+    live "/ecspanse/battles/lobby", PageLive.Ecspanse.Battles.Lobby.IndexLive
+    live "/ecspanse/battles/lobby/:id", PageLive.Ecspanse.Battles.Lobby.JoinLive
 
-    live "/ecspanse/battles/play/index/:battle_entity_id",
+    live "/ecspanse/battles/dump", PageLive.Ecspanse.Battles.Dump.IndexLive
+
+    live "/ecspanse/battles/play",
          PageLive.Ecspanse.Battles.Play.IndexLive
   end
 
@@ -61,9 +65,7 @@ defmodule TarragonWeb.Router do
 
       live_dashboard "/dashboard",
         metrics: TarragonWeb.Telemetry,
-        additional_pages: [
-          ECSpanse: {EcspanseLiveDashboard.Dashboard, refresher?: true}
-        ]
+        additional_pages: []
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end

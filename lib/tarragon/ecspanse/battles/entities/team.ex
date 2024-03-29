@@ -5,17 +5,21 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Team do
   """
   alias Tarragon.Ecspanse.Battles.Components
 
-  def blueprint(field_side_factor, name, color, icon \\ "🏴", battle) do
-    {Ecspanse.Entity,
-     components: [
-       {Components.Team, [field_side_factor: field_side_factor]},
-       {Components.Brand,
-        [
-          name: name,
-          color: color,
-          icon: icon
-        ]}
-     ],
-     parents: [battle]}
+  @spec new(String.t(), String.t(), String.t(), Ecspanse.Entity.t()) ::
+          Ecspanse.Entity.entity_spec()
+  def new(name, color, icon \\ "🏴", battle_entity) do
+    {
+      Ecspanse.Entity,
+      components: [
+        Components.Team,
+        {Components.Brand,
+         [
+           name: name,
+           color: color,
+           icon: icon
+         ]}
+      ],
+      parents: [battle_entity]
+    }
   end
 end

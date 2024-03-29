@@ -5,6 +5,7 @@ defmodule Tarragon.Ecspanse.Battles.Components.Actions.Shooting.Template do
 
   use Ecspanse.Template.Component,
     state: [
+      :target_entity_id,
       :name,
       icon: "s",
       number_of_shots: 1,

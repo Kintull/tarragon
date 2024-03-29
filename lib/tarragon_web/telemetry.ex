@@ -73,7 +73,23 @@ defmodule TarragonWeb.Telemetry do
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),
       summary("vm.total_run_queue_lengths.cpu"),
-      summary("vm.total_run_queue_lengths.io")
+      summary("vm.total_run_queue_lengths.io"),
+      # summary("ecspanse_state_machine.start.system_time",
+      #   unit: {:native, :millisecond}
+      #   # tags: [:state_machine]
+      # ),
+      summary("ecspanse_state_machine.stop.duration",
+        unit: {:native, :millisecond}
+        # tags: [:state_machine]
+      ),
+      summary("ecspanse_state_machine.state.stop.duration",
+        unit: {:native, :millisecond},
+        tags: [:state]
+      ),
+      counter("ecspanse_state_machine.state.start.system_time",
+        # unit: {:native, :millisecond},
+        tags: [:state]
+      )
     ]
   end
 

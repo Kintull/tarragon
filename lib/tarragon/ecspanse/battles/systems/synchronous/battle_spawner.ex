@@ -2,6 +2,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
   @moduledoc """
   Spawns Battles
   """
+  alias Tarragon.Ecspanse.Lobby.LobbyGame
+  alias Tarragon.Ecspanse.Battles.Components
+  alias Tarragon.Ecspanse.Lobby.GameParameters
   alias Tarragon.Ecspanse.Withables
   alias Tarragon.Ecspanse.Battles.Events
   alias Tarragon.Ecspanse.Battles.Entities
@@ -9,30 +12,121 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
   use Ecspanse.System,
     event_subscriptions: [Events.SpawnBattleRequest]
 
-  def run(%Events.SpawnBattleRequest{}, _frame) do
-    red_team_name = Faker.Team.En.name()
-    blue_team_name = Faker.Team.En.name()
+  def run(%Events.SpawnBattleRequest{} = request, _frame) do
+    %LobbyGame{} = lobby_game = request.lobby_game
+    %GameParameters{} = gp = lobby_game.game_parameters
 
     battle_entity =
       Ecspanse.Command.spawn_entity!(
-        Entities.Battle.blueprint("#{red_team_name} vs. #{blue_team_name}")
+        Entities.Battle.new(
+          lobby_game.id,
+          "#{gp.red_team_name} vs. #{gp.blue_team_name}",
+          gp.turns
+        )
       )
 
-    IO.puts(EcspanseStateMachine.as_mermaid_diagram(battle_entity.id) |> Withables.val_or_nil())
+    IO.puts(
+      EcspanseStateMachine.format_as_mermaid_diagram(battle_entity.id)
+      |> Withables.val_or_nil()
+    )
 
     [red_team, blue_team] =
       Ecspanse.Command.spawn_entities!([
-        Entities.Team.blueprint(1, red_team_name, "#F00", "🚩", battle_entity),
-        Entities.Team.blueprint(-1, blue_team_name, "#00F", "🏴", battle_entity)
+        Entities.Team.new(gp.red_team_name, "#F00", "🚩", battle_entity),
+        Entities.Team.new(gp.blue_team_name, "#00F", "🏴", battle_entity)
       ])
 
+    frag_grenade_spec =
+      {Components.FragGrenade,
+       Map.take(gp.frag_grenade_params, [:damage, :encumbrance, :radius, :range])
+       |> Map.to_list()
+       |> List.insert_at(0, {:count, 1})}
+
     Ecspanse.Command.spawn_entities!([
-      Entities.Combatant.pistolero_blueprint(Faker.Person.first_name(), 0, red_team),
-      Entities.Combatant.gunner_blueprint(Faker.Person.first_name(), 0, red_team),
-      Entities.Combatant.sniper_blueprint(Faker.Person.first_name(), 0, red_team),
-      Entities.Combatant.pistolero_blueprint(Faker.Person.first_name(), 17, blue_team),
-      Entities.Combatant.gunner_blueprint(Faker.Person.first_name(), 17, blue_team),
-      Entities.Combatant.sniper_blueprint(Faker.Person.first_name(), 17, blue_team)
+      Entities.Combatant.new_gunner(
+        Faker.Person.first_name(),
+        [x: 0, y: 1],
+        [x: 1, y: 0],
+        red_team,
+        gp.machine_gunner_params.max_health,
+        frag_grenade_spec,
+        Components.MainWeapon.machine_gun(
+          gp.machine_gunner_params.main_weapon_params.damage_per_projectile,
+          gp.machine_gunner_params.main_weapon_params.projectiles_per_shot,
+          gp.machine_gunner_params.main_weapon_params.range
+        ),
+        LobbyGame.get_player_id(lobby_game, :red, :machine_gunner)
+      ),
+      Entities.Combatant.new_pistolero(
+        Faker.Person.first_name(),
+        [x: 0, y: 0],
+        [x: 1, y: 0],
+        red_team,
+        gp.pistolero_params,
+        frag_grenade_spec,
+        Components.MainWeapon.pistol(
+          gp.pistolero_params.main_weapon_params.damage_per_projectile,
+          gp.pistolero_params.main_weapon_params.projectiles_per_shot,
+          gp.pistolero_params.main_weapon_params.range
+        ),
+        LobbyGame.get_player_id(lobby_game, :red, :pistolero)
+      ),
+      Entities.Combatant.new_sniper(
+        Faker.Person.first_name(),
+        [x: 0, y: 2],
+        [x: 1, y: 0],
+        red_team,
+        gp.sniper_params.max_health,
+        frag_grenade_spec,
+        Components.MainWeapon.sniper_rifle(
+          gp.sniper_params.main_weapon_params.damage_per_projectile,
+          gp.sniper_params.main_weapon_params.projectiles_per_shot,
+          gp.sniper_params.main_weapon_params.range
+        ),
+        LobbyGame.get_player_id(lobby_game, :red, :sniper)
+      ),
+      Entities.Combatant.new_gunner(
+        Faker.Person.first_name(),
+        [x: 17, y: 1],
+        [x: -1, y: 0],
+        blue_team,
+        gp.machine_gunner_params.max_health,
+        frag_grenade_spec,
+        Components.MainWeapon.machine_gun(
+          gp.machine_gunner_params.main_weapon_params.damage_per_projectile,
+          gp.machine_gunner_params.main_weapon_params.projectiles_per_shot,
+          gp.machine_gunner_params.main_weapon_params.range
+        ),
+        LobbyGame.get_player_id(lobby_game, :blue, :machine_gunner)
+      ),
+      Entities.Combatant.new_pistolero(
+        Faker.Person.first_name(),
+        [x: 17, y: 0],
+        [x: -1, y: 0],
+        blue_team,
+        gp.pistolero_params,
+        frag_grenade_spec,
+        Components.MainWeapon.pistol(
+          gp.pistolero_params.main_weapon_params.damage_per_projectile,
+          gp.pistolero_params.main_weapon_params.projectiles_per_shot,
+          gp.pistolero_params.main_weapon_params.range
+        ),
+        LobbyGame.get_player_id(lobby_game, :blue, :pistolero)
+      ),
+      Entities.Combatant.new_sniper(
+        Faker.Person.first_name(),
+        [x: 17, y: 2],
+        [x: -1, y: 0],
+        blue_team,
+        gp.sniper_params.max_health,
+        frag_grenade_spec,
+        Components.MainWeapon.sniper_rifle(
+          gp.sniper_params.main_weapon_params.damage_per_projectile,
+          gp.sniper_params.main_weapon_params.projectiles_per_shot,
+          gp.sniper_params.main_weapon_params.range
+        ),
+        LobbyGame.get_player_id(lobby_game, :blue, :sniper)
+      )
     ])
   end
 end

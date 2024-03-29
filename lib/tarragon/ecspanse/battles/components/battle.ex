@@ -4,6 +4,7 @@ defmodule Tarragon.Ecspanse.Battles.Components.Battle do
   """
   use Ecspanse.Component,
     state: [
+      game_id: nil,
       name: "Red vs. Blue",
       field_width: 21,
       is_started: false,

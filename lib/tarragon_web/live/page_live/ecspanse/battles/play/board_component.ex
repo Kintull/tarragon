@@ -1,26 +1,26 @@
 defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardComponent do
   use TarragonWeb, :live_component
 
-  defp board_dimensions() do
-    width = 640.0
-    height = 360.0
-    cell_count = 18
+  @board_width 640
+  @board_height 360
+  @cell_count 20
+  @cell_width @board_width / 20
+  @cell_height @board_height / 10
 
+  defp board_dimensions() do
     [
-      width: width,
-      height: height,
-      half_width: width / 2.0,
-      half_height: height / 2.0,
-      cell_count: cell_count,
-      cell_width: width / cell_count,
-      cell_height: height / 6.0
+      width: @board_width,
+      height: @board_height,
+      half_width: @board_width / 2.0,
+      half_height: @board_height / 2.0,
+      cell_count: @cell_count,
+      cell_width: @cell_width,
+      cell_height: @cell_height
     ]
   end
 
-  defp board_row(:sniper), do: 1
-  defp board_row(:machine_gunner), do: 2
-  defp board_row(:pistolero), do: 3
-  defp board_row(:explosive), do: 4
+  def x_to_board(x), do: @cell_width * x + 1.5 * @cell_width
+  def y_to_board(y), do: @cell_height * 2 * y + 1.5 * @cell_height
 
   def render(assigns) do
     assigns = assign(assigns, board_dimensions())
@@ -29,8 +29,11 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardComponent do
     <div>
       <div>
         Turn: <%= @battle.battle.turn %> of <%= @battle.battle.max_turns %> Phase: <%= @battle.state_machine.current_state %>
-        <div class={["inline-block", @battle.state_timer.paused && "opacity-25"]}>
-          <.countdown_timer id={"board_state_timer_#{@battle.entity.id}"} timer={@battle.state_timer} />
+        <div class={["inline-block", @battle.state_machine.paused && "opacity-25"]}>
+          <.countdown_timer
+            id={"board_state_timer_#{@battle.entity.id}"}
+            state_machine={@battle.state_machine}
+          />
         </div>
       </div>
 
@@ -41,8 +44,8 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardComponent do
             :for={combatant <- team.combatants}
             module={TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardCombatant}
             id={"board_combatant_#{combatant.entity.id}"}
-            board_row={board_row(combatant.profession.type)}
             combatant={combatant}
+            is_player={false}
             {board_dimensions()}
           />
         <% end %>
@@ -51,8 +54,15 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardComponent do
           :for={grenade <- @battle.grenades}
           module={TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardGrenade}
           id={"board_grenade_#{grenade.entity.id}"}
-          board_row={board_row(grenade.grenade.type)}
           grenade={grenade}
+          {board_dimensions()}
+        />
+
+        <.live_component
+          :for={bullet <- @battle.bullets}
+          module={TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardBullet}
+          id={"board_bullet_#{bullet.entity.id}"}
+          bullet={bullet}
           {board_dimensions()}
         />
       </svg>
@@ -60,7 +70,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardComponent do
     """
   end
 
-  attr :timer, :any, required: true
+  attr :state_machine, :any, required: true
   attr :width, :integer, default: 100
   attr :height, :integer, default: 10
   attr :id, :string, required: true
@@ -73,7 +83,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardComponent do
         id={"#{@id}_bar"}
         x="1"
         y="1"
-        width={ceil((@width - 2) * @timer.time / @timer.duration * 10) / 10}
+        width={ceil((@width - 2) * @state_machine.time / @state_machine.duration * 10) / 10}
         height={@height - 2}
         fill="#00F"
       />

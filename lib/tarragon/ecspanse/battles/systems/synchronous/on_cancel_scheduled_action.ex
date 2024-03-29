@@ -20,8 +20,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.OnCancelScheduledAction 
            Lookup.fetch_parent(scheduled_action_entity, Components.Combatant),
          {:ok, action_points_component} <- Components.ActionPoints.fetch(combatant_entity),
          {:ok, battle_entity} <- Lookup.fetch_ancestor(combatant_entity, Components.Battle),
-         {:ok, battle_component} <- Components.Battle.fetch(battle_entity) do
-      if battle_component.phase == "Decision Phase" do
+         {:ok, battle_state} <- EcspanseStateMachine.current_state(battle_entity.id) do
+      if battle_state == "Decisions Phase" do
         spawn_available_action(scheduled_action_entity, action)
 
         Ecspanse.Command.update_component!(action_points_component,
