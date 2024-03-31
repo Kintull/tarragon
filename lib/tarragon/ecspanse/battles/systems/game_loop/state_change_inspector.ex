@@ -13,6 +13,6 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.StateChangeInspector do
         },
         _frame
       ) do
-    # Logger.info("#{entity_id} State from '#{from}' to '#{to}' due to '#{trigger}'")
+    Logger.info("#{entity_id} State from '#{from}' to '#{to}' due to '#{trigger}'")
   end
 end

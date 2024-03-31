@@ -1,4 +1,5 @@
 defmodule Tarragon.Ecspanse.Lobby.FragGrenadeParameters do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -21,6 +22,7 @@ defmodule Tarragon.Ecspanse.Lobby.FragGrenadeParameters do
 end
 
 defmodule Tarragon.Ecspanse.Lobby.MainWeaponParameters do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -40,7 +42,27 @@ defmodule Tarragon.Ecspanse.Lobby.MainWeaponParameters do
   end
 end
 
+defmodule Tarragon.Ecspanse.Lobby.TeamParameters do
+  @moduledoc false
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  embedded_schema do
+    field :name, :string
+    field :color, :string, default: "#000000"
+  end
+
+  def changeset(model, attrs \\ %{}) do
+    model
+    |> cast(attrs, [:name, :color])
+    |> validate_required([:name, :color])
+    |> validate_length(:name, greater_than: 0, less_than: 21)
+    |> validate_length(:color, greater_than: 7, less_than: 7)
+  end
+end
+
 defmodule Tarragon.Ecspanse.Lobby.CombatantParameters do
+  @moduledoc false
   alias Tarragon.Ecspanse.Lobby.MainWeaponParameters
   use Ecto.Schema
   import Ecto.Changeset
@@ -60,17 +82,18 @@ defmodule Tarragon.Ecspanse.Lobby.CombatantParameters do
 end
 
 defmodule Tarragon.Ecspanse.Lobby.GameParameters do
+  @moduledoc false
   alias Tarragon.Ecspanse.Lobby.CombatantParameters
   alias Tarragon.Ecspanse.Lobby.FragGrenadeParameters
-  alias Tarragon.Ecspanse.Lobby.FragGrenadeParameters
+  alias Tarragon.Ecspanse.Lobby.TeamParameters
   alias Tarragon.Ecspanse.Lobby.MainWeaponParameters
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "game_parameters" do
-    field :blue_team_name, :binary, default: "Blue"
-    field :red_team_name, :binary, default: "Red"
     field :turns, :integer, default: 30
+    embeds_one :blue_team_params, TeamParameters
+    embeds_one :red_team_params, TeamParameters
     embeds_one :frag_grenade_params, FragGrenadeParameters
     embeds_one :machine_gunner_params, CombatantParameters
     embeds_one :pistolero_params, CombatantParameters
@@ -82,23 +105,23 @@ defmodule Tarragon.Ecspanse.Lobby.GameParameters do
   @doc false
   def changeset(model, attrs \\ %{}) do
     model
-    |> cast(attrs, [:id, :turns, :red_team_name, :blue_team_name])
+    |> cast(attrs, [:id, :turns])
+    |> cast_embed(:blue_team_params, with: &TeamParameters.changeset/2)
+    |> cast_embed(:red_team_params, with: &TeamParameters.changeset/2)
     |> cast_embed(:frag_grenade_params, with: &FragGrenadeParameters.changeset/2)
     |> cast_embed(:machine_gunner_params, with: &CombatantParameters.changeset/2)
     |> cast_embed(:pistolero_params, with: &CombatantParameters.changeset/2)
     |> cast_embed(:sniper_params, with: &CombatantParameters.changeset/2)
-    |> validate_required([:id, :turns, :red_team_name, :blue_team_name])
-    |> validate_length(:blue_team_name, greater_than: 0, less_than: 51)
-    |> validate_length(:red_team_name, greater_than: 0, less_than: 51)
+    |> validate_required([:id, :turns])
     |> validate_number(:turns, greater_than: 0, less_than: 51)
   end
 
   def new(attrs \\ %{}) do
     struct(
       %__MODULE__{
-        blue_team_name: Faker.Team.En.name(),
-        red_team_name: Faker.Team.En.name(),
         turns: 30,
+        blue_team_params: %TeamParameters{color: "#0000FF", name: Faker.Team.En.name()},
+        red_team_params: %TeamParameters{color: "#FF0000", name: Faker.Team.En.name()},
         frag_grenade_params: %FragGrenadeParameters{},
         machine_gunner_params: %CombatantParameters{
           main_weapon_params: %MainWeaponParameters{

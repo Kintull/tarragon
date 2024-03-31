@@ -45,6 +45,22 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents 
   end
 
   attr :title, :string
+  attr :team_params_form_field, Phoenix.HTML.FormField
+
+  def team_params(assigns) do
+    ~H"""
+    <div>
+      <div class="font-bold"><%= @title %></div>
+      <div class="grid grid-cols-1 gap-2">
+        <.inputs_for :let={team_params} field={@team_params_form_field}>
+          <.input field={team_params[:name]} label="Name" />
+        </.inputs_for>
+      </div>
+    </div>
+    """
+  end
+
+  attr :title, :string
   attr :combatant_params_form_field, Phoenix.HTML.FormField
 
   def combatant_params(assigns) do

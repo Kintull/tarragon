@@ -7,10 +7,20 @@
   phx-submit="save"
   class="divide-y-2 divide-neutral-300 space-y-4"
 >
-  <div class="grid grid-cols-2 gap-2">
+  <TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents.team_params
+    title="Red Team"
+    team_params_form_field={@form[:red_team_params]}
+  />
+
+  <TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents.team_params
+    title="Blue Team"
+    team_params_form_field={@form[:blue_team_params]}
+  />
+
+  <%!-- <div class="grid grid-cols-2 gap-2">
     <.input field={@form[:red_team_name]} label="Red Team Name" />
     <.input field={@form[:blue_team_name]} label="Blue Team Name" />
-  </div>
+  </div> --%>
   <.input field={@form[:turns]} label="Turns" type="number" />
 
   <TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents.combatant_params

@@ -8,21 +8,20 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Lobby.JoinLive do
   end
 
   defp assign_lobby_game(socket, lobby_game) do
-    IO.inspect(lobby_game, label: "lobby_game")
-    IO.inspect(socket.assigns.user_id, label: "socket.assigns.user_id")
-
     teams_and_professions =
       for team <- [:red, :blue],
           profession <- [:machine_gunner, :pistolero, :sniper],
           do: {team, profession}
 
+    player_combatants =
+      teams_and_professions
+      |> Enum.reduce(%{}, fn {team, profession}, acc ->
+        Map.put(acc, {team, profession}, LobbyGame.get_user_id(lobby_game, team, profession))
+      end)
+
     socket
     |> assign(:lobby_game, lobby_game)
-    |> assign(:teams_and_professions, teams_and_professions)
-    |> assign(
-      :player_combatant_key,
-      LobbyGame.get_combatant_key(lobby_game, socket.assigns.user_id)
-    )
+    |> assign(:player_combatants, player_combatants)
   end
 
   defp ensure_user_id(socket, session) do
@@ -46,10 +45,12 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Lobby.JoinLive do
   def mount(%{"id" => lobby_game_id}, session, socket) do
     socket = ensure_user_id(socket, session)
 
-    selected_lobby_game = find_game_by_id(LobbyGamesAgent.values(), lobby_game_id)
+    if connected?(socket), do: Phoenix.PubSub.subscribe(Tarragon.PubSub, "lobby_games")
+
+    lobby_game = find_game_by_id(LobbyGamesAgent.values(), lobby_game_id)
 
     socket
-    |> assign_lobby_game(selected_lobby_game)
+    |> assign_lobby_game(lobby_game)
     |> assign_new(:enrolled, fn -> nil end)
     |> ok()
   end
@@ -61,13 +62,43 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Lobby.JoinLive do
       ) do
     lobby_game = socket.assigns.lobby_game
 
-    IO.inspect(lobby_game.player_combatants,
-      label: "lobby_game.player_combatants"
+    # assign new role - also clears old role
+    lobby_game =
+      LobbyGame.assign_player_combatant(
+        lobby_game,
+        String.to_existing_atom(team),
+        String.to_existing_atom(profession),
+        socket.assigns.user_id
+      )
+
+    LobbyGamesAgent.put(lobby_game)
+
+    Phoenix.PubSub.broadcast(
+      Tarragon.PubSub,
+      "lobby_games",
+      {"lobby_games", "player_assignment_changed", lobby_game.id}
     )
+
+    socket
+    |> assign_lobby_game(lobby_game)
+    |> assign(enrolled: lobby_game.id)
+    |> noreply()
+  end
+
+  def handle_event(
+        "unassign_player",
+        %{"team" => team, "profession" => profession},
+        socket
+      ) do
+    lobby_game = socket.assigns.lobby_game
 
     # assign new role - also clears old role
     lobby_game =
-      LobbyGame.assign_player_combatant(lobby_game, team, profession, socket.assigns.user_id)
+      LobbyGame.clear_player_combatant(
+        lobby_game,
+        String.to_existing_atom(team),
+        String.to_existing_atom(profession)
+      )
 
     LobbyGamesAgent.put(lobby_game)
 
@@ -91,7 +122,10 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Lobby.JoinLive do
       %LobbyGame{} = g ->
         Tarragon.Ecspanse.Battles.Api.spawn_battle(g)
         Process.sleep(100)
-        push_navigate(socket, to: ~p"/ecspanse/battles/play?game_id=#{g}")
+
+        push_navigate(socket,
+          to: ~p"/ecspanse/battles/play?game_id=#{g}&user_id=#{socket.assigns.user_id}"
+        )
     end
     |> noreply()
   end

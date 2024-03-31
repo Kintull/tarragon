@@ -29,7 +29,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterMove do
           &(Ecspanse.Query.fetch_tagged_component(&1, [:movement])
             |> Withables.val_or_nil())
         )
-        |> Enum.map(&spawn_moving_animations/1)
+        |> Enum.each(&spawn_moving_animations/1)
 
         Ecspanse.Command.despawn_entities!(scheduled_action_entities)
       else

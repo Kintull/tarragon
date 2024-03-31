@@ -1,4 +1,5 @@
 defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardCombatant do
+  @moduledoc false
   alias TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardComponent
   use TarragonWeb, :live_component
 
@@ -52,7 +53,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardCombatant do
         href="/images/svg/player-dodge-svgrepo-com.svg"
       />
       <circle
-        id="health_indicator"
+        id={"health_indicator_combatant_#{@combatant.entity.id}"}
         r={@health_radius}
         stroke="#0F0"
         stroke-width="3"
@@ -61,7 +62,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.BoardCombatant do
       />
       <circle
         :if={@combatant.health.current > 0}
-        id="range_indicator"
+        id={"range_indicator_combatant_#{@combatant.entity.id}"}
         r={@cell_width * @combatant.main_weapon.range}
         stroke="#000"
         stroke-width="1"
