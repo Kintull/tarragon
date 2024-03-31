@@ -20,7 +20,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
       Ecspanse.Command.spawn_entity!(
         Entities.Battle.new(
           lobby_game.id,
-          "#{gp.red_team_name} vs. #{gp.blue_team_name}",
+          "#{gp.red_team_params.name} vs. #{gp.blue_team_params.name}",
           gp.turns
         )
       )
@@ -32,8 +32,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
 
     [red_team, blue_team] =
       Ecspanse.Command.spawn_entities!([
-        Entities.Team.new(gp.red_team_name, "#F00", "🚩", battle_entity),
-        Entities.Team.new(gp.blue_team_name, "#00F", "🏴", battle_entity)
+        Entities.Team.new(gp.red_team_params.name, gp.red_team_params.color, "🚩", battle_entity),
+        Entities.Team.new(gp.blue_team_params.name, gp.blue_team_params.color, "🏴", battle_entity)
       ])
 
     frag_grenade_spec =
@@ -55,21 +55,21 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
           gp.machine_gunner_params.main_weapon_params.projectiles_per_shot,
           gp.machine_gunner_params.main_weapon_params.range
         ),
-        LobbyGame.get_player_id(lobby_game, :red, :machine_gunner)
+        LobbyGame.get_user_id(lobby_game, :red, :machine_gunner)
       ),
       Entities.Combatant.new_pistolero(
         Faker.Person.first_name(),
         [x: 0, y: 0],
         [x: 1, y: 0],
         red_team,
-        gp.pistolero_params,
+        gp.machine_gunner_params.max_health,
         frag_grenade_spec,
         Components.MainWeapon.pistol(
           gp.pistolero_params.main_weapon_params.damage_per_projectile,
           gp.pistolero_params.main_weapon_params.projectiles_per_shot,
           gp.pistolero_params.main_weapon_params.range
         ),
-        LobbyGame.get_player_id(lobby_game, :red, :pistolero)
+        LobbyGame.get_user_id(lobby_game, :red, :pistolero)
       ),
       Entities.Combatant.new_sniper(
         Faker.Person.first_name(),
@@ -83,7 +83,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
           gp.sniper_params.main_weapon_params.projectiles_per_shot,
           gp.sniper_params.main_weapon_params.range
         ),
-        LobbyGame.get_player_id(lobby_game, :red, :sniper)
+        LobbyGame.get_user_id(lobby_game, :red, :sniper)
       ),
       Entities.Combatant.new_gunner(
         Faker.Person.first_name(),
@@ -97,21 +97,21 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
           gp.machine_gunner_params.main_weapon_params.projectiles_per_shot,
           gp.machine_gunner_params.main_weapon_params.range
         ),
-        LobbyGame.get_player_id(lobby_game, :blue, :machine_gunner)
+        LobbyGame.get_user_id(lobby_game, :blue, :machine_gunner)
       ),
       Entities.Combatant.new_pistolero(
         Faker.Person.first_name(),
         [x: 17, y: 0],
         [x: -1, y: 0],
         blue_team,
-        gp.pistolero_params,
+        gp.machine_gunner_params.max_health,
         frag_grenade_spec,
         Components.MainWeapon.pistol(
           gp.pistolero_params.main_weapon_params.damage_per_projectile,
           gp.pistolero_params.main_weapon_params.projectiles_per_shot,
           gp.pistolero_params.main_weapon_params.range
         ),
-        LobbyGame.get_player_id(lobby_game, :blue, :pistolero)
+        LobbyGame.get_user_id(lobby_game, :blue, :pistolero)
       ),
       Entities.Combatant.new_sniper(
         Faker.Person.first_name(),
@@ -125,7 +125,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
           gp.sniper_params.main_weapon_params.projectiles_per_shot,
           gp.sniper_params.main_weapon_params.range
         ),
-        LobbyGame.get_player_id(lobby_game, :blue, :sniper)
+        LobbyGame.get_user_id(lobby_game, :blue, :sniper)
       )
     ])
   end

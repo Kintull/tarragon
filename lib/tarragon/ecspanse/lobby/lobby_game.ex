@@ -1,4 +1,5 @@
 defmodule Tarragon.Ecspanse.Lobby.CombatantKey do
+  @moduledoc false
   defstruct team: nil, profession: nil
 
   @type t :: %__MODULE__{
@@ -8,6 +9,7 @@ defmodule Tarragon.Ecspanse.Lobby.CombatantKey do
 end
 
 defmodule Tarragon.Ecspanse.Lobby.PlayerAssignment do
+  @moduledoc false
   alias Tarragon.Ecspanse.Lobby.CombatantKey
   defstruct combatant_key: nil, user_id: nil
 
@@ -18,6 +20,7 @@ defmodule Tarragon.Ecspanse.Lobby.PlayerAssignment do
 end
 
 defmodule PlayerCombatants do
+  @moduledoc false
   alias Tarragon.Ecspanse.Lobby.PlayerAssignment
   alias Tarragon.Ecspanse.Lobby.CombatantKey
 
@@ -27,22 +30,19 @@ defmodule PlayerCombatants do
           assignments_list: list(PlayerAssignment.t())
         }
 
-  # def clear_assignment(%__MODULE__{} = player_combatants, team, profession),
-  #   do: clear_assignment(player_combatants, %CombatantKey{team: team, profession: profession})
+  def clear_assignment(%__MODULE__{} = player_combatants, %CombatantKey{} = combatant_key) do
+    case Enum.find(player_combatants.assignments_list, &(&1.combatant_key == combatant_key)) do
+      nil ->
+        player_combatants
 
-  # def clear_assignment(%__MODULE__{} = player_combatants, %CombatantKey{} = combatant_key) do
-  #   case Enum.find(player_combatants.assignments_list, &(&1.combatant_key == combatant_key)) do
-  #     nil ->
-  #       player_combatants
-
-  #     assignment ->
-  #       Map.put(
-  #         player_combatants,
-  #         :assignments_list,
-  #         List.delete(player_combatants.assignments_list, assignment)
-  #       )
-  #   end
-  # end
+      assignment ->
+        Map.put(
+          player_combatants,
+          :assignments_list,
+          List.delete(player_combatants.assignments_list, assignment)
+        )
+    end
+  end
 
   def clear_assignment(%__MODULE__{} = player_combatants, user_id) do
     case Enum.find(player_combatants.assignments_list, &(&1.user_id == user_id)) do
@@ -62,7 +62,8 @@ defmodule PlayerCombatants do
     do: assign(player_combatants, %CombatantKey{team: team, profession: profession}, user_id)
 
   def assign(%__MODULE__{} = player_combatants, %CombatantKey{} = combatant_key, user_id) do
-    player_combatants = clear_assignment(player_combatants, combatant_key)
+    # clear the user's prior assignment
+    player_combatants = clear_assignment(player_combatants, user_id)
 
     assignments_list = [
       %PlayerAssignment{combatant_key: combatant_key, user_id: user_id}
@@ -88,6 +89,8 @@ defmodule PlayerCombatants do
 end
 
 defmodule Tarragon.Ecspanse.Lobby.LobbyGame do
+  @moduledoc false
+  alias Tarragon.Ecspanse.Lobby.CombatantKey
   alias Tarragon.Ecspanse.Lobby.GameParameters
 
   @enforce_keys [:game_parameters]
@@ -118,6 +121,16 @@ defmodule Tarragon.Ecspanse.Lobby.LobbyGame do
     Map.put(lobby_game, :player_combatants, player_combatants)
   end
 
+  def clear_player_combatant(%__MODULE__{} = lobby_game, team, profession) do
+    player_combatants =
+      PlayerCombatants.clear_assignment(lobby_game.player_combatants, %CombatantKey{
+        team: team,
+        profession: profession
+      })
+
+    Map.put(lobby_game, :player_combatants, player_combatants)
+  end
+
   def clear_player_combatant(%__MODULE__{} = lobby_game, user_id) do
     player_combatants =
       PlayerCombatants.clear_assignment(lobby_game.player_combatants, user_id)
@@ -125,7 +138,13 @@ defmodule Tarragon.Ecspanse.Lobby.LobbyGame do
     Map.put(lobby_game, :player_combatants, player_combatants)
   end
 
-  def get_combatant_key(%__MODULE__{} = lobby_game, user_id) do
-    PlayerCombatants.get_combatant_key(lobby_game.player_combatants, user_id)
-  end
+  def get_combatant_key(%__MODULE__{} = lobby_game, user_id),
+    do: PlayerCombatants.get_combatant_key(lobby_game.player_combatants, user_id)
+
+  def get_user_id(%__MODULE__{} = lobby_game, team, profession),
+    do:
+      PlayerCombatants.get_user_id(lobby_game.player_combatants, %CombatantKey{
+        team: team,
+        profession: profession
+      })
 end

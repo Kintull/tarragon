@@ -4,8 +4,11 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
 
   use TarragonWeb, :live_view
 
-  def mount(_params, _session, socket) do
-    socket |> assign(:battle_loaded, false) |> ok()
+  def mount(%{"user_id" => user_id}, _session, socket) do
+    socket
+    |> assign(:battle_loaded, false)
+    |> assign(:user_id, String.to_integer(user_id))
+    |> ok()
   end
 
   def handle_params(params, _uri, socket) do
@@ -18,7 +21,6 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
           load_battle(socket, battle_entity_id)
 
         _ ->
-          IO.inspect(params, label: "params")
           socket |> push_navigate(to: ~p"/ecspanse/battles/dump")
       end
 
@@ -29,9 +31,10 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
     do: load_game(socket, String.to_integer(game_id))
 
   def load_game(socket, game_id) do
-    with {:ok, battle} <- Api.find_battle_by_game(game_id) do
-      assign_battle(socket, battle)
-    else
+    case Api.find_battle_by_game(game_id) do
+      {:ok, battle} ->
+        assign_battle(socket, battle)
+
       {:error, :not_found} ->
         push_navigate(socket, to: ~p"/ecspanse/battles/dump")
     end
@@ -47,16 +50,23 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
     end
   end
 
+  defp find_player_combatant(battle, user_id) do
+    Enum.find_value(battle.teams, fn team ->
+      Enum.find(team.combatants, &(&1.combatant.user_id == user_id))
+    end)
+  end
+
   defp assign_battle(socket, battle) do
-    selected_combatant = hd(hd(battle.teams).combatants)
+    player_combatant = find_player_combatant(battle, socket.assigns.user_id)
 
     socket =
       socket
       |> assign(
         battle: battle,
-        selected_combatant: selected_combatant,
-        selected_combatant_id: selected_combatant.entity.id,
-        battle_loaded: true
+        selected_combatant: nil,
+        selected_combatant_id: nil,
+        battle_loaded: true,
+        player_combatant: player_combatant
       )
 
     if connected?(socket),
@@ -95,10 +105,15 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
 
   def handle_info({:projection_updated, %{result: battle}}, socket) do
     selected_combatant = find_combatant(battle, socket.assigns.selected_combatant_id)
+    player_combatant = find_player_combatant(battle, socket.assigns.user_id)
 
-    socket = assign(socket, battle: battle, selected_combatant: selected_combatant)
-
-    {:noreply, socket}
+    socket
+    |> assign(
+      battle: battle,
+      selected_combatant: selected_combatant,
+      player_combatant: player_combatant
+    )
+    |> noreply()
   end
 
   def handle_info(msg, socket) do

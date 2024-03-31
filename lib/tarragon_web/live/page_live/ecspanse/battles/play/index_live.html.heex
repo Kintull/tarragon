@@ -11,18 +11,19 @@
     />
     <div>
       <.live_component
+        :if={@selected_combatant != nil}
         module={TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant}
         battle={@battle}
         combatant={@selected_combatant}
         id={"board_selected_combatant_#{@selected_combatant.entity.id}"}
       />
-      <%!-- <.selected_combatant combatant={@selected_combatant} /> --%>
     </div>
   </div>
-
-  <%!-- <div :for={bullet <- @battle.bullets}>
-  <pre>
-    <%= inspect(bullet, pretty: true) %> 
-  </pre>
-</div> --%>
+  <.live_component
+    module={TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatant}
+    battle={@battle}
+    combatant={@player_combatant}
+    id={"board_player_combatant_#{@player_combatant.entity.id}"}
+  />
 </div>
+<pre><%= inspect(assigns.battle, pretty: true) %></pre>

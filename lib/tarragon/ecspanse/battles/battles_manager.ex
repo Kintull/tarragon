@@ -23,7 +23,7 @@ defmodule Tarragon.Ecspanse.Battles.BattlesManager do
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnLockIntentions)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.MovingAnimator)
     # state machine
-    |> Ecspanse.add_frame_start_system(Systems.GameLoop.StateChangeInspector)
+    # |> Ecspanse.add_frame_start_system(Systems.GameLoop.StateChangeInspector)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterActionPhaseEnd)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterActionPhaseStart)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBattleEnd)

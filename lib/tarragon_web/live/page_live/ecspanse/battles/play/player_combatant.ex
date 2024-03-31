@@ -1,4 +1,4 @@
-defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
+defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatant do
   @moduledoc false
   alias Tarragon.Ecspanse.Battles.Api
   use TarragonWeb, :live_component
@@ -6,19 +6,20 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
   def render(assigns) do
     ~H"""
     <div>
-      <div>Name: <%= @combatant.brand.name %></div>
+      <div class="grid grid-cols-5 gap-2">
+        <div>Name: <%= @combatant.brand.name %></div>
 
-      <div>Profession: <%= @combatant.profession.name %></div>
+        <div>Profession: <%= @combatant.profession.name %></div>
 
-      <div>Health: <%= @combatant.health.current %></div>
+        <div>Health: <%= @combatant.health.current %></div>
 
-      <div>Action Points: <%= @combatant.action_points.current %></div>
+        <div>Action Points: <%= @combatant.action_points.current %></div>
 
-      <div>Position: <%= @combatant.position.x %></div>
-
+        <div>Position: <%= @combatant.position.x %></div>
+      </div>
       <div class="underline underline-offset-2">Available Actions</div>
 
-      <div class="grid grid-cols-2 gap-2 pt-2">
+      <div class="grid grid-cols-5 gap-2 pt-2">
         <div
           :for={action <- @combatant.available_actions}
           class={[

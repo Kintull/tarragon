@@ -7,7 +7,7 @@
   row_click={fn game -> JS.patch(~p"/ecspanse/battles/lobby/#{game}") end}
 >
   <:col :let={game} label="name">
-    <%= game.game_parameters.red_team_name %> vs. <%= game.game_parameters.blue_team_name %>
+    <%= game.game_parameters.red_team_params.name %> vs. <%= game.game_parameters.blue_team_params.name %>
   </:col>
   <:action :let={game}>
     <.link patch={~p"/ecspanse/battles/lobby/#{game}"}>Join</.link>
