@@ -1,0 +1,15 @@
+<h1>Battles</h1>
+
+<TarragonWeb.FlexGridLayouts.auto_grid>
+  <div :for={battle <- @battles} class="">
+    <.live_component
+      module={TarragonWeb.PageLive.Ecspanse.Battles.Dump.BattleComponent}
+      id={battle.entity.id}
+      battle={battle}
+    />
+  </div>
+</TarragonWeb.FlexGridLayouts.auto_grid>
+
+<div class="flex flex-wrap items-start gap-2">
+  <.button phx-click={:spawn_battle}>New Battle</.button>
+</div>

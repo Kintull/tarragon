@@ -19,7 +19,7 @@ defmodule Tarragon.MixProject do
   def application do
     [
       mod: {Tarragon.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :observer, :wx]
     ]
   end
 
@@ -32,29 +32,36 @@ defmodule Tarragon.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:comeonin, "~> 2.5"},
+      {:dns_cluster, "~> 0.1"},
+      {:ecspanse, "~> 0.8.0"},
+      {:ecto_sql, "~> 3.10"},
+      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
+      {:ex_machina, "~> 2.7", only: :test},
+      {:faker, "~> 0.17"},
+      {:finch, "~> 0.13"},
+      {:floki, "~> 0.30", only: :test},
+      {:gettext, "~> 0.20"},
+      {:hammox, "~> 0.7", only: :test},
+      {:jason, "~> 1.2"},
+      {:mnemonic_slugs, "~> 0.0.3"},
       {:phoenix, "~> 1.7"},
       {:phoenix_ecto, "~> 4.4"},
-      {:ecto_sql, "~> 3.10"},
-      {:postgrex, "~> 0.17"},
       {:phoenix_html, "~> 3.3"},
+      {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.20"},
-      {:floki, "~> 0.30", only: :test},
-      {:phoenix_live_dashboard, "~> 0.8"},
-      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:phoenix_storybook, "~> 0.5"},
+      {:plug_cowboy, "~> 2.5"},
+      {:postgrex, "~> 0.17"},
       {:swoosh, "~> 1.3"},
-      {:finch, "~> 0.13"},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.20"},
-      {:jason, "~> 1.2"},
-      {:dns_cluster, "~> 0.1"},
-      {:plug_cowboy, "~> 2.5"},
-      {:comeonin, "~> 2.5"},
-      {:phoenix_storybook, "~> 0.5"},
-      {:ex_machina, "~> 2.7", only: :test},
-      {:hammox, "~> 0.7", only: :test}
+      {:struct_access, "~> 1.1"},
+      {:typedstruct, "~> 0.5.2"},
+      {:ecspanse_live_dashboard, path: "../../ecspanse_live_dashboard"},
+      {:ecspanse_state_machine, path: "../../ecspanse_state_machine"}
     ]
   end
 

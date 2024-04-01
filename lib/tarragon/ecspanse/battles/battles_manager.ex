@@ -1,0 +1,45 @@
+defmodule Tarragon.Ecspanse.Battles.BattlesManager do
+  @moduledoc """
+  Adds the demo systems to the expanse manager.  That is, if you want the demo system to be active,
+  call setup from the ecspanse manager.
+  """
+
+  alias Tarragon.Ecspanse.Battles.Systems
+
+  def setup(data) do
+    data
+    |> EcspanseStateMachine.setup()
+    #
+    # system startup
+    #
+    |> Ecspanse.add_startup_system(Systems.Startup.SpawnABattle)
+    #
+    # frame start
+    #
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.BattleSpawner)
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.NewBattleMonitor)
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnScheduleAvailableAction)
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnCancelScheduledAction)
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnLockIntentions)
+    # state machine
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.StateChangeInspector)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterActionPhaseEnd)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterActionPhaseStart)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBattleEnd)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBattleStart)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDecisionsPhase)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDodge)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterFragOut)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterMove)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterPopSmoke)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnExitDecisionsPhase)
+    # `
+    # every frame`
+    # `
+    |> Ecspanse.add_system(Systems.MovingAnimator)
+
+    #
+    # frame end
+    #
+  end
+end
