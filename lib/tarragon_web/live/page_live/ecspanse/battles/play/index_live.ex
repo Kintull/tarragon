@@ -4,27 +4,75 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
 
   use TarragonWeb, :live_view
 
-  def mount(%{"battle_entity_id" => battle_entity_id}, _session, socket) do
-    if Api.battle_exists?(battle_entity_id) do
-      battle = Api.list_battle(battle_entity_id)
+  def mount(%{"user_id" => user_id}, _session, socket) do
+    socket
+    |> assign(:battle_loaded, false)
+    |> assign(:user_id, String.to_integer(user_id))
+    |> ok()
+  end
 
-      selected_combatant = hd(hd(battle.teams).combatants)
+  def handle_params(params, _uri, socket) do
+    socket =
+      case params do
+        %{"game_id" => game_id} ->
+          load_game(socket, game_id)
 
-      socket =
-        socket
-        |> assign(
-          battle: battle,
-          selected_combatant: selected_combatant,
-          selected_combatant_id: selected_combatant.entity.id
-        )
+        %{"battle_id" => battle_entity_id} ->
+          load_battle(socket, battle_entity_id)
 
-      if connected?(socket),
-        do: Projections.Battle.start!(%{entity_id: battle_entity_id, client_pid: self()})
+        _ ->
+          socket |> push_navigate(to: ~p"/ecspanse/battles/dump")
+      end
 
-      {:ok, socket}
-    else
-      {:ok, push_navigate(socket, to: ~p"/ecspanse/battles/dump/index")}
+    noreply(socket)
+  end
+
+  def load_game(socket, game_id) when is_binary(game_id),
+    do: load_game(socket, String.to_integer(game_id))
+
+  def load_game(socket, game_id) do
+    case Api.find_battle_by_game(game_id) do
+      {:ok, battle} ->
+        assign_battle(socket, battle)
+
+      {:error, :not_found} ->
+        push_navigate(socket, to: ~p"/ecspanse/battles/dump")
     end
+  end
+
+  def load_battle(socket, battle_entity_id) do
+    case Api.list_battle(battle_entity_id) do
+      {:error, :not_found} ->
+        push_navigate(socket, to: ~p"/ecspanse/battles/dump")
+
+      battle ->
+        assign_battle(socket, battle)
+    end
+  end
+
+  defp find_player_combatant(battle, user_id) do
+    Enum.find_value(battle.teams, fn team ->
+      Enum.find(team.combatants, &(&1.combatant.user_id == user_id))
+    end)
+  end
+
+  defp assign_battle(socket, battle) do
+    player_combatant = find_player_combatant(battle, socket.assigns.user_id)
+
+    socket =
+      socket
+      |> assign(
+        battle: battle,
+        selected_combatant: nil,
+        selected_combatant_id: nil,
+        battle_loaded: true,
+        player_combatant: player_combatant
+      )
+
+    if connected?(socket),
+      do: Projections.Battle.start!(%{entity_id: battle.entity.id, client_pid: self()})
+
+    socket
   end
 
   defp find_combatant(battle, combatant_entity_id) when is_nil(combatant_entity_id),
@@ -57,10 +105,15 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.IndexLive do
 
   def handle_info({:projection_updated, %{result: battle}}, socket) do
     selected_combatant = find_combatant(battle, socket.assigns.selected_combatant_id)
+    player_combatant = find_player_combatant(battle, socket.assigns.user_id)
 
-    socket = assign(socket, battle: battle, selected_combatant: selected_combatant)
-
-    {:noreply, socket}
+    socket
+    |> assign(
+      battle: battle,
+      selected_combatant: selected_combatant,
+      player_combatant: player_combatant
+    )
+    |> noreply()
   end
 
   def handle_info(msg, socket) do

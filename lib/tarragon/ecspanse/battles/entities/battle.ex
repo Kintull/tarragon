@@ -2,9 +2,12 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Battle do
   @moduledoc """
   Factory for creating a battle
   """
+  alias Tarragon.Ecspanse.Battles.Entities.GameLoopConstants
   alias Tarragon.Ecspanse.Battles.Lookup
   alias Tarragon.Ecspanse.Battles.Components
   require Logger
+
+  use GameLoopConstants
 
   @spec list_living_combatants(Ecspanse.Entity.t()) :: list(Ecspanse.Entity.t())
   @doc """
@@ -18,42 +21,98 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Battle do
     end)
   end
 
-  def blueprint(name) do
+  def enemies_by_distance_from_me(battle_entity, combatant_entity) do
+    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
+      get_other_team_combatants(battle_entity, combatant_entity)
+      |> Enum.group_by(fn ee ->
+        with {:ok, enemy_position} <- Components.Position.fetch(ee) do
+          abs(position.x - enemy_position.x)
+        end
+      end)
+    end
+  end
+
+  def am_i_in_range_of_enemy?(battle_entity, combatant_entity) do
+    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
+      get_other_team_combatants(battle_entity, combatant_entity)
+      |> Enum.any?(fn ee ->
+        with {:ok, {enemy_position, their_weapon}} <-
+               Ecspanse.Query.fetch_components(ee, {Components.Position, Components.MainWeapon}) do
+          abs(position.x - enemy_position.x) <= their_weapon.range
+        end
+      end)
+    end
+  end
+
+  def get_other_team_combatants(battle_entity, combatant_entity) do
+    living_combatants = list_living_combatants(battle_entity)
+    {:ok, my_team} = Lookup.fetch_parent(combatant_entity, Components.Team)
+
+    Lookup.list_children(battle_entity, Components.Team)
+    |> Enum.find(&(&1.id != my_team.id))
+    |> Lookup.list_children(Components.Combatant)
+    |> Enum.filter(&(&1 in living_combatants))
+  end
+
+  def new(game_id, name, max_turns) do
     {Ecspanse.Entity,
      components: [
-       {Components.Battle, [name: name]},
-       EcspanseStateMachine.state_machine(
+       {Components.Battle, [game_id: game_id, max_turns: max_turns, name: name]},
+       EcspanseStateMachine.new(
          "Battle Start",
          [
-           [name: "Battle Start", exits_to: ["Decisions Phase"]],
-           [name: "Decisions Phase", exits_to: ["Action Phase Start"]],
-           [name: "Action Phase Start", exits_to: ["Pop Smoke"]],
-           [name: "Pop Smoke", exits_to: ["Frag Out"]],
-           [name: "Frag Out", exits_to: ["Dodge"]],
-           [name: "Dodge", exits_to: ["Unpack Weapons"]],
-           [name: "Unpack Weapons", exits_to: ["Shooting"]],
-           [name: "Shooting", exits_to: ["Frag Grenades Detonate"]],
-           [name: "Frag Grenades Detonate", exits_to: ["Pack Weapons"]],
-           [name: "Pack Weapons", exits_to: ["Move"]],
-           [name: "Move", exits_to: ["Action Phase End"]],
-           [name: "Action Phase End", exits_to: ["Decisions Phase", "Battle End"]],
-           [name: "Battle End", exits_to: []]
+           [
+             name: @state_names.battle_start,
+             exits: [@state_names.decisions_phase],
+             timeout: 2_000
+           ],
+           [
+             name: @state_names.decisions_phase,
+             exits: [@state_names.action_phase_start],
+             timeout: 60_000
+           ],
+           [
+             name: @state_names.action_phase_start,
+             exits: [@state_names.pop_smoke],
+             timeout: 1_000
+           ],
+           [name: @state_names.pop_smoke, exits: [@state_names.frag_out], timeout: 1_000],
+           [
+             name: @state_names.frag_out,
+             exits: [@state_names.dodge],
+             timeout: @movement_durations.grenades
+           ],
+           [name: @state_names.dodge, exits: [@state_names.deploy_weapons], timeout: 1_000],
+           [name: @state_names.deploy_weapons, exits: [@state_names.fire_weapon], timeout: 1_000],
+           [
+             name: @state_names.fire_weapon,
+             exits: [@state_names.bullets_impact],
+             timeout: @movement_durations.bullets
+           ],
+           [
+             name: @state_names.bullets_impact,
+             exits: [@state_names.frag_grenades_detonate],
+             timeout: 1000
+           ],
+           [
+             name: @state_names.frag_grenades_detonate,
+             exits: [@state_names.pack_weapons],
+             timeout: 1_000
+           ],
+           [name: @state_names.pack_weapons, exits: [@state_names.move], timeout: 1_000],
+           [
+             name: @state_names.move,
+             exits: [@state_names.action_phase_end],
+             timeout: @movement_durations.combatants
+           ],
+           [
+             name: @state_names.action_phase_end,
+             exits: [@state_names.decisions_phase, @state_names.battle_end]
+           ],
+           [name: @state_names.battle_end]
          ],
-         false
-       ),
-       EcspanseStateMachine.state_timer([
-         [name: "Battle Start", duration: 3_000, exits_to: "Decisions Phase"],
-         [name: "Decisions Phase", duration: 15_000, exits_to: "Action Phase Start"],
-         [name: "Action Phase Start", duration: 1_000, exits_to: "Pop Smoke"],
-         [name: "Pop Smoke", duration: 1_000, exits_to: "Frag Out"],
-         [name: "Frag Out", duration: 1_000, exits_to: "Dodge"],
-         [name: "Dodge", duration: 1_000, exits_to: "Unpack Weapons"],
-         [name: "Unpack Weapons", duration: 1_000, exits_to: "Shooting"],
-         [name: "Shooting", duration: 1_000, exits_to: "Frag Grenades Detonate"],
-         [name: "Frag Grenades Detonate", duration: 1_000, exits_to: "Pack Weapons"],
-         [name: "Pack Weapons", duration: 1_000, exits_to: "Move"],
-         [name: "Move", duration: 1_000, exits_to: "Action Phase End"]
-       ])
+         auto_start: false
+       )
      ]}
   end
 end

@@ -1,6 +1,6 @@
 defmodule Tarragon.Ecspanse.Battles.Components.AvailableAction do
   @moduledoc """
-  An action available to the combatant
+  This is essentilly a tag to be able to identify available actions.
   """
   use Ecspanse.Component,
     state: [],

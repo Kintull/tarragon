@@ -1,4 +1,5 @@
 defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
+  @moduledoc false
   alias Tarragon.Ecspanse.Battles.Api
   use TarragonWeb, :live_component
 
@@ -6,17 +7,17 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
     ~H"""
     <div>
       <div>Name: <%= @combatant.brand.name %></div>
-      
+
       <div>Profession: <%= @combatant.profession.name %></div>
-      
+
       <div>Health: <%= @combatant.health.current %></div>
-      
+
       <div>Action Points: <%= @combatant.action_points.current %></div>
-      
+
       <div>Position: <%= @combatant.position.x %></div>
-      
+
       <div class="underline underline-offset-2">Available Actions</div>
-      
+
       <div class="grid grid-cols-2 gap-2 pt-2">
         <div
           :for={action <- @combatant.available_actions}
@@ -32,10 +33,10 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
         >
           <.action_tag_content action={action.action} />
         </div>
-        
+
         <div :if={!Enum.any?(@combatant.available_actions)}>-- none --</div>
       </div>
-      
+
       <button
         :if={@combatant.combatant.waiting_for_intentions}
         phx-click="lock_intentions"
@@ -48,9 +49,9 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
       >
         🔒 Lock Actions 🛈
       </button>
-      
+
       <div class="underline underline-offset-2">Scheduled Actions</div>
-      
+
       <div class="grid grid-cols-2 gap-2 pt-2">
         <div
           :for={action <- @combatant.scheduled_actions}
@@ -65,7 +66,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
         >
           <.action_tag_content action={action.action} />
         </div>
-        
+
         <div :if={!Enum.any?(@combatant.scheduled_actions)}>-- none --</div>
       </div>
     </div>

@@ -4,12 +4,15 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterActionPhaseStart do
   """
   alias Tarragon.Ecspanse.Battles.Entities
   alias Tarragon.Ecspanse.Battles.Components
+  use Entities.GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
 
+  @to_state @state_names.action_phase_start
+
   def run(
-        %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: "Action Phase Start"},
+        %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: @to_state},
         _frame
       ) do
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do

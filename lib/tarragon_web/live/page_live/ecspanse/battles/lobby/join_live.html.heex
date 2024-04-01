@@ -1,0 +1,61 @@
+<div class="border-2 border-black p-2">
+  <div class="bg-red-300 p-2">
+    <%= assigns.lobby_game.game_parameters.red_team_params.name %>
+  </div>
+  <div class="grid grid-cols-3 gap-4 bg-red-300 p-2">
+    <div :for={{{:red, profession}, user_id} <- @player_combatants}>
+      <.button
+        :if={user_id == nil}
+        phx-click="assign_player"
+        phx-value-team="red"
+        phx-value-profession={profession}
+      >
+        be <%= profession %>
+      </.button>
+      <div :if={user_id != nil}>
+        <%= inspect(profession) %>
+        <span :if={user_id != @user_id}>Player <%= inspect(@user_id) %></span>
+        <span :if={user_id == @user_id}>You</span>
+        <.button
+          phx-click="unassign_player"
+          phx-value-team="red"
+          phx-value-profession={profession}
+        >
+          X
+        </.button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-blue-300 p-2">
+    <%= assigns.lobby_game.game_parameters.blue_team_params.name %>
+  </div>
+  <div class="grid grid-cols-3 gap-4 bg-blue-300 p-2">
+    <div :for={{{:blue, profession}, user_id} <- @player_combatants}>
+      <.button
+        :if={user_id == nil}
+        phx-click="assign_player"
+        phx-value-team="blue"
+        phx-value-profession={profession}
+      >
+        be <%= profession %>
+      </.button>
+      <div :if={user_id != nil}>
+        <%= inspect(profession) %>
+        <span :if={user_id != @user_id}>Player <%= inspect(@user_id) %></span>
+        <span :if={user_id == @user_id}>You</span>
+        <.button
+          phx-click="unassign_player"
+          phx-value-team="blue"
+          phx-value-profession={profession}
+        >
+          X
+        </.button>
+      </div>
+    </div>
+  </div>
+  <.button :if={@enrolled == @lobby_game.id} class="mt-8" phx-click="play">
+    Play
+  </.button>
+</div>
+lobby_game <pre><%= inspect(assigns.lobby_game, pretty: true) %></pre>

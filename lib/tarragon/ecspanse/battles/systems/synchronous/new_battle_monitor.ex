@@ -5,8 +5,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.NewBattleMonitor do
   alias Tarragon.Ecspanse.Battles.Components
   alias Tarragon.Ecspanse.Battles.Entities
 
-  use Ecspanse.System,
-    lock_components: [Components.Battle]
+  use Ecspanse.System
 
   def run(_frame) do
     Ecspanse.Query.select({Ecspanse.Entity, Components.Battle})
@@ -18,8 +17,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.NewBattleMonitor do
 
   defp start_battles(entity_battle_tuples) do
     entity_battle_tuples
-    |> Enum.each(fn {entity, _battle} ->
+    |> Enum.each(fn {entity, battle} ->
       EcspanseStateMachine.start(entity.id)
+      Ecspanse.Command.update_component!(battle, is_started: true)
     end)
   end
 

@@ -21,22 +21,28 @@ defmodule Tarragon.Ecspanse.Battles.BattlesManager do
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnScheduleAvailableAction)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnCancelScheduledAction)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnLockIntentions)
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.MovingAnimator)
     # state machine
-    |> Ecspanse.add_frame_start_system(Systems.GameLoop.StateChangeInspector)
+    # |> Ecspanse.add_frame_start_system(Systems.GameLoop.StateChangeInspector)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterActionPhaseEnd)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterActionPhaseStart)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBattleEnd)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBattleStart)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBulletsImpact)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDecisionsPhase)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDeployWeapons)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDodge)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterFragOut)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterFragGrenadesDetonate)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterFireWeapon)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterMove)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterPackWeapons)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterPopSmoke)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnExitDecisionsPhase)
+
     # `
     # every frame`
     # `
-    |> Ecspanse.add_system(Systems.MovingAnimator)
 
     #
     # frame end

@@ -1,0 +1,40 @@
+<h1>Configure a new game</h1>
+<%!-- <pre><%= inspect assigns.form[:sniper_rifle_params], pretty: true %></pre> --%>
+
+<.form
+  for={@form}
+  phx-change="validate"
+  phx-submit="save"
+  class="divide-y-2 divide-neutral-300 space-y-4"
+>
+  <TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents.team_params
+    title="Red Team"
+    team_params_form_field={@form[:red_team_params]}
+  />
+
+  <TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents.team_params
+    title="Blue Team"
+    team_params_form_field={@form[:blue_team_params]}
+  />
+
+  <%!-- <div class="grid grid-cols-2 gap-2">
+    <.input field={@form[:red_team_name]} label="Red Team Name" />
+    <.input field={@form[:blue_team_name]} label="Blue Team Name" />
+  </div> --%>
+  <.input field={@form[:turns]} label="Turns" type="number" />
+
+  <TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents.combatant_params
+    title="Machine Gunner"
+    combatant_params_form_field={@form[:machine_gunner_params]}
+  />
+  <TarragonWeb.PageLive.Ecspanse.Battles.New.GameParameterFormComponents.frag_grenade_params
+    title="Frag Grenade"
+    frag_grenade_params_form_field={@form[:frag_grenade_params]}
+  />
+
+  <.button>Go</.button>
+</.form>
+
+<pre><%= inspect assigns.form, pretty: true %></pre>
+
+<.back navigate={~p"/ecspanse/battles/lobby"}>To Games List</.back>

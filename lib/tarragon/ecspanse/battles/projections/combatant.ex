@@ -11,12 +11,13 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
       :brand,
       :combatant,
       :entity,
-      :firearm,
-      :grenade_pouch,
+      :frag_grenade,
       :health,
+      :main_weapon,
       :position,
       :profession,
       :scheduled_actions,
+      :smoke_grenade,
       :is_dodging,
       :is_obscured,
       :is_moving,
@@ -44,16 +45,16 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
   end
 
   def project_combatant(%Ecspanse.Entity{} = combatant_entity) do
-    with {:ok, {action_points, brand, combatant, grenade_pouch, health, position}} <-
+    with {:ok,
+          {action_points, brand, combatant, frag_grenade, health, main_weapon, position,
+           profession,
+           smoke_grenade}} <-
            Ecspanse.Query.fetch_components(
              combatant_entity,
              {Components.ActionPoints, Components.Brand, Components.Combatant,
-              Components.GrenadePouch, Components.Health, Components.Position}
-           ),
-         {:ok, firearm} <-
-           Ecspanse.Query.fetch_tagged_component(combatant_entity, [:firearm]),
-         {:ok, profession} <-
-           Ecspanse.Query.fetch_tagged_component(combatant_entity, [:profession]) do
+              Components.FragGrenade, Components.Health, Components.MainWeapon,
+              Components.Position, Components.Profession, Components.SmokeGrenade}
+           ) do
       available_action_projections =
         Lookup.list_children(combatant_entity, Components.AvailableAction)
         |> Enum.map(&Projections.AvailableAction.project_available_action/1)
@@ -93,12 +94,13 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
         brand: ProjectionUtils.project(brand),
         combatant: ProjectionUtils.project(combatant),
         entity: ProjectionUtils.project(combatant_entity),
-        grenade_pouch: ProjectionUtils.project(grenade_pouch),
+        frag_grenade: ProjectionUtils.project(frag_grenade),
         health: ProjectionUtils.project(health),
-        firearm: ProjectionUtils.project(firearm),
-        position: project_position(position),
+        main_weapon: ProjectionUtils.project(main_weapon),
+        position: Projections.Position.project_position(position),
         profession: ProjectionUtils.project(profession),
         scheduled_actions: scheduled_action_projections,
+        smoke_grenade: ProjectionUtils.project(smoke_grenade),
         is_dodging: is_dodging,
         is_moving: is_moving,
         is_shooting: is_shooting,
@@ -106,11 +108,5 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
         is_obscured: is_obscured
       )
     end
-  end
-
-  defp project_position(%Components.Position{} = position) do
-    projection = ProjectionUtils.project(position)
-    # .05 increments
-    %{projection | x: floor(projection.x * 20) / 20}
   end
 end

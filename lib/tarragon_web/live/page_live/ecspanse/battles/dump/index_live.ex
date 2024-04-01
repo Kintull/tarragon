@@ -43,11 +43,6 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Dump.IndexLive do
     {:noreply, socket}
   end
 
-  def handle_event(event, params, socket) do
-    IO.inspect({event, params}, label: "unhandled_event")
-    {:noreply, socket}
-  end
-
   def handle_info({:projection_updated, %{result: battle}}, socket) do
     updated_battles =
       Map.get(socket.assigns, :battles, [])
@@ -62,11 +57,6 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Dump.IndexLive do
 
   def handle_info(:scan_battles, socket) do
     socket = scan_battles(socket)
-    {:noreply, socket}
-  end
-
-  def handle_info(msg, socket) do
-    IO.inspect(msg, label: "unhandled_info")
     {:noreply, socket}
   end
 end

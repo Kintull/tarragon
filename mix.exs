@@ -33,6 +33,7 @@ defmodule Tarragon.MixProject do
   defp deps do
     [
       {:comeonin, "~> 2.5"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dns_cluster, "~> 0.1"},
       {:ecspanse, "~> 0.8.0"},
       {:ecto_sql, "~> 3.10"},
@@ -60,8 +61,8 @@ defmodule Tarragon.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:struct_access, "~> 1.1"},
       {:typedstruct, "~> 0.5.2"},
-      {:ecspanse_live_dashboard, path: "../../ecspanse_live_dashboard"},
-      {:ecspanse_state_machine, path: "../../ecspanse_state_machine"}
+      {:ecspanse_state_machine, ">= 0.3.2"}
+      # {:ecspanse_state_machine, path: "/Users/ketupia/src/phoenix/ecspanse_state_machine"}
     ]
   end
 
