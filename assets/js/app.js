@@ -26,6 +26,12 @@ import $ from "../vendor/jquery.3.7.1.min"
 import {createPlayerScreenHooks} from "./player_screen_hooks";
 import {createViewportResizeHooks} from "./viewport_resize_hook"
 import {createBattleScreenHooks} from "./battle_screen_hooks"
+import collapse from '@alpinejs/collapse'
+import Alpine from "alpinejs"
+
+Alpine.plugin(collapse);
+Alpine.start();
+window.Alpine = Alpine;
 
 
 const playerScreenHooks = createPlayerScreenHooks();
@@ -49,7 +55,14 @@ let liveSocket = new LiveSocket("/live", Socket, {
             height: window.innerHeight
         }
     },
-    hooks: Hooks
+    hooks: Hooks,
+    dom: {
+        onBeforeElUpdated(from, to) {
+            if (from._x_dataStack) {
+                window.Alpine.clone(from, to);
+            }
+        }
+    }
 })
 
 window.sendData = LiveSocket.sendData

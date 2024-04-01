@@ -14,7 +14,10 @@ defmodule Storybook.BattleV2.BattleCharacter do
           width: "70",
           current_health: 60,
           max_health: 100,
-          style: ""
+          style: "",
+          is_ally: true,
+          is_player: true,
+          is_target: false
         }
       }
     ]

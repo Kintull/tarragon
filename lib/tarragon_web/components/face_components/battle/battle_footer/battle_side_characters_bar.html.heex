@@ -1,6 +1,4 @@
 <%
-percentage = round(@current_hp * 100 / @max_hp)
-
 colors =
 case @color_scheme do
     "blue" ->
@@ -27,32 +25,48 @@ transform_class =
     end
 
 %>
-<div class={["relative w-[83px] h-fit pr-[2px] py-[2px] bg-dark-50 rounded-r-[11px]", transform_class]}>
-    <div class={[
-         "relative pb-[15px] flex flex-col items-center justify-start h-full w-full border-[2px] border-beige-30 ",
-         "border-l-transparent rounded-r-[10px] bg-dark-40"]}>
-        <div class="mb-[10px] mt-[6px] w-[68px] flex flex-row items-end justify-center">
-            <div class="w-[56px] h-[16px]">
-                <%= if @color_scheme == "blue" do %>
-                    <.flower_horizontal_left_blue_svg/>
-                <% else %>
-                    <.flower_horizontal_left_red_svg/>
-                <% end %>
+<div x-data="{ expanded: false }" @click.outside="expanded = false">
+    <div class={["relative w-[83px] h-fit pr-[2px] py-[2px] bg-dark-50 rounded-r-[11px]", transform_class]}>
+        <div class={[
+             "relative pb-[5px] flex flex-col items-center justify-start h-full w-full border-[2px] border-beige-30 ",
+             "border-l-transparent rounded-r-[10px] bg-dark-40"]}>
+            <div class="TopOrnament mb-[10px] mt-[6px] w-[68px] flex flex-row items-end justify-center">
+                <div class="w-[56px] h-[16px]">
+                    <%= if @color_scheme == "blue" do %>
+                        <.flower_horizontal_left_blue_svg/>
+                    <% else %>
+                        <.flower_horizontal_left_red_svg/>
+                    <% end %>
+                </div>
+                <div class="translate-x-[-3px] w-[11px] h-[11px]">
+                    <%= if @color_scheme == "blue" do %>
+                        <.ball_blue_svg/>
+                    <% else %>
+                        <.ball_red_svg/>
+                    <% end %>
+                </div>
             </div>
-            <div class="translate-x-[-3px] w-[11px] h-[11px]">
-                <%= if @color_scheme == "blue" do %>
-                    <.ball_blue_svg/>
-                <% else %>
-                    <.ball_red_svg/>
-                <% end %>
-            </div>
-        </div>
 
-        <div class={["CharacterList flex flex-col gap-[13px] w-full h-full items-center justify-center", transform_class]}>
-            <%= for id <- @character_ids do %>
-                <% percentage = round(@current_health_points_by_ids[id] / @max_health_points_by_ids[id] * 100) %>
-                <.battle_side_character img_url={@avatars_by_ids[id]} border_color={border_color} bg_color={bg_color} percentage={percentage}/>
-            <% end %>
+            <div class={["CharacterList flex flex-col gap-[13px] w-full h-full items-center justify-center", transform_class]}>
+                <% [head_character_id | tail_character_ids] = @character_ids %>
+                <% percentage = round(@current_health_points_by_ids[head_character_id] / @max_health_points_by_ids[head_character_id] * 100) %>
+                <.battle_side_character img_url={@avatars_by_ids[head_character_id]} border_color={border_color} bg_color={bg_color} percentage={percentage}/>
+                <div x-show="expanded" x-collapse class="flex flex-col gap-[13px]">
+                    <%= for id <- tail_character_ids do %>
+                    <% percentage = round(@current_health_points_by_ids[id] / @max_health_points_by_ids[id] * 100) %>
+                    <.battle_side_character img_url={@avatars_by_ids[id]} border_color={border_color} bg_color={bg_color} percentage={percentage}/>
+                    <% end %>
+                </div>
+            </div>
+
+            <div x-bind:class="{'transform rotate-180': expanded}" class="w-[20px] h-[15px] m-[5px]" @click="expanded = ! expanded">
+                <svg viewBox="0 0 42 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 29.2161L2.64165 2.09562L20.6771 8.24866L21 8.35882L21.3229 8.24866L39.3583 2.0956L21 29.2161Z" fill="#181F25" stroke="#DDD3C5" stroke-width="2"/>
+                    <path d="M7 4.89477L21.0001 25.5034L35 4.89478" stroke="#7AA9B8" stroke-width="2"/>
+                </svg>
+            </div>
         </div>
     </div>
+
+
 </div>

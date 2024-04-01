@@ -1,0 +1,11 @@
+<div class={["absolute w-full h-full hover:scale-[105%] hover:text-beige-10 hover:z-10", @text_color]} style={"width: #{@width}px; height: #{@height}px; left: #{@left}px; top: #{@top}px"}>
+<!--    <div class="absolute w-full h-full flex items-center justify-center">-->
+<!--        <p class="text text-[5px] z-10 text-black"><%="#{inspect(@hex_coords)}"%></p>-->
+<!--    </div>-->
+    <div class="absolute w-full h-full flex items-center justify-center">
+        <%= render_slot(@inner_block) %>
+    </div>
+    <svg viewBox="0 0 90 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.7284 51.4808L0.661439 26L22.7284 0.519238L67.2716 0.519238L89.3386 26L67.2716 51.4808L22.7284 51.4808Z" fill="currentColor" stroke="#181F25"/>
+    </svg>
+</div>
