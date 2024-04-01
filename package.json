@@ -5,6 +5,8 @@
     "styles-loader": "^3.0.0"
   },
   "dependencies": {
+    "@alpinejs/collapse": "^3.13.7",
+    "alpinejs": "^3.13.7",
     "live_json": "file:./deps/live_json",
     "sprity": "^1.0.8",
     "three": "^0.161.0",

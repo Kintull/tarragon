@@ -1,7 +1,8 @@
+<% id = System.unique_integer([:positive]) %>
 <svg  viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
   <circle cx="6.5" cy="6.5" r="6.5" fill="#326F95" />
   <mask
-    id="mask0_515_11226"
+    id={"mask#{id}"}
     style="mask-type:alpha"
     maskUnits="userSpaceOnUse"
     x="0"
@@ -11,7 +12,7 @@
   >
     <circle cx="6.5" cy="6.5" r="6.5" fill="#823217" />
   </mask>
-  <g mask="url(#mask0_515_11226)">
+  <g mask={"url(#mask#{id})"}>
     <path
       d="M2.63767 2.34959C1.37126 3.18261 0.577152 5.61283 0.806671 6.84191C1.42894 7.72871 1.6009 6.79195 1.64547 6.32423C1.70618 5.99295 1.6825 5.1994 2.12533 4.36861C2.73919 3.21698 3.09438 2.94333 3.95883 2.50501C4.15924 2.04357 4.29199 1.26141 2.63767 2.34959Z"
       fill="#FFF4E5"
