@@ -59,7 +59,7 @@ defmodule TarragonWeb.PageLive.ChatScreen do
     socket =
       assign(socket,
         sent_messages: messages,
-        the_message: "",
+        the_message: nil,
         user_id: user_id
       )
 
