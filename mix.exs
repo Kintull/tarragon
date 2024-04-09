@@ -48,11 +48,11 @@ defmodule Tarragon.MixProject do
       {:mnemonic_slugs, "~> 0.0.3"},
       {:phoenix, "~> 1.7"},
       {:phoenix_ecto, "~> 4.4"},
-      {:phoenix_html, "~> 3.3"},
+      {:phoenix_html, "~> 4.1"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.20"},
-      {:phoenix_storybook, "~> 0.5"},
+      {:phoenix_storybook, "~> 0.6"},
       {:plug_cowboy, "~> 2.5"},
       {:postgrex, "~> 0.17"},
       {:swoosh, "~> 1.3"},
@@ -61,7 +61,8 @@ defmodule Tarragon.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:struct_access, "~> 1.1"},
       {:typedstruct, "~> 0.5.2"},
-      {:ecspanse_state_machine, ">= 0.3.2"}
+      {:ecspanse_state_machine, ">= 0.3.2"},
+      {:backoffice_templates, "~> 1.0.4"}
       # {:ecspanse_state_machine, path: "/Users/ketupia/src/phoenix/ecspanse_state_machine"}
     ]
   end

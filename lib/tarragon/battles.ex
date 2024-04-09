@@ -5,6 +5,7 @@ defmodule Tarragon.Battles do
 
   alias Tarragon.Battles.Room
   alias Tarragon.Battles.Participant
+  alias Tarragon.Battles.Profession
   alias Tarragon.Battles.CharacterBattleBonuses
   alias Tarragon.Accounts.UserCharacter
 

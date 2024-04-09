@@ -72,6 +72,13 @@ defmodule Tarragon.Ecspanse.Lobby.CombatantParameters do
     embeds_one :main_weapon_params, MainWeaponParameters
   end
 
+  @spec changeset(
+          {map(), map()}
+          | %{
+              :__struct__ => atom() | %{:__changeset__ => map(), optional(any()) => any()},
+              optional(atom()) => any()
+            }
+        ) :: map()
   def changeset(model, attrs \\ %{}) do
     model
     |> cast(attrs, [:max_health])

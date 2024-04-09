@@ -21,7 +21,7 @@ defmodule TarragonWeb do
 
   def router do
     quote do
-      use Phoenix.Router, helpers: false
+      use Phoenix.Router, helpers: true
 
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
@@ -86,6 +86,7 @@ defmodule TarragonWeb do
       # Core UI components and translation
       import TarragonWeb.CoreComponents
       import TarragonWeb.FaceComponents
+      import TarragonWeb.BackofficeComponents
       import TarragonWeb.Gettext
 
       # Shortcut for generating JS commands
