@@ -8,6 +8,7 @@ defmodule Tarragon.Battles.Impl do
 
   alias Tarragon.Accounts.UserCharacter
   alias Tarragon.Battles.Participant
+  alias Tarragon.Battles.Profession
   alias Tarragon.Battles.Room
   alias Tarragon.Repo
 

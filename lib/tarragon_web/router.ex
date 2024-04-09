@@ -15,6 +15,10 @@ defmodule TarragonWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :admin do
+    plug :put_root_layout, html: {TarragonWeb.Layouts, :admin_root}
+  end
+
   scope "/" do
     storybook_assets()
   end
@@ -44,6 +48,20 @@ defmodule TarragonWeb.Router do
 
     live "/ecspanse/battles/play",
          PageLive.Ecspanse.Battles.Play.IndexLive
+
+    scope "/admin" do
+      pipe_through :admin
+
+      live "/", AdminLive.Index, :index
+      live "/weapon_parameters", AdminLive.WeaponParameters
+      live "/battle_room_parameters", AdminLive.BattleRoomParameters
+      live "/profession_parameters", AdminLive.ProfessionParameters
+      live "/professions", ProfessionLive.Index, :index
+      live "/professions/new", ProfessionLive.Index, :new
+      live "/professions/:id/edit", ProfessionLive.Index, :edit
+      live "/professions/:id", ProfessionLive.Show, :show
+      live "/professions/:id/show/edit", ProfessionLive.Show, :edit
+    end
   end
 
   # Other scopes may use custom stacks.
