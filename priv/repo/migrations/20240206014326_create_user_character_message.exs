@@ -5,7 +5,7 @@ defmodule Tarragon.Repo.Migrations.CreateUserCharacterMessageTable do
     create table(:user_character_messages) do
       add :message, :string
       add :user_character_id, references(:user_characters)
-      add :chat_rooms_id, references(:chat_rooms)
+      add :chat_room_id, references(:chat_rooms)
       timestamps()
     end
   end

@@ -32,7 +32,6 @@ defmodule Tarragon.Accounts.CharacterHealer do
             })
 
           IO.inspect(updated_character.current_health)
-          updated_character
         else
           user_character
         end

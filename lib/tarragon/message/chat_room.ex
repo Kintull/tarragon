@@ -4,11 +4,10 @@ defmodule Tarragon.Message.ChatRoom do
   alias Tarragon.Message.ChatRoomMember
 
   schema "chat_room" do
-
-    field :title,:string
+    field :title, :string
     has_many :chat_room_members, ChatRoomMember
     has_many :user_character_messages, UserCharacterMessage
 
-  timestamps()
+    timestamps()
   end
 end
