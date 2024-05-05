@@ -1,19 +1,17 @@
-<%
-
-available = %{
-outer_color: "bg-beige-20",
-inner_color: "bg-beige-10 group-active:bg-beige-30",
-border_color: "border-beige-40",
-text_color: "text-dark-20 group-active:text-beige-10",
-ring_border_color: "border-beige-40 group-active:border-beige-10"
+<% available = %{
+  outer_color: "bg-beige-20",
+  inner_color: "bg-beige-10 group-active:bg-beige-30",
+  border_color: "border-beige-40",
+  text_color: "text-dark-20 group-active:text-beige-10",
+  ring_border_color: "border-beige-40 group-active:border-beige-10"
 }
 
 unavailable = %{
-outer_color: "bg-beige-20",
-inner_color: "bg-beige-20",
-border_color: "border-brown-30",
-text_color: "text-beige-30",
-ring_border_color: "border-brown-20"
+  outer_color: "bg-beige-20",
+  inner_color: "bg-beige-20",
+  border_color: "border-brown-30",
+  text_color: "text-beige-30",
+  ring_border_color: "border-brown-20"
 }
 
 style_set = if @state == :unavailable, do: unavailable, else: available
@@ -22,9 +20,7 @@ outer_color = style_set[:outer_color]
 inner_color = style_set[:inner_color]
 border_color = style_set[:border_color]
 text_color = style_set[:text_color]
-ring_border_color = style_set[:ring_border_color]
-
-%>
+ring_border_color = style_set[:ring_border_color] %>
 
 <.bordered_rectangle
   border_color={border_color}
@@ -34,9 +30,11 @@ ring_border_color = style_set[:ring_border_color]
   class="w-[64px] h-[54px] mx-auto group"
 >
   <div class="w-full h-full flex flex-col items-start justify-center">
-    <div class={["ml-[12px] w-min h-min text-[12px] font-semibold font-metropolis-regular select-none", text_color]}>
+    <div class={[
+      "ml-[12px] w-min h-min text-[12px] font-semibold font-metropolis-regular select-none",
+      text_color
+    ]}>
       <%= @text %>
     </div>
   </div>
 </.bordered_rectangle>
-

@@ -6,27 +6,40 @@
           <thead class="bg-gray-50">
             <tr>
               <%= for key <- @keys do %>
-                <th class="px-6 py-2 text-xs text-gray-500"> <%= String.upcase(Atom.to_string(key)) %> </th>
+                <th class="px-6 py-2 text-xs text-gray-500">
+                  <%= String.upcase(Atom.to_string(key)) %>
+                </th>
               <% end %>
-                <th class="px-6 py-2 text-xs text-gray-500"> EDIT </th>
-                <th class="px-6 py-2 text-xs text-gray-500"> DELETE </th>
+              <th class="px-6 py-2 text-xs text-gray-500">EDIT</th>
+              <th class="px-6 py-2 text-xs text-gray-500">DELETE</th>
             </tr>
           </thead>
           <tbody class="bg-white">
             <%= for item <- @items do %>
               <tr class="whitespace-nowrap" id={@item_id_prefix <> "-" <> "#{item.id}"}>
                 <%= for key <- @keys do %>
-                    <td class="px-6 py-4 text-sm text-gray-500"><%= Map.get(item, key) %></td>
+                  <td class="px-6 py-4 text-sm text-gray-500"><%= Map.get(item, key) %></td>
                 <% end %>
 
                 <td class="px-6 py-4 text-sm text-gray-500">
-                  <%= live_redirect "Edit", to: @edit_fn.(item), class: "px-4 py-1 text-sm text-white bg-blue-400 rounded"%>
+                  <%= live_redirect("Edit",
+                    to: @edit_fn.(item),
+                    class: "px-4 py-1 text-sm text-white bg-blue-400 rounded"
+                  ) %>
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-500">
-                    <.link href="#" phx-click="delete" phx-value-id={item.id} data-confirm="Really?" class="px-4 py-1 text-sm text-white bg-red-400 rounded">Delete</.link>
+                  <.link
+                    href="#"
+                    phx-click="delete"
+                    phx-value-id={item.id}
+                    data-confirm="Really?"
+                    class="px-4 py-1 text-sm text-white bg-red-400 rounded"
+                  >
+                    Delete
+                  </.link>
                 </td>
               </tr>
-              <% end %>
+            <% end %>
           </tbody>
         </table>
       </div>

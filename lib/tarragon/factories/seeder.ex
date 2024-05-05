@@ -182,8 +182,8 @@ defmodule Seeder do
 
   def hard_reset_battles do
     Seeder.delete_all_participants_and_rooms()
-    ally_characters = for x <- 1..3, do: Seeder.create_character_with_items()
-    enemy_characters = for x <- 1..3, do: Seeder.create_character_with_items()
+    ally_characters = for _ <- 1..3, do: Seeder.create_character_with_items()
+    enemy_characters = for _ <- 1..3, do: Seeder.create_character_with_items()
     Seeder.create_battle_room_with_participants(ally_characters, enemy_characters)
 
     ally_characters |> List.first()

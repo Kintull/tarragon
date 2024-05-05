@@ -7,7 +7,7 @@
     <.live_title suffix=" · Admin panel">
       <%= assigns[:page_title] || "Tarragon" %>
     </.live_title>
-     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
     <link rel="manifest" href="/assets/manifest.json" />
@@ -19,24 +19,38 @@
         <nav class="bg-gray-800 p-2">
           <ul class="flex gap-2">
             <li class="mr-2">
-               <a href="/admin/" class="text-white">Home</a>
+              <a href="/admin/" class="text-white">Home</a>
             </li>
 
             <li class="mr-2">
-              <a href="/admin/battle_room_parameters" class="text-white
-              hover:text-gray-400">Battle Rooms</a>
+              <a
+                href="/admin/battle_room_parameters"
+                class="text-white
+              hover:text-gray-400"
+              >
+                Battle Rooms
+              </a>
             </li>
 
             <li class="mr-2">
-              <a href="/admin/profession_parameters" class="text-white
-              hover:text-gray-400">Professions</a>
+              <a
+                href="/admin/profession_parameters"
+                class="text-white
+              hover:text-gray-400"
+              >
+                Professions
+              </a>
             </li>
 
             <li class="mr-2">
-              <a href="/admin/weapon_parameters" class="text-white
-              hover:text-gray-400">Weapons</a>
+              <a
+                href="/admin/weapon_parameters"
+                class="text-white
+              hover:text-gray-400"
+              >
+                Weapons
+              </a>
             </li>
-
           </ul>
         </nav>
       </div>

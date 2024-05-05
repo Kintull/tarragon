@@ -2,12 +2,13 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterPopSmoke do
   @moduledoc """
   Current does nothing but transition to decision phase
   """
-  alias Tarragon.Ecspanse.Battles.Entities
   alias Tarragon.Ecspanse.Withables
-  alias Tarragon.Ecspanse.Battles.Entities.Battle
   alias Tarragon.Ecspanse.Battles.Components
+  alias Tarragon.Ecspanse.Battles.Entities.Battle
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
   alias Tarragon.Ecspanse.Battles.Lookup
-  use Entities.GameLoopConstants
+
+  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]

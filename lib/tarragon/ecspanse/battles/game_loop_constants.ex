@@ -1,4 +1,4 @@
-defmodule Tarragon.Ecspanse.Battles.Entities.GameLoopConstants do
+defmodule Tarragon.Ecspanse.Battles.GameLoopConstants do
   defmodule MovementDurations do
     defstruct combatants: 1000, grenades: 250, bullets: 100
 

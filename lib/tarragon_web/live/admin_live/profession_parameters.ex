@@ -21,9 +21,9 @@ defmodule TarragonWeb.AdminLive.ProfessionParameters do
   def render(assigns) do
     ~H"""
     <div class="flex-grow">
-        <div class="flex justify-center items-center h-full">
-          <h1 class="text-4xl">Welcome to the Admin Portal</h1>
-        </div>
+      <div class="flex justify-center items-center h-full">
+        <h1 class="text-4xl">Welcome to the Admin Portal</h1>
+      </div>
     </div>
     """
   end

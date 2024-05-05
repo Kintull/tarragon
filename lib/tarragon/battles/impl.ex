@@ -8,7 +8,6 @@ defmodule Tarragon.Battles.Impl do
 
   alias Tarragon.Accounts.UserCharacter
   alias Tarragon.Battles.Participant
-  alias Tarragon.Battles.Profession
   alias Tarragon.Battles.Room
   alias Tarragon.Repo
 
@@ -434,7 +433,9 @@ defmodule Tarragon.Battles.Impl do
   end
 
   @impl true
-  defdelegate init_battle_process(participants), to: Tarragon.Battles.BattleRoom, as: :init_battle
+  defdelegate init_battle_process(participants),
+    to: Tarragon.Battles.BattleTrackerEcs,
+    as: :init_battle
 
   @impl true
   defdelegate submit_battle_action(battle_room_id, action_map),

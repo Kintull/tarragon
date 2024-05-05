@@ -3,10 +3,12 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterMove do
   * Executes scheduled movement actions
   """
   alias Tarragon.Ecspanse.Withables
-  alias Tarragon.Ecspanse.Battles.Lookup
   alias Tarragon.Ecspanse.Battles.Components
   alias Tarragon.Ecspanse.Battles.Entities
-  use Entities.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.Lookup
+
+  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]

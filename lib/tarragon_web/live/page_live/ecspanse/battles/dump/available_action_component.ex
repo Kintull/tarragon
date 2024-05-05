@@ -9,7 +9,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Dump.AvailableActionComponent do
         <:header>
           <%= @available_action.action.name %>
         </:header>
-         <CommonComponents.details_card_from_map label="Action" map={@available_action.action} />
+        <CommonComponents.details_card_from_map label="Action" map={@available_action.action} />
         <CommonComponents.details_card_from_map
           label="Available Action"
           map={@available_action.available_action}

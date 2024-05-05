@@ -6,7 +6,8 @@ defmodule Tarragon.Ecspanse.Battles.Components.Battle do
     state: [
       game_id: nil,
       name: "Red vs. Blue",
-      field_width: 21,
+      field_width: 7,
+      field_radius: 5,
       is_started: false,
       turn: 0,
       max_turns: 30,

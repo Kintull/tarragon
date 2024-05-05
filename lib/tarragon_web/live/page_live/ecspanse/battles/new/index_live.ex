@@ -1,7 +1,7 @@
 defmodule TarragonWeb.PageLive.Ecspanse.Battles.New.IndexLive do
   alias Tarragon.Ecspanse.Lobby.LobbyGame
   alias Tarragon.Ecspanse.Lobby.LobbyGamesAgent
-  alias Tarragon.Ecspanse.Lobby.GameParameters
+  alias Tarragon.Ecspanse.GameParameters
 
   use TarragonWeb, :live_view
 

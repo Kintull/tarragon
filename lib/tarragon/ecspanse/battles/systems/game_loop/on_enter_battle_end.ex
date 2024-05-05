@@ -3,10 +3,12 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterBattleEnd do
   Determines Winners
   """
   alias Tarragon.Ecspanse.Withables
-  alias Tarragon.Ecspanse.Battles.Lookup
-  alias Tarragon.Ecspanse.Battles.Entities
   alias Tarragon.Ecspanse.Battles.Components
-  use Entities.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.Entities
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.Lookup
+
+  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]

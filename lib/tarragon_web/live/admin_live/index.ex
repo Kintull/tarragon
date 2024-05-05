@@ -14,8 +14,8 @@ defmodule TarragonWeb.AdminLive.Index do
   def render(assigns) do
     ~H"""
     <div class="flex justify-center items-center h-full">
-          <h1 class="text-4xl">Welcome to the Admin Portal</h1>
-        </div>
+      <h1 class="text-4xl">Welcome to the Admin Portal</h1>
+    </div>
     """
   end
 end

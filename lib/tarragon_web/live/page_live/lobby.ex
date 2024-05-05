@@ -64,7 +64,7 @@ defmodule TarragonWeb.PageLive.Lobby do
     Phoenix.PubSub.unsubscribe(Tarragon.PubSub, "awaiting_participant:#{participant.id}")
 
     {:noreply,
-     socket |> assign(%{participant: participant}) |> push_navigate(to: ~p"/battle_screen")}
+     socket |> assign(%{participant: participant}) |> push_navigate(to: ~p"/battle_screen_v3")}
   end
 
   def handle_info(:tick_timer, %{assigns: assigns} = socket) do
