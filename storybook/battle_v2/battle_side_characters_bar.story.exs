@@ -1,8 +1,6 @@
 defmodule Storybook.BattleV2.BattleSideCharactersBar do
   use PhoenixStorybook.Story, :component
 
-  alias TarragonWeb.PageLive.BattleScreenV2
-
   def function, do: &Elixir.TarragonWeb.FaceComponents.battle_side_characters_bar/1
 
   def variations do

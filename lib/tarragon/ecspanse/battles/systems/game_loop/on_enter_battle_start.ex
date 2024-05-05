@@ -3,8 +3,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterBattleStart do
   Current does nothing but transition to decision phase
   """
 
-  alias Tarragon.Ecspanse.Battles.Entities
-  use Entities.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
+
+  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]

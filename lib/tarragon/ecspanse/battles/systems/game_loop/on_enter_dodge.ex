@@ -2,10 +2,11 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDodge do
   @moduledoc """
   * Executes scheduled movement actions
   """
-  alias Tarragon.Ecspanse.Battles.Entities
-  alias Tarragon.Ecspanse.Battles.Lookup
   alias Tarragon.Ecspanse.Battles.Components
-  use Entities.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.Lookup
+
+  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]

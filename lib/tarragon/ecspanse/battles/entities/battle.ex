@@ -2,57 +2,12 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Battle do
   @moduledoc """
   Factory for creating a battle
   """
-  alias Tarragon.Ecspanse.Battles.Entities.GameLoopConstants
-  alias Tarragon.Ecspanse.Battles.Lookup
   alias Tarragon.Ecspanse.Battles.Components
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.Lookup
   require Logger
 
   use GameLoopConstants
-
-  @spec list_living_combatants(Ecspanse.Entity.t()) :: list(Ecspanse.Entity.t())
-  @doc """
-  Returns a list of entities descendent from the battle entity that have current health > 0.
-  """
-  def list_living_combatants(%Ecspanse.Entity{} = entity) do
-    Lookup.list_descendants(entity, Components.Combatant)
-    |> Enum.filter(fn descendant ->
-      {:ok, health_component} = Components.Health.fetch(descendant)
-      health_component.current > 0
-    end)
-  end
-
-  def enemies_by_distance_from_me(battle_entity, combatant_entity) do
-    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
-      get_other_team_combatants(battle_entity, combatant_entity)
-      |> Enum.group_by(fn ee ->
-        with {:ok, enemy_position} <- Components.Position.fetch(ee) do
-          abs(position.x - enemy_position.x)
-        end
-      end)
-    end
-  end
-
-  def am_i_in_range_of_enemy?(battle_entity, combatant_entity) do
-    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
-      get_other_team_combatants(battle_entity, combatant_entity)
-      |> Enum.any?(fn ee ->
-        with {:ok, {enemy_position, their_weapon}} <-
-               Ecspanse.Query.fetch_components(ee, {Components.Position, Components.MainWeapon}) do
-          abs(position.x - enemy_position.x) <= their_weapon.range
-        end
-      end)
-    end
-  end
-
-  def get_other_team_combatants(battle_entity, combatant_entity) do
-    living_combatants = list_living_combatants(battle_entity)
-    {:ok, my_team} = Lookup.fetch_parent(combatant_entity, Components.Team)
-
-    Lookup.list_children(battle_entity, Components.Team)
-    |> Enum.find(&(&1.id != my_team.id))
-    |> Lookup.list_children(Components.Combatant)
-    |> Enum.filter(&(&1 in living_combatants))
-  end
 
   def new(game_id, name, max_turns) do
     {Ecspanse.Entity,
@@ -114,5 +69,50 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Battle do
          auto_start: false
        )
      ]}
+  end
+
+  @spec list_living_combatants(Ecspanse.Entity.t()) :: list(Ecspanse.Entity.t())
+  @doc """
+  Returns a list of entities descendent from the battle entity that have current health > 0.
+  """
+  def list_living_combatants(%Ecspanse.Entity{} = entity) do
+    Lookup.list_descendants(entity, Components.Combatant)
+    |> Enum.filter(fn descendant ->
+      {:ok, health_component} = Components.Health.fetch(descendant)
+      health_component.current > 0
+    end)
+  end
+
+  def enemies_by_distance_from_me(battle_entity, combatant_entity) do
+    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
+      get_other_team_combatants(battle_entity, combatant_entity)
+      |> Enum.group_by(fn ee ->
+        with {:ok, enemy_position} <- Components.Position.fetch(ee) do
+          abs(position.x - enemy_position.x)
+        end
+      end)
+    end
+  end
+
+  def am_i_in_range_of_enemy?(battle_entity, combatant_entity) do
+    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
+      get_other_team_combatants(battle_entity, combatant_entity)
+      |> Enum.any?(fn ee ->
+        with {:ok, {enemy_position, their_weapon}} <-
+               Ecspanse.Query.fetch_components(ee, {Components.Position, Components.MainWeapon}) do
+          abs(position.x - enemy_position.x) <= their_weapon.range
+        end
+      end)
+    end
+  end
+
+  def get_other_team_combatants(battle_entity, combatant_entity) do
+    living_combatants = list_living_combatants(battle_entity)
+    {:ok, my_team} = Lookup.fetch_parent(combatant_entity, Components.Team)
+
+    Lookup.list_children(battle_entity, Components.Team)
+    |> Enum.find(&(&1.id != my_team.id))
+    |> Lookup.list_children(Components.Combatant)
+    |> Enum.filter(&(&1 in living_combatants))
   end
 end

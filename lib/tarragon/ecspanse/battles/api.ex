@@ -3,10 +3,17 @@ defmodule Tarragon.Ecspanse.Battles.Api do
   Methods to be used by systems outside of the ecspanse battle framework.
   """
   alias Tarragon.Ecspanse.Lobby.LobbyGame
-  alias Tarragon.Ecspanse.Lobby.GameParameters
   alias Tarragon.Ecspanse.Battles.Components
   alias Tarragon.Ecspanse.Battles.Events
   alias Tarragon.Ecspanse.Battles.Projections
+
+  def spawn_battle() do
+    Ecspanse.event({Events.SpawnBattleRequest, [lobby_game: LobbyGame.new()]})
+  end
+
+  def spawn_battle(%LobbyGame{} = lobby_game) do
+    Ecspanse.event({Events.SpawnBattleRequest, [lobby_game: lobby_game]})
+  end
 
   def battle_exists?(battle_entity_id) do
     with {:ok, entity} <- Ecspanse.Entity.fetch(battle_entity_id),
@@ -59,13 +66,5 @@ defmodule Tarragon.Ecspanse.Battles.Api do
     Ecspanse.event(
       {Events.ScheduleAvailableAction, [available_action_entity_id: available_action_entity_id]}
     )
-  end
-
-  def spawn_battle() do
-    Ecspanse.event({Events.SpawnBattleRequest, [lobby_game: LobbyGame.new()]})
-  end
-
-  def spawn_battle(%LobbyGame{} = lobby_game) do
-    Ecspanse.event({Events.SpawnBattleRequest, [lobby_game: lobby_game]})
   end
 end

@@ -1,8 +1,6 @@
 defmodule Storybook.BattleV2.BattleHeaderV3 do
   use PhoenixStorybook.Story, :component
 
-  alias TarragonWeb.PageLive.BattleScreenV2
-
   def function, do: &Elixir.TarragonWeb.FaceComponents.battle_header_v3/1
 
   def variations do

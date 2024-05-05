@@ -1,4 +1,4 @@
-defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatant do
+defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatants do
   @moduledoc false
   alias Tarragon.Ecspanse.Battles.Api
   use TarragonWeb, :live_component

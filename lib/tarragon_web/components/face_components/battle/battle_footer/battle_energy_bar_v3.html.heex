@@ -8,15 +8,18 @@
   <div class="w-full h-full flex flex-col items-center justify-center px-[10px]">
     <div class="Bars w-full h-[16px] bg-brown-10 rounded-full border border-dark-30 flex flex-row gap-[1px] p-[1px]">
       <%= for i <- 1..@energy_state.max_energy do %>
-        <%
-          rounded_left = if i == 1, do: "rounded-l-full"
-          rounded_right = if i == @energy_state.max_energy, do: "rounded-r-full"
-        %>
+        <% rounded_left = if i == 1, do: "rounded-l-full"
+        rounded_right = if i == @energy_state.max_energy, do: "rounded-r-full" %>
 
         <%= if i <= @energy_state.current_energy do %>
           <div class={["bg-brown-30 h-full w-full", rounded_left, rounded_right]}></div>
         <% else %>
-          <div class={["border border-brown-30 bg-transparent h-full w-full", rounded_left, rounded_right]}></div>
+          <div class={[
+            "border border-brown-30 bg-transparent h-full w-full",
+            rounded_left,
+            rounded_right
+          ]}>
+          </div>
         <% end %>
       <% end %>
     </div>

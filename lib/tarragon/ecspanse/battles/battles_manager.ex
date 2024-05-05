@@ -12,7 +12,7 @@ defmodule Tarragon.Ecspanse.Battles.BattlesManager do
     #
     # system startup
     #
-    |> Ecspanse.add_startup_system(Systems.Startup.SpawnABattle)
+    # |> Ecspanse.add_startup_system(Systems.Startup.SpawnABattle)
     #
     # frame start
     #

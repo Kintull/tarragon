@@ -4,7 +4,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
   """
   alias Tarragon.Ecspanse.Lobby.LobbyGame
   alias Tarragon.Ecspanse.Battles.Components
-  alias Tarragon.Ecspanse.Lobby.GameParameters
+  alias Tarragon.Ecspanse.GameParameters
   alias Tarragon.Ecspanse.Withables
   alias Tarragon.Ecspanse.Battles.Events
   alias Tarragon.Ecspanse.Battles.Entities

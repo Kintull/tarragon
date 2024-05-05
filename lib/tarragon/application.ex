@@ -19,8 +19,7 @@ defmodule Tarragon.Application do
         # {Tarragon.Worker, arg},
         # Start to serve requests, typically the last entry,
 
-        TarragonWeb.Endpoint,
-
+        TarragonWeb.Endpoint
       ] ++ workers()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -33,11 +32,11 @@ defmodule Tarragon.Application do
     case Application.get_env(:tarragon, :start_workers) do
       true ->
         [
-          # Tarragon.Ecspanse.Manager,
+          Tarragon.Ecspanse.Manager,
           # {Tarragon.Ecspanse.Lobby.LobbyGamesAgent, %{}}
-          #          {Tarragon.Battles.BattleRoom, name: Tarragon.Battles.BattleRoom},
+          {Tarragon.Battles.BattleTrackerEcs, name: Tarragon.Battles.BattleTrackerEcs},
           #          {Tarragon.Battles.BattleBots, name: Tarragon.Battles.BattleBots},
-          #          {Tarragon.Battles.LobbyTracker, name: Tarragon.Battles.LobbyTracker},
+          {Tarragon.Battles.LobbyTracker, name: Tarragon.Battles.LobbyTracker}
           #          {Tarragon.Accounts.CharacterHealer, name: Tarragon.Accounts.CharacterHealer}
         ]
 

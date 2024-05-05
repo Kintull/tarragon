@@ -2,9 +2,11 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterActionPhaseStart do
   @moduledoc """
   * Clear waiting for combatant intentions
   """
-  alias Tarragon.Ecspanse.Battles.Entities
   alias Tarragon.Ecspanse.Battles.Components
-  use Entities.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.Entities
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
+
+  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]

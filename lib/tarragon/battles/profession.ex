@@ -1,5 +1,4 @@
 defmodule Tarragon.Battles.Profession do
-  alias Tarragon.Battles.Profession
   use Ecto.Schema
   import Ecto.Changeset
 

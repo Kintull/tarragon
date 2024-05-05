@@ -1,8 +1,6 @@
 defmodule TarragonWeb.PageLive.BattleScreenV2 do
   use TarragonWeb, :live_view
 
-  alias Tarragon.Accounts
-  alias Tarragon.Inventory
   alias Tarragon.Battles
 
   def mount(_params, _, socket) do
@@ -11,8 +9,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
         viewport_width = socket.private.connect_params["viewport"]["width"]
         viewport_height = socket.private.connect_params["viewport"]["height"] - 55 - 165
 
-        {character_params, enemy_params, range_params} =
-          calculate_locations(viewport_width, viewport_height)
+        calculate_locations(viewport_width, viewport_height)
       else
         character_params = %{bottom: 0, left: 0, height: 0, width: 0}
         enemy_params = %{bottom: 0, left: 0, height: 0, width: 0}
@@ -22,7 +19,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
       |> IO.inspect()
 
     character = get_player_character()
-    participant = Battles.impl().get_active_participant(character)
     room = Battles.impl().get_character_active_room(character.id)
     {ally_team, enemy_team} = split_ally_enemy_teams(character.id, room.participants)
     selected_enemy = hd(enemy_team)
@@ -109,7 +105,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
     {:noreply, socket}
   end
 
-  def handle_event("action_click" = event, %{"action" => action} = params, socket) do
+  def handle_event("action_click" = event, %{"action" => action}, socket) do
     if action not in Map.keys(socket.assigns.action_to_state_name), do: raise("Unknown action")
 
     state_name = socket.assigns.action_to_state_name[action]
@@ -361,8 +357,8 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
 
   def hard_reset_battles do
     Seeder.delete_all_participants_and_rooms()
-    ally_characters = for x <- 1..3, do: Seeder.create_character_with_items()
-    enemy_characters = for x <- 1..3, do: Seeder.create_character_with_items()
+    ally_characters = for _ <- 1..3, do: Seeder.create_character_with_items()
+    enemy_characters = for _ <- 1..3, do: Seeder.create_character_with_items()
     Seeder.create_battle_room_with_participants(ally_characters, enemy_characters)
 
     ally_characters |> List.first()
@@ -391,16 +387,16 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
     end
   end
 
-  defp show_victory?(room, current_participant) do
-    (room.winner_team == :team_a and current_participant.team_a) ||
-      (room.winner_team == :team_b and current_participant.team_b)
-  end
+  # defp show_victory?(room, current_participant) do
+  #   (room.winner_team == :team_a and current_participant.team_a) ||
+  #     (room.winner_team == :team_b and current_participant.team_b)
+  # end
 
-  def show_defeat?(room, current_participant) do
-    (room.winner_team == :team_a and current_participant.team_b) ||
-      (room.winner_team == :team_b and current_participant.team_a) ||
-      room.winner_team == :draw
-  end
+  # def show_defeat?(room, current_participant) do
+  #   (room.winner_team == :team_a and current_participant.team_b) ||
+  #     (room.winner_team == :team_b and current_participant.team_a) ||
+  #     room.winner_team == :draw
+  # end
 
   def calculate_locations(viewport_width, viewport_height) do
     chunk = div(viewport_width, 6) |> round()
@@ -411,9 +407,9 @@ defmodule TarragonWeb.PageLive.BattleScreenV2 do
     character_width = (chunk * 1.2) |> round()
     character_height = (character_width / character_image_aspect_ratio) |> round()
 
-    header_height = 55
-    footer_height = 117
-    battle_area_height = viewport_height - header_height - footer_height
+    # header_height = 55
+    # footer_height = 117
+    # battle_area_height = viewport_height - header_height - footer_height
     # calculate player character bottom, left, hight, width
     # calculate enemy character top, left, height, width
     # calculate range highlight bottom, left, height, width

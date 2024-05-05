@@ -4,7 +4,5 @@ defmodule TarragonWeb.BackofficeComponents do
   """
   use Phoenix.Component
 
-  alias Phoenix.LiveView.JS
-
   embed_templates "backoffice_components/**/*"
 end

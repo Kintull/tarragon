@@ -5,15 +5,16 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
   * Sets Waiting for intentions
   * Spawns Available Actions
   """
-  alias Tarragon.Ecspanse.Battles.Encumbering
-  alias Tarragon.Ecspanse.Withables
-  alias Tarragon.Ecspanse.Battles.BotAi
   alias Tarragon.Ecspanse.Battles.Api
-  alias Tarragon.Ecspanse.Battles.Lookup
-  alias Tarragon.Ecspanse.Battles.Components.Actions
+  alias Tarragon.Ecspanse.Battles.BotAi
   alias Tarragon.Ecspanse.Battles.Components
+  alias Tarragon.Ecspanse.Battles.Components.Actions
+  alias Tarragon.Ecspanse.Battles.Encumbering
   alias Tarragon.Ecspanse.Battles.Entities
-  use Entities.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.GameLoopConstants
+  alias Tarragon.Ecspanse.Battles.Lookup
+
+  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
