@@ -2,10 +2,14 @@
 <module type="ELIXIR_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.elixir_ls/build/test/lib/tarragon/ebin" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/ranch" />
+    </content>
     <orderEntry type="jdk" jdkName="Elixir 1.16.0-otp-26" jdkType="Elixir SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="comeonin" level="project" />
+    <orderEntry type="library" name="credo" level="project" />
     <orderEntry type="library" name="dns_cluster" level="project" />
     <orderEntry type="library" name="ecspanse" level="project" />
     <orderEntry type="library" name="ecto_sql" level="project" />
@@ -33,15 +37,17 @@
     <orderEntry type="library" name="telemetry_poller" level="project" />
     <orderEntry type="library" name="struct_access" level="project" />
     <orderEntry type="library" name="typedstruct" level="project" />
-    <orderEntry type="library" name="ecspanse_live_dashboard" level="project" />
     <orderEntry type="library" name="ecspanse_state_machine" level="project" />
+    <orderEntry type="library" name="backoffice_templates" level="project" />
     <orderEntry type="library" name="earmark" level="project" />
     <orderEntry type="library" name="ex_doc" level="project" />
     <orderEntry type="library" name="dialyxir" level="project" />
+    <orderEntry type="library" name="file_system" level="project" />
+    <orderEntry type="library" name="bunt" level="project" />
+    <orderEntry type="library" name="nimble_parsec" level="project" />
     <orderEntry type="library" name="elixir_uuid" level="project" />
     <orderEntry type="library" name="ex2ms" level="project" />
     <orderEntry type="library" name="memoize" level="project" />
-    <orderEntry type="library" name="credo" level="project" />
     <orderEntry type="library" name="ecto" level="project" />
     <orderEntry type="library" name="telemetry" level="project" />
     <orderEntry type="library" name="db_connection" level="project" />
@@ -82,8 +88,8 @@
     <orderEntry type="library" name="stream_data" level="project" />
     <orderEntry type="library" name="ecto_sqlite3" level="project" />
     <orderEntry type="library" name="dart_sass" level="project" />
-    <orderEntry type="library" name="file_system" level="project" />
     <orderEntry type="library" name="html_entities" level="project" />
+    <orderEntry type="library" name="phoenix_html_helpers" level="project" />
     <orderEntry type="library" name="heroicons" level="project" />
     <orderEntry type="library" name="cowboy_telemetry" level="project" />
     <orderEntry type="library" name="hackney" level="project" />
@@ -93,15 +99,16 @@
     <orderEntry type="library" name="req" level="project" />
     <orderEntry type="library" name="mail" level="project" />
     <orderEntry type="library" name="gen_smtp" level="project" />
+    <orderEntry type="library" name="mua" level="project" />
+    <orderEntry type="library" name="bandit" level="project" />
+    <orderEntry type="library" name="multipart" level="project" />
     <orderEntry type="library" name="ex_aws" level="project" />
     <orderEntry type="library" name="ex_check" level="project" />
     <orderEntry type="library" name="ex_unit_notifier" level="project" />
     <orderEntry type="library" name="benchfella" level="project" />
     <orderEntry type="library" name="hpax" level="project" />
     <orderEntry type="library" name="websock" level="project" />
-    <orderEntry type="library" name="bandit" level="project" />
     <orderEntry type="library" name="makeup" level="project" />
-    <orderEntry type="library" name="nimble_parsec" level="project" />
     <orderEntry type="library" name="makeup_html" level="project" />
     <orderEntry type="library" name="unicode_set" level="project" />
     <orderEntry type="library" name="benchee_markdown" level="project" />

@@ -43,6 +43,18 @@ defmodule Tarragon.Ecspanse.Battles.Api do
     end
   end
 
+  def find_combatant_by_user_character_id(user_character_id) do
+    case Components.Combatant.list()
+    |> Enum.find(&(&1.user_id == user_character_id)) do
+      nil ->
+        {:error, :not_found}
+
+      combatant_component ->
+        {:ok,
+         Projections.Combatant.project_combatant(Ecspanse.Query.get_component_entity(combatant_component))}
+    end
+  end
+
   @spec list_battles() :: list(struct())
   @doc """
   returns a list of entities for battles

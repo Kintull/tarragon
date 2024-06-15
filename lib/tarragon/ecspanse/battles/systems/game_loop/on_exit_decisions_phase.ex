@@ -10,6 +10,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnExitDecisionsPhase do
 
   use GameLoopConstants
 
+  require Logger
+
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
 
@@ -19,6 +21,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnExitDecisionsPhase do
         %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, from: @from_state},
         _frame
       ) do
+    Logger.debug("OnExitDecisionsPhase #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
       living_combatants = Entities.Battle.list_living_combatants(battle_entity)
 

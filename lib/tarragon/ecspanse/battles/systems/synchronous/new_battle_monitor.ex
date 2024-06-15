@@ -2,16 +2,16 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.NewBattleMonitor do
   @moduledoc """
   Looks for battles that haven't been started and starts them once there are enough combatants
   """
-  alias Tarragon.Ecspanse.Battles.Components
+  alias Tarragon.Ecspanse.Battles.Components.Battle
   alias Tarragon.Ecspanse.Battles.Entities
 
   use Ecspanse.System
 
   def run(_frame) do
-    Ecspanse.Query.select({Ecspanse.Entity, Components.Battle})
+    Ecspanse.Query.select({Ecspanse.Entity, Battle})
     |> Ecspanse.Query.stream()
     |> limit_to_battles_not_started()
-    |> limit_to_battles_with_enough_combatants()
+    # |> limit_to_battles_with_enough_combatants()
     |> start_battles()
   end
 

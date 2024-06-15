@@ -16,7 +16,7 @@ defmodule Tarragon.Ecspanse.Battles.BattlesManager do
     #
     # frame start
     #
-    |> Ecspanse.add_frame_start_system(Systems.Synchronous.BattleSpawner)
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.BattleSpawnerV2)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.NewBattleMonitor)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnScheduleAvailableAction)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnCancelScheduledAction)

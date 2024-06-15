@@ -62,6 +62,12 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       (Enum.zip(ally_team, ally_locations) ++ Enum.zip(enemy_team, enemy_locations))
       |> Enum.into(%{}, fn {character, location} -> {location, character.id} end)
 
+#    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room.id)
+#    {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id).entity
+
+    # option 1 - extend grid where every cell is a container, and it has properties like highlighted, selected, etc.
+    # option 2 - store options for cells in an action state, and render them based on that state
+
     socket =
       assign(socket, grid: grid)
       |> assign(ally_score: 0)

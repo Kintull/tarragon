@@ -50,7 +50,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
             :sniper,
             red_team,
             gp,
-            spawn_coords
+            Map.to_list(spawn_coords)
           )
         ]
       end)
@@ -64,12 +64,12 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
             :sniper,
             blue_team,
             gp,
-            spawn_coords
+            Map.to_list(spawn_coords)
           )
         ]
       end)
 
-    Ecspanse.Command.spawn_entities!(team_a_entites ++ team_b_entites)
+    Ecspanse.Command.spawn_entities!(List.flatten(team_a_entites ++ team_b_entites))
   end
 
   defp spawn_comabatant(user_id, :pistolero, team, game_parameters, spawn_location) do
