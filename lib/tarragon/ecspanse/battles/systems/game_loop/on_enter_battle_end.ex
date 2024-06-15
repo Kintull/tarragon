@@ -15,10 +15,14 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterBattleEnd do
 
   @to_state @state_names.battle_end
 
+  require Logger
+
   def run(
         %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: @to_state},
         _frame
       ) do
+    Logger.debug("OnEnterBattleEnd #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id),
          {:ok, battle_component} <- Components.Battle.fetch(battle_entity) do
       living_combatants = Entities.Battle.list_living_combatants(battle_entity)

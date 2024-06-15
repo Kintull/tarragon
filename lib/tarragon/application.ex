@@ -29,6 +29,8 @@ defmodule Tarragon.Application do
   end
 
   defp workers() do
+    Ecspanse.System.debug()
+
     case Application.get_env(:tarragon, :start_workers) do
       true ->
         [

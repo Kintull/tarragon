@@ -13,10 +13,14 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFragGrenadesDetonate
 
   @to_state @state_names.frag_grenades_detonate
 
+  require Logger
+
   def run(
         %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: @to_state},
         _frame
       ) do
+    Logger.debug("OnEnterFragGrenadesDetonate #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
       grenade_entities =
         Lookup.list_children(battle_entity, Components.FragGrenade)

@@ -14,12 +14,16 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterActionPhaseEnd do
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
 
+  require Logger
+
   @to_state @state_names.action_phase_end
 
   def run(
         %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: @to_state},
         _frame
       ) do
+    Logger.debug("OnEnterActionPhaseEnd #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
       remove_effects(battle_entity)
 

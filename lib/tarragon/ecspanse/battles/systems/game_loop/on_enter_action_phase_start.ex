@@ -11,12 +11,16 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterActionPhaseStart do
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
 
+  require Logger
+
   @to_state @state_names.action_phase_start
 
   def run(
         %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: @to_state},
         _frame
       ) do
+    Logger.debug("OnEnterActionPhaseStart #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
       clear_waiting_for_intentions(battle_entity)
     end

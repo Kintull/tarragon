@@ -8,10 +8,13 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterPopSmoke do
   alias Tarragon.Ecspanse.Battles.GameLoopConstants
   alias Tarragon.Ecspanse.Battles.Lookup
 
+  require Logger
+
   use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
+
 
   @to_state @state_names.pop_smoke
 
@@ -19,6 +22,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterPopSmoke do
         %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: @to_state},
         _frame
       ) do
+    Logger.debug("OnEnterPopSmoke #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
       scheduled_action_entities =
         Lookup.list_descendants(battle_entity, Components.ScheduledAction)

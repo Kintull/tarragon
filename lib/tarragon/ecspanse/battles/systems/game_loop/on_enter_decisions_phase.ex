@@ -19,6 +19,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
 
+  require Logger
+
   @to_state @state_names.decisions_phase
 
   def run(
@@ -28,6 +30,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
         },
         _frame
       ) do
+    Logger.debug("OnEnterDecisionsPhase #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Query.fetch_entity(entity_id) do
       increment_turn_counter(battle_entity)
 

@@ -14,10 +14,14 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFragOut do
 
   @to_state @state_names.frag_out
 
+  require Logger
+
   def run(
         %EcspanseStateMachine.Events.StateChanged{entity_id: entity_id, to: @to_state},
         _frame
       ) do
+    Logger.debug("OnEnterFragOut #{entity_id}")
+
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
       scheduled_action_entities =
         Lookup.list_descendants(battle_entity, Components.ScheduledAction)
