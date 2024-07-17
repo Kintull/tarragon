@@ -2,10 +2,11 @@
   case @state do
     :selected -> "ease-out duration-200 transition-transform translate-y-[-30%]"
     :active -> "ease-out duration-200 transition-transform translate-y-[-30%]"
+    :active_completed -> "ease-out duration-200 transition-transform translate-y-[-30%]"
     _ -> "ease-out duration-200 transition-transform"
   end
 
-cancel_hidden = if @state in [:selected, :active], do: "block", else: "hidden"
+cancel_hidden = if @state in [:selected, :active, :active_completed], do: "block", else: "hidden"
 
 idle_styles = %{
   outer_color: "bg-blue-20",
@@ -41,6 +42,7 @@ style_set =
   case @state do
     :selected -> selected_and_active_styles
     :active -> selected_and_active_styles
+    :active_completed -> selected_and_active_styles
     :unavailable -> unavailable_styles
     _ -> idle_styles
   end

@@ -1,6 +1,12 @@
 <% text_color_fn =
-  fn hex ->
+  fn hex, grid_state ->
     cond do
+      hex.hex_coords in grid_state.move_options ->
+        "text-blue-300"
+
+      hex.hex_coords == grid_state.selected_move ->
+        "text-blue-400"
+
       hex.hex_coords.x == 0 ->
         "text-green-200"
 
@@ -15,8 +21,8 @@
     end
   end
 
-hex_height = hd(@grid.cells).height
-hex_width = hd(@grid.cells).width %>
+hex_height = hd(@grid_state.grid.cells).height
+hex_width = hd(@grid_state.grid.cells).width %>
 
 <div
   id="battle_screen"
@@ -64,23 +70,27 @@ hex_width = hd(@grid.cells).width %>
 
   <div class="grow relative flex justify-center items-center">
     <div class="relative" style={"width: #{hex_width}px; height: #{hex_height}px;"}>
-      <%= for hex <- @grid.cells do %>
+      <%= for hex <- @grid_state.grid.cells do %>
+        <% color = text_color_fn.(hex, @grid_state) %>
         <.hexagon_flat
-          text_color={text_color_fn.(hex)}
+          hex_coords={hex.hex_coords}
+          text_color={color}
           width={hex.width}
           height={hex.height}
           left={hex.left}
           top={hex.top}
           hex_coords={hex.hex_coords}
         >
-          <% char_id =
-            @character_ids_by_locations[{hex.hex_coords.x, hex.hex_coords.y, hex.hex_coords.z}]
+          <%
+          char_id = @grid_state.character_ids_by_locations[hex.hex_coords]
 
           is_ally = char_id in @ally_character_ids
           is_player = char_id == @player_character_id
-          is_target = char_id == @target_character_id %>
+          is_target = char_id == @grid_state.selected_attack_target
+          is_target_option = char_id in @grid_state.attack_target_options %>
           <%= if char_id do %>
             <.battle_character
+              is_target_option={is_target_option}
               is_target={is_target}
               is_ally={is_ally}
               is_player={is_player}

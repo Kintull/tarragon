@@ -92,4 +92,15 @@ defmodule Tarragon.Ecspanse.MapParameters do
   def distance(hex_a, hex_b) do
     Enum.max([abs(hex_a.x - hex_b.x), abs(hex_a.y - hex_b.y), abs(hex_a.z - hex_b.z)])
   end
+
+  def neighbours(%{x: x, y: y, z: z}, distance) do
+    [
+      %{x: x + distance, y: y - distance, z: z},
+      %{x: x + distance, y: y, z: z - distance},
+      %{x: x, y: y + distance, z: z - distance},
+      %{x: x - distance, y: y + distance, z: z},
+      %{x: x - distance, y: y, z: z + distance},
+      %{x: x, y: y - distance, z: z + distance}
+    ]
+  end
 end

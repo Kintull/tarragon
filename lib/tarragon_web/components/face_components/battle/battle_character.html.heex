@@ -13,12 +13,13 @@ shadow_color =
     @is_player -> "bg-blue-40"
     @is_ally -> "bg-blue-20"
     @is_target -> "bg-brown-40"
+    @is_target_option -> "bg-brown-30"
     true -> "bg-brown-20"
   end %>
 
 <div
+  phx-click="character_click"
   phx-value-character_id={@character_id}
-  phx-click="character-clicked"
   class={["BattleCharacter", @class]}
   style={["width: #{@width}px;", @style]}
 >

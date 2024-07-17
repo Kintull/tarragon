@@ -15,7 +15,6 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterPopSmoke do
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
 
-
   @to_state @state_names.pop_smoke
 
   def run(

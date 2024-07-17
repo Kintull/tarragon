@@ -5,6 +5,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
   * Sets Waiting for intentions
   * Spawns Available Actions
   """
+
   alias Tarragon.Ecspanse.Battles.Api
   alias Tarragon.Ecspanse.Battles.BotAi
   alias Tarragon.Ecspanse.Battles.Components

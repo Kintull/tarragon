@@ -24,7 +24,7 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Battle do
            [
              name: @state_names.decisions_phase,
              exits: [@state_names.action_phase_start],
-             timeout: 60_000
+             timeout: 10_000
            ],
            [
              name: @state_names.action_phase_start,
