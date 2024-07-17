@@ -30,6 +30,7 @@ defmodule Tarragon.Ecspanse.Battles.BattlesManager do
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBattleStart)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterBulletsImpact)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDecisionsPhase)
+    |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnStateChange)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDeployWeapons)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterDodge)
     |> Ecspanse.add_frame_start_system(Systems.GameLoop.OnEnterFragOut)

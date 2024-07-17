@@ -3,18 +3,8 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
 
   alias Tarragon.Battles
 
+  @impl true
   def mount(_params, _, socket) do
-    # hexagonal grid coordinates include x, y, z, where x + y + z = 0
-    # creating a hexagonal grid with 7 hexagons
-    # outer_r = 20
-    # inner_r = round(outer_r * 0.86602540378)
-
-    cell_width = 63
-    #    grid = generate_grid_rectangle_flat(9, 5, cell_width)
-    #    grid = generate_grid_rectangle_pointy(9, 5, cell_width)
-    #    grid = generate_grid_circle_pointy(3, cell_width)
-    grid = generate_grid_circle_flat(5, cell_width)
-
     character = get_player_character()
     room = Battles.impl().get_character_active_room(character.id)
     {ally_team, enemy_team} = split_ally_enemy_teams(character.id, room.participants)
@@ -46,30 +36,24 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
          battle_bonus_map[participant.user_character_id].max_health}
       end)
 
-    ally_locations = [
-      {-1, 4, -3},
-      {0, 4, -4},
-      {1, 3, -4}
-    ]
-
-    enemy_locations = [
-      {-1, -3, 4},
-      {0, -4, 4},
-      {1, -4, 3}
-    ]
-
     character_ids_by_locations =
-      (Enum.zip(ally_team, ally_locations) ++ Enum.zip(enemy_team, enemy_locations))
-      |> Enum.into(%{}, fn {character, location} -> {location, character.id} end)
+      (ally_team ++ enemy_team)
+      |> Enum.into(%{}, fn character ->
+        {:ok, combatant} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id)
+        IO.inspect(combatant)
+        {combatant.position, character.id}
+      end)
 
-#    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room.id)
-#    {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id).entity
+    #    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room.id)
+    #    {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id)
 
     # option 1 - extend grid where every cell is a container, and it has properties like highlighted, selected, etc.
     # option 2 - store options for cells in an action state, and render them based on that state
 
+    send(self(), :timer_tick)
+
     socket =
-      assign(socket, grid: grid)
+      socket
       |> assign(ally_score: 0)
       |> assign(enemy_score: 0)
       |> assign(player_location: 0)
@@ -79,7 +63,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       |> assign(target_character_id: selected_enemy.id)
       |> assign(ally_character_ids: ally_team |> Enum.map(& &1.id))
       |> assign(enemy_character_ids: enemy_team |> Enum.map(& &1.id))
-      |> assign(character_ids_by_locations: character_ids_by_locations)
       |> assign(avatars_by_ids: avatars_by_ids)
       |> assign(current_health_points_by_ids: current_health_points_by_ids)
       |> assign(max_health_points_by_ids: max_health_points_by_ids)
@@ -89,25 +72,66 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
           :attack_action_state,
           :dodge_action_state,
           :step_action_state,
-          :energy_state
+          :energy_state,
+          :grid_state,
+          :player_character_id,
+          :enemy_character_ids
         ]
       )
       |> assign(
         action_to_state_name: %{
           "attack" => :attack_action_state,
           "dodge" => :dodge_action_state,
-          "step" => :step_action_state
+          "step" => :step_action_state,
+          "step_move_select" => :step_action_state
         }
       )
       |> assign(attack_action_state: init_attack_action_state())
       |> assign(dodge_action_state: init_dodge_action_state())
       |> assign(step_action_state: init_step_action_state())
       |> assign(energy_state: init_energy_state())
+      |> assign(grid_state: init_grid_state(character_ids_by_locations))
       |> assign(bg_tile_size: 200)
+      |> assign(room_id: room.id)
 
     {:ok, socket, layout: false}
   end
 
+  def init_grid_state(character_ids_by_locations) do
+    # hexagonal grid coordinates include x, y, z, where x + y + z = 0
+    # creating a hexagonal grid with 7 hexagons
+    # outer_r = 20
+    # inner_r = round(outer_r * 0.86602540378)
+
+    cell_width = 63
+    #    grid = generate_grid_rectangle_flat(9, 5, cell_width)
+    #    grid = generate_grid_rectangle_pointy(9, 5, cell_width)
+    #    grid = generate_grid_circle_pointy(3, cell_width)
+    grid = generate_grid_circle_flat(5, cell_width)
+
+    %{
+      name: :grid_state,
+      move_options: [],
+      selected_move: nil,
+      attack_target_options: [],
+      selected_attack_target: nil,
+      character_ids_by_locations: character_ids_by_locations,
+      grid: grid
+    }
+  end
+
+  @impl true
+  def handle_info(:timer_tick, socket) do
+    room_id = socket.assigns.room_id
+    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room_id)
+    time = ecs_battle_entity.state_machine.time
+    Process.send_after(self(), :timer_tick, 1000)
+    socket = assign(socket, seconds_left: round(time/1000))
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("resized", _params, socket) do
     IO.inspect("handle_event(resized/battle_screen_v3)")
 
@@ -117,7 +141,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   def handle_event("character-clicked", %{"character_id" => id}, socket) do
     IO.inspect("handle_event(character-clicked/battle_screen_v3) #{id}")
     id = String.to_integer(id)
-    socket.assigns.enemy_character_ids
 
     selected_enemy_id =
       if id in socket.assigns.enemy_character_ids,
@@ -125,6 +148,53 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
         else: socket.assigns.target_character_id
 
     socket = assign(socket, target_character_id: selected_enemy_id)
+    {:noreply, socket}
+  end
+
+  def handle_event("tile_click", %{"coords" => coords_raw}, socket) do
+    IO.inspect("tile_click")
+    [x,y,z] = String.split(coords_raw) |> Enum.map(&String.to_integer/1)
+    coords = %{x: x, y: y, z: z}
+
+    updated_states =
+      cond do
+        socket.assigns.step_action_state.state == :active ->
+          process_action_event(
+            "tile_click",
+            :step_action_state,
+            Map.take(socket.assigns, socket.assigns.action_related_keys),
+            %{coords: coords}
+          )
+        true ->
+          []
+      end
+
+    socket = Enum.reduce(updated_states, socket, fn {k, v}, acc -> assign(acc, k, v) end)
+
+    {:noreply, socket}
+  end
+
+
+  def handle_event("character_click", %{"character_id" => character_id_raw}, socket) do
+    IO.inspect("character_click")
+    character_id = String.to_integer(character_id_raw)
+    IO.inspect(character_id)
+
+    updated_states =
+      cond do
+        socket.assigns.attack_action_state.state == :selected ->
+          process_action_event(
+            "character_click",
+            :attack_action_state,
+            Map.take(socket.assigns, socket.assigns.action_related_keys),
+            %{character_id: character_id}
+          )
+        true ->
+          []
+      end
+
+    socket = Enum.reduce(updated_states, socket, fn {k, v}, acc -> assign(acc, k, v) end)
+
     {:noreply, socket}
   end
 
@@ -165,8 +235,8 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     new_states =
       case state_name do
         :attack_action_state -> process_attack_action_event(event, state_name, assigns, params)
-        :dodge_action_state -> process_step_and_dodge_action_event(event, state_name, assigns)
-        :step_action_state -> process_step_and_dodge_action_event(event, state_name, assigns)
+        :dodge_action_state -> process_dodge_action_event(event, state_name, assigns)
+        :step_action_state -> process_step_action_event(event, state_name, assigns, params)
       end
 
     # based on new energy state, update action states, enable/disable actions
@@ -182,7 +252,78 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     )
   end
 
-  def process_step_and_dodge_action_event(event, state_name, assigns) do
+  def process_step_action_event(event, state_name, assigns, params \\ %{}) do
+    energy_state = assigns.energy_state
+    grid_state = assigns.grid_state
+    old_state = assigns[state_name]
+    selected_tile = params[:coords]
+
+    new_state =
+      cond do
+        event == "tile_click" and old_state.state == :active and (selected_tile in grid_state.move_options) ->
+          %{old_state | state: :active_completed}
+
+        event == "action_click" and old_state.state == :idle ->
+          %{old_state | state: :active}
+
+        event == "cancel_action" and old_state.state in [:active, :active_completed] ->
+          %{old_state | state: :idle}
+
+        true ->
+          old_state
+      end
+
+    new_energy_state =
+      case {old_state.state, new_state.state} do
+        {:idle, :active} ->
+          %{
+            energy_state
+          | current_energy: energy_state.current_energy - assigns[state_name].energy_cost
+          }
+
+        {_any, :idle} ->
+          %{
+            energy_state
+          | current_energy: energy_state.current_energy + assigns[state_name].energy_cost
+          }
+
+        _ ->
+          energy_state
+      end
+
+    new_grid_state =
+      case {old_state.state, new_state.state} do
+        {:idle, :active} ->
+          player_character_id = assigns.player_character_id
+          {character_location, _id} = Enum.find(grid_state.character_ids_by_locations, fn {_, id} -> id == player_character_id end)
+          highlighted_cells = Tarragon.Ecspanse.MapParameters.neighbours(character_location, 1)
+
+          %{
+            grid_state
+          | move_options: highlighted_cells
+          }
+
+        {_any, :idle} ->
+          %{
+            grid_state
+          | move_options: [], selected_move: nil
+          }
+
+        {:active, :active_completed} ->
+          %{
+            grid_state
+          | move_options: [], selected_move: selected_tile
+          }
+
+        _ ->
+          grid_state
+      end
+
+    Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state, grid_state: new_grid_state})
+  end
+
+
+  def process_dodge_action_event(event, state_name, assigns) do
     energy_state = assigns.energy_state
     old_state = assigns[state_name]
 
@@ -222,31 +363,31 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   def process_attack_action_event(event, state_name, assigns, params) do
     IO.inspect(event)
     energy_state = assigns.energy_state
+    grid_state = assigns.grid_state
+    attack_target_options = grid_state.attack_target_options
+    enemy_character_ids = assigns.enemy_character_ids
+    selected_character_id = params[:character_id]
     old_state = assigns[state_name]
+
+    IO.inspect("#{selected_character_id} #{attack_target_options}")
 
     new_state =
       cond do
         event == "action_click" and old_state.state == :idle ->
-          new_options = process_click_attack_option(old_state.options, 1)
-          %{old_state | state: :selected, options: new_options}
+          %{old_state | state: :selected}
 
         event == "cancel_action" ->
           init_attack_action_state()
 
-        event == "attack_option_click" and old_state.state == :selected ->
-          new_options = process_click_attack_option(old_state.options, params.option_id)
-          %{old_state | options: new_options}
-
-        event == "attack_option_select" and old_state.state == :selected ->
-          new_options = process_select_attack_option(old_state.options, params.option_id)
-          %{old_state | state: :active, options: new_options}
+        event == "character_click" and old_state.state == :selected and selected_character_id in attack_target_options ->
+          %{old_state | state: :active}
 
         true ->
           old_state
       end
 
     new_energy_state =
-      case {old_state.state, new_state.state} |> IO.inspect() do
+      case {old_state.state, new_state.state} do
         {:selected, :active} ->
           %{
             energy_state
@@ -263,7 +404,32 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
           energy_state
       end
 
-    Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state})
+      new_grid_state = case {old_state.state, new_state.state} do
+        {:idle, :selected} ->
+          %{
+            grid_state
+          | attack_target_options: enemy_character_ids
+          }
+
+        {:selected, :active} ->
+          %{
+            grid_state
+          | attack_target_options: [], selected_attack_target: selected_character_id
+          }
+
+        {_any, :idle} ->
+          %{
+            grid_state
+          | attack_target_options: [], selected_attack_target: nil
+          }
+
+        _ ->
+          grid_state
+      end
+
+    IO.inspect(new_state.state)
+    IO.inspect(new_grid_state.selected_attack_target)
+    Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state, grid_state: new_grid_state})
   end
 
   defp process_click_attack_option(options, id) do
