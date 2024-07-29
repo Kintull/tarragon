@@ -78,7 +78,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
     Entities.Combatant.new_pistolero(
       Faker.Person.first_name(),
       spawn_location,
-      [x: -1, y: 0],
+      [x: 0, y: 0, z: 0],
       team,
       game_parameters.machine_gunner_params.max_health,
       frag_grenade_component,
@@ -93,7 +93,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
     Entities.Combatant.new_sniper(
       Faker.Person.first_name(),
       spawn_location,
-      [x: -1, y: 0],
+      [x: 0, y: 0, z: 0],
       team,
       game_parameters.sniper_params.max_health,
       frag_grenade_component,
@@ -108,7 +108,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
     Entities.Combatant.new_gunner(
       Faker.Person.first_name(),
       spawn_location,
-      [x: -1, y: 0],
+      [x: 0, y: 0, z: 0],
       team,
       game_parameters.machine_gunner_params.max_health,
       frag_grenade_component,

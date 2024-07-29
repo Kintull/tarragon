@@ -159,7 +159,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
           end
         )
         |> map_set_put_if(
-          shortest_distance_to_enemy > 1,
+          true,
           case {profession.type, main_weapon.deployed} do
             {:pistolero, _} -> {Actions.Movement.Advance, []}
             {_, false} -> {Actions.Movement.Advance, [action_point_cost: 1]}
