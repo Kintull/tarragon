@@ -2,6 +2,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   use TarragonWeb, :live_view
 
   alias Tarragon.Battles
+  alias Tarragon.Ecspanse.Battles.Lookup
 
   @impl true
   def mount(_params, _, socket) do
@@ -11,6 +12,10 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     selected_enemy = hd(enemy_team)
 
     seconds_left = 20
+
+    {:ok, combatant_projection} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id)
+    %{current: current_energy, max: max_energy} = combatant_projection.action_points
+    energy_regen = combatant_projection.combatant.action_points_per_turn
 
     battle_bonus_map =
       Enum.map(room.participants, fn participant ->
@@ -39,9 +44,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     character_ids_by_locations =
       (ally_team ++ enemy_team)
       |> Enum.into(%{}, fn character ->
-        {:ok, combatant} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id)
-        IO.inspect(combatant)
-        {combatant.position, character.id}
+        {combatant_projection.position, character.id}
       end)
 
     #    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room.id)
@@ -89,7 +92,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       |> assign(attack_action_state: init_attack_action_state())
       |> assign(dodge_action_state: init_dodge_action_state())
       |> assign(step_action_state: init_step_action_state())
-      |> assign(energy_state: init_energy_state())
+      |> assign(energy_state: init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen))
       |> assign(grid_state: init_grid_state(character_ids_by_locations))
       |> assign(bg_tile_size: 200)
       |> assign(room_id: room.id)
@@ -123,10 +126,26 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   @impl true
   def handle_info(:timer_tick, socket) do
     room_id = socket.assigns.room_id
+    character_id = socket.assigns.player_character_id
     {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room_id)
+    {:ok, combatant} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character_id)
     time = ecs_battle_entity.state_machine.time
     Process.send_after(self(), :timer_tick, 1000)
     socket = assign(socket, seconds_left: round(time/1000))
+    character_ids_by_locations =
+      socket.assigns.grid_state.character_ids_by_locations
+      |> Enum.into(%{}, fn {_, character_id} ->
+        {combatant.position, character_id}
+      end)
+
+    {:ok, combatant_projection} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character_id)
+    %{current: current_energy, max: max_energy} = combatant_projection.action_points
+    energy_regen = combatant_projection.combatant.action_points_per_turn
+
+    new_grid_state = %{ socket.assigns.grid_state |  character_ids_by_locations: character_ids_by_locations}
+    new_energy_state = init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen)
+
+    socket = assign(socket, grid_state: new_grid_state)
 
     {:noreply, socket}
   end
@@ -256,11 +275,11 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     energy_state = assigns.energy_state
     grid_state = assigns.grid_state
     old_state = assigns[state_name]
-    selected_tile = params[:coords]
+    selected_coords = params[:coords]
 
     new_state =
       cond do
-        event == "tile_click" and old_state.state == :active and (selected_tile in grid_state.move_options) ->
+        event == "tile_click" and old_state.state == :active and (selected_coords in grid_state.move_options) ->
           %{old_state | state: :active_completed}
 
         event == "action_click" and old_state.state == :idle ->
@@ -312,12 +331,44 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
         {:active, :active_completed} ->
           %{
             grid_state
-          | move_options: [], selected_move: selected_tile
+          | move_options: [], selected_move: selected_coords
           }
 
         _ ->
           grid_state
       end
+
+    # state machine side effects:
+    # submit or remove the action in ECS system so it can get processed
+    case {old_state.state, new_state.state} do
+      {:active, :active_completed} ->
+        player_character_id = assigns.player_character_id
+        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
+
+        [action] = Lookup.list_descendants(ecs_combatant_entity, Tarragon.Ecspanse.Battles.Components.AvailableAction)
+        |> Enum.filter(
+             &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :movement]))
+           )
+
+      %{x: x, y: y, z: z} = selected_coords |> IO.inspect()
+      Tarragon.Ecspanse.Battles.Api.schedule_available_action(action.id)
+      Tarragon.Ecspanse.Battles.Api.update_move_direction(ecs_combatant_entity.id, x, y ,z)
+
+      {:active_completed, :idle} ->
+        player_character_id = assigns.player_character_id
+        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(player_character_id)
+
+        [action] = Lookup.list_descendants(ecs_combatant_entity, Tarragon.Ecspanse.Battles.Components.AvailableAction)
+                 |> Enum.filter(
+                      &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :movement]))
+                    )
+
+        Tarragon.Ecspanse.Battles.Api.cancel_scheduled_action(action.id)
+
+      _ ->
+        :ok
+    end
+
 
     Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state, grid_state: new_grid_state})
   end
@@ -499,12 +550,12 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     }
   end
 
-  def init_energy_state do
+  def init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen) do
     %{
       name: :energy_state,
-      max_energy: 3,
-      current_energy: 3,
-      energy_regen: 2
+      max_energy: max_energy,
+      current_energy: current_energy,
+      energy_regen: energy_regen
     }
   end
 

@@ -51,17 +51,16 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterMove do
 
     with {:ok, combatant_entity} <-
            Lookup.fetch_parent(scheduled_action_entity, Components.Combatant),
-         {:ok, {%Components.Position{} = position, %Components.Direction{} = direction}} <-
+         {:ok, {%Components.Position{} = position, %Components.MoveActionDirection{} = direction}} <-
            Ecspanse.Query.fetch_components(
              combatant_entity,
-             {Components.Position, Components.Direction}
+             {Components.Position, Components.MoveActionDirection}
            ) do
       Ecspanse.Command.spawn_entity!(
-        Entities.Animations.Moving.new(
+        Entities.Animations.MovingHex.new(
           combatant_entity,
           position,
           direction,
-          movement_component.steps,
           @movement_durations.combatants
         )
       )

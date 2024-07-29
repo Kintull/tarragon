@@ -24,13 +24,6 @@ defmodule Tarragon.Ecspanse.Battles.Api do
     end
   end
 
-  @spec cancel_scheduled_action(Ecspanse.Entity.id()) :: :ok
-  def cancel_scheduled_action(scheduled_action_entity_id) do
-    Ecspanse.event(
-      {Events.CancelScheduledAction, [scheduled_action_entity_id: scheduled_action_entity_id]}
-    )
-  end
-
   def find_battle_by_game(game_id) do
     case Components.Battle.list()
          |> Enum.find(&(&1.game_id == game_id)) do
@@ -57,6 +50,17 @@ defmodule Tarragon.Ecspanse.Battles.Api do
     end
   end
 
+  def find_combatant_entity_by_user_character_id(user_character_id) do
+    case Components.Combatant.list()
+         |> Enum.find(&(&1.user_id == user_character_id)) do
+      nil ->
+        {:error, :not_found}
+
+      combatant_component ->
+        {:ok, Ecspanse.Query.get_component_entity(combatant_component)}
+    end
+  end
+
   @spec list_battles() :: list(struct())
   @doc """
   returns a list of entities for battles
@@ -79,6 +83,20 @@ defmodule Tarragon.Ecspanse.Battles.Api do
   def schedule_available_action(available_action_entity_id) do
     Ecspanse.event(
       {Events.ScheduleAvailableAction, [available_action_entity_id: available_action_entity_id]}
+    )
+  end
+
+  @spec cancel_scheduled_action(Ecspanse.Entity.id()) :: :ok
+  def cancel_scheduled_action(scheduled_action_entity_id) do
+    Ecspanse.event(
+      {Events.CancelScheduledAction, [scheduled_action_entity_id: scheduled_action_entity_id]}
+    )
+  end
+
+  @spec update_move_direction(Ecspanse.Entity.id(), integer, integer, integer) :: :ok
+  def update_move_direction(combatant_entity_id, x, y, z) do
+    Ecspanse.event(
+      {Events.SelectMoveTile, [combatant_entity_id: combatant_entity_id, x: x, y: y, z: z]}
     )
   end
 end
