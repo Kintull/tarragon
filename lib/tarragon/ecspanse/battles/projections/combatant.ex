@@ -6,6 +6,7 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
 
   use Ecspanse.Projection,
     fields: [
+      :attack_target_options,
       :available_actions,
       :action_points,
       :brand,
@@ -16,7 +17,6 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
       :main_weapon,
       :position,
       :profession,
-      :scheduled_actions,
       :smoke_grenade,
       :is_dodging,
       :is_obscured,
@@ -56,12 +56,8 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
               Components.Position, Components.Profession, Components.SmokeGrenade}
            ) do
       available_action_projections =
-        Lookup.list_children(combatant_entity, Components.AvailableAction)
+        Lookup.list_children(combatant_entity, Components.ActionState)
         |> Enum.map(&Projections.AvailableAction.project_available_action/1)
-
-      scheduled_action_projections =
-        Lookup.list_children(combatant_entity, Components.ScheduledAction)
-        |> Enum.map(&Projections.ScheduledAction.project_scheduled_action/1)
 
       is_dodging = Ecspanse.Query.has_component?(combatant_entity, Components.Effects.Dodging)
 
@@ -88,6 +84,11 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
           ])
         )
 
+      attack_target_options =
+        Ecspanse.Query.select({Components.AttackTargetOption}, for_entities: [combatant_entity])
+        |> Ecspanse.Query.stream()
+        |> Enum.map(&(elem(&1,0)))
+
       struct!(__MODULE__,
         available_actions: available_action_projections,
         action_points: ProjectionUtils.project(action_points),
@@ -99,8 +100,8 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
         main_weapon: ProjectionUtils.project(main_weapon),
         position: Projections.Position.project_position(position),
         profession: ProjectionUtils.project(profession),
-        scheduled_actions: scheduled_action_projections,
         smoke_grenade: ProjectionUtils.project(smoke_grenade),
+        attack_target_options: ProjectionUtils.project(attack_target_options),
         is_dodging: is_dodging,
         is_moving: is_moving,
         is_shooting: is_shooting,

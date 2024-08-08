@@ -25,7 +25,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterBattleEnd do
 
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id),
          {:ok, battle_component} <- Components.Battle.fetch(battle_entity) do
-      living_combatants = Entities.Battle.list_living_combatants(battle_entity)
+      living_combatants = Entities.BattleEntity.list_living_combatants(battle_entity)
 
       winner_combatant_entity_id =
         case living_combatants do

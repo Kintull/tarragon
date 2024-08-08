@@ -39,7 +39,7 @@ defmodule Tarragon.Ecspanse.GameParameters do
   def new(attrs \\ %{}) do
     struct(
       %__MODULE__{
-        turns: 30,
+        turns: 200,
         blue_team_params: %TeamParameters{color: "#0000FF", name: Faker.Team.En.name()},
         red_team_params: %TeamParameters{color: "#FF0000", name: Faker.Team.En.name()},
         frag_grenade_params: %FragGrenadeParameters{},

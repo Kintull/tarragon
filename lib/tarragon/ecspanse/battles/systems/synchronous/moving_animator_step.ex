@@ -11,7 +11,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.MovingAnimatorStep do
   #     Components.Animations.StartPosition
   #   ]
 
-  def run(%Ecspanse.Frame{} = frame) do
+  def run(%Ecspanse.Frame{} = _frame) do
     Components.Animations.Moving.list()
     |> Enum.each(fn moving ->
       with moving_entity <- Ecspanse.Query.get_component_entity(moving),

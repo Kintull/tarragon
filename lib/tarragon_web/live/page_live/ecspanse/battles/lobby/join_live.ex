@@ -8,7 +8,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Lobby.JoinLive do
   end
 
   defp assign_lobby_game(socket, lobby_game) do
-    teams_and_professions =
+    _teams_and_professions =
       for team <- [:red, :blue],
           profession <- [:machine_gunner, :pistolero, :sniper],
           do: {team, profession}
@@ -88,7 +88,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Lobby.JoinLive do
 
   def handle_event(
         "unassign_player",
-        %{"team" => team, "profession" => profession},
+        %{"team" => _team, "profession" => _profession},
         socket
       ) do
     lobby_game = socket.assigns.lobby_game

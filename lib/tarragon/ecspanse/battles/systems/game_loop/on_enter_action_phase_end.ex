@@ -64,7 +64,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterActionPhaseEnd do
   defp is_battle_over?(battle_entity) do
     with {:ok, battle_component} <- Components.Battle.fetch(battle_entity) do
       unless battle_component.is_completed do
-        living_combatants = Entities.Battle.list_living_combatants(battle_entity)
+        living_combatants = Entities.BattleEntity.list_living_combatants(battle_entity)
 
         max_turns_exceeded = battle_component.turn >= battle_component.max_turns
 

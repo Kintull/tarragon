@@ -3,10 +3,13 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
 
   alias Tarragon.Battles
   alias Tarragon.Ecspanse.Battles.Lookup
+  alias Tarragon.Ecspanse.Battles.Projections
+  alias Tarragon.Ecspanse.Battles.Components
 
   @impl true
   def mount(_params, _, socket) do
     character = get_player_character()
+    character.id |> IO.inspect(label: "player_character_id")
     room = Battles.impl().get_character_active_room(character.id)
     {ally_team, enemy_team} = split_ally_enemy_teams(character.id, room.participants)
     selected_enemy = hd(enemy_team)
@@ -44,6 +47,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     character_ids_by_locations =
       (ally_team ++ enemy_team)
       |> Enum.into(%{}, fn character ->
+        {:ok, combatant_projection} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id)
         {combatant_projection.position, character.id}
       end)
 
@@ -53,10 +57,45 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     # option 1 - extend grid where every cell is a container, and it has properties like highlighted, selected, etc.
     # option 2 - store options for cells in an action state, and render them based on that state
 
-    send(self(), :timer_tick)
+    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room.id)
+    turn = ecs_battle_entity.battle.turn
+    ecs_sm_state = ecs_battle_entity.state_machine.current_state
+
+    IO.inspect(ecs_battle_entity.entity.id, label: "subscribe to")
+    if connected?(socket) do
+      Projections.Battle.start!(%{entity_id: ecs_battle_entity.entity.id, client_pid: self()})
+    end
+    Enum.each(
+      (ally_team ++ enemy_team),
+      fn character ->
+        {:ok, combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(character.id)
+        Projections.Combatant.start!(%{entity_id: combatant_entity.id, client_pid: self()})
+      end
+    )
+
+    IO.inspect(character)
+    {:ok, ecs_combatant_projection} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id)
+
+    move_action =
+      ecs_combatant_projection.available_actions
+      |> Enum.find(& &1.action.action_group == :movement)
+
+    attack_action =
+      ecs_combatant_projection.available_actions
+      |> Enum.find(& &1.action.action_group == :attack)
+
+    weapon_range = ecs_combatant_projection.main_weapon.range
+    attack_target_options = ecs_combatant_projection.attack_target_options
+
+    step_action_state = init_step_action_state(attack_action.action.action_point_cost, move_action.action_state.is_available)
+    attack_action_state = init_attack_action_state(attack_action.action.action_point_cost, attack_action.action_state.is_available, weapon_range, attack_target_options)
+    IO.inspect(combatant_projection)
+
 
     socket =
       socket
+      |> assign(turn: turn)
+      |> assign(ecs_sm_state: ecs_sm_state)
       |> assign(ally_score: 0)
       |> assign(enemy_score: 0)
       |> assign(player_location: 0)
@@ -64,6 +103,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       |> assign(seconds_left: seconds_left)
       |> assign(player_character_id: character.id)
       |> assign(target_character_id: selected_enemy.id)
+      |> assign(all_character_ids: (ally_team ++ enemy_team) |> Enum.map(& &1.id))
       |> assign(ally_character_ids: ally_team |> Enum.map(& &1.id))
       |> assign(enemy_character_ids: enemy_team |> Enum.map(& &1.id))
       |> assign(avatars_by_ids: avatars_by_ids)
@@ -89,9 +129,9 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
           "step_move_select" => :step_action_state
         }
       )
-      |> assign(attack_action_state: init_attack_action_state())
+      |> assign(attack_action_state: attack_action_state)
       |> assign(dodge_action_state: init_dodge_action_state())
-      |> assign(step_action_state: init_step_action_state())
+      |> assign(step_action_state: step_action_state)
       |> assign(energy_state: init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen))
       |> assign(grid_state: init_grid_state(character_ids_by_locations))
       |> assign(bg_tile_size: 200)
@@ -116,6 +156,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       name: :grid_state,
       move_options: [],
       selected_move: nil,
+      attack_range_highlights: [],
       attack_target_options: [],
       selected_attack_target: nil,
       character_ids_by_locations: character_ids_by_locations,
@@ -124,28 +165,93 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   end
 
   @impl true
-  def handle_info(:timer_tick, socket) do
-    room_id = socket.assigns.room_id
-    character_id = socket.assigns.player_character_id
-    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room_id)
-    {:ok, combatant} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character_id)
-    time = ecs_battle_entity.state_machine.time
-    Process.send_after(self(), :timer_tick, 1000)
-    socket = assign(socket, seconds_left: round(time/1000))
-    character_ids_by_locations =
-      socket.assigns.grid_state.character_ids_by_locations
-      |> Enum.into(%{}, fn {_, character_id} ->
-        {combatant.position, character_id}
+  def handle_info({:projection_updated, %{result: projection = %Projections.Battle{}}}, socket) do
+    time = projection.state_machine.time
+
+    socket =
+      socket
+      |> assign(seconds_left: round(time/1000))
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:projection_updated, %{result: combatant_projection = %Projections.Combatant{}}}, socket) do
+    old_character_ids_by_locations = socket.assigns.grid_state.character_ids_by_locations
+
+    new_character_ids_by_locations =
+      Enum.into(old_character_ids_by_locations, %{}, fn {location, character_id} ->
+        new_location =
+          if character_id == combatant_projection.combatant.user_id do
+            combatant_projection.position
+          else
+            location
+          end
+        {new_location, character_id}
       end)
 
-    {:ok, combatant_projection} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character_id)
-    %{current: current_energy, max: max_energy} = combatant_projection.action_points
-    energy_regen = combatant_projection.combatant.action_points_per_turn
+    new_grid_state = %{ socket.assigns.grid_state |  character_ids_by_locations: new_character_ids_by_locations}
 
-    new_grid_state = %{ socket.assigns.grid_state |  character_ids_by_locations: character_ids_by_locations}
-    new_energy_state = init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen)
+    new_energy_state =
+      if combatant_projection.combatant.user_id == socket.assigns.player_character_id do
+        %{current: current_energy, max: max_energy} = combatant_projection.action_points
+        energy_regen = combatant_projection.combatant.action_points_per_turn
+        init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen)
+      else
+        socket.assigns.energy_state
+      end
 
-    socket = assign(socket, grid_state: new_grid_state)
+    old_step_action_state = socket.assigns.step_action_state
+    old_attack_action_state = socket.assigns.attack_action_state
+
+    {new_step_action_state, new_grid_state} =
+      if combatant_projection.combatant.user_id == socket.assigns.player_character_id do
+        movement_action =
+          combatant_projection.available_actions
+          |> Enum.find(& &1.action.action_group == :movement)
+
+        case movement_action do
+          %{action_state: %{is_scheduled: false}} ->
+            {
+              init_step_action_state(movement_action.action.action_point_cost, movement_action.action_state.is_available),
+              %{new_grid_state | move_options: [], selected_move: nil}
+            }
+
+          _ ->
+            {old_step_action_state, new_grid_state}
+        end
+      else
+        {old_step_action_state, new_grid_state}
+      end
+
+    {new_attack_action_state, new_grid_state} =
+      if combatant_projection.combatant.user_id == socket.assigns.player_character_id do
+        attack_action =
+          combatant_projection.available_actions
+          |> Enum.find(& &1.action.action_group == :attack)
+
+        weapon_range = combatant_projection.main_weapon.range
+        attack_target_options = combatant_projection.attack_target_options
+
+        case attack_action do
+          %{action_state: %{is_scheduled: false}} ->
+            {
+              init_attack_action_state(attack_action.action.action_point_cost, attack_action.action_state.is_available, weapon_range, attack_target_options),
+              %{new_grid_state | attack_range_highlights: [], selected_attack_target: nil}
+            }
+
+          _ ->
+            {old_attack_action_state, new_grid_state}
+        end
+      else
+        {old_attack_action_state, new_grid_state}
+      end
+
+    socket =
+      socket
+      |> assign(grid_state: new_grid_state)
+      |> assign(energy_state: new_energy_state)
+      |> assign(step_action_state: new_step_action_state)
+      |> assign(attack_action_state: new_attack_action_state)
 
     {:noreply, socket}
   end
@@ -195,13 +301,12 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
 
 
   def handle_event("character_click", %{"character_id" => character_id_raw}, socket) do
-    IO.inspect("character_click")
+    IO.inspect("character_click id: #{character_id_raw}")
     character_id = String.to_integer(character_id_raw)
-    IO.inspect(character_id)
 
     updated_states =
       cond do
-        socket.assigns.attack_action_state.state == :selected ->
+        socket.assigns.attack_action_state.state == :active ->
           process_action_event(
             "character_click",
             :attack_action_state,
@@ -246,29 +351,28 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       )
 
     socket = Enum.reduce(updated_states, socket, fn {k, v}, acc -> assign(acc, k, v) end)
-    IO.inspect(socket.assigns.energy_state)
     {:noreply, socket}
   end
 
   def process_action_event(event, state_name, assigns, params \\ %{}) do
-    new_states =
-      case state_name do
-        :attack_action_state -> process_attack_action_event(event, state_name, assigns, params)
-        :dodge_action_state -> process_dodge_action_event(event, state_name, assigns)
-        :step_action_state -> process_step_action_event(event, state_name, assigns, params)
-      end
+    case state_name do
+      :attack_action_state -> process_attack_action_event(event, state_name, assigns, params)
+      :dodge_action_state -> process_dodge_action_event(event, state_name, assigns)
+      :step_action_state -> process_step_action_event(event, state_name, assigns, params)
+    end
 
+    # UPDATE: for now update avilability by receiving async events
     # based on new energy state, update action states, enable/disable actions
-    new_energy_state = new_states.energy_state
-    all_action_state_keys = Map.values(assigns.action_to_state_name)
-
-    Enum.into(
-      all_action_state_keys,
-      new_states,
-      fn action_name ->
-        {action_name, maybe_make_action_unavailable(new_states[action_name], new_energy_state)}
-      end
-    )
+#    new_energy_state = new_states.energy_state
+#    all_action_state_keys = Map.values(assigns.action_to_state_name)
+#
+#    Enum.into(
+#      all_action_state_keys,
+#      new_states,
+#      fn action_name ->
+#        {action_name, maybe_make_action_unavailable(new_states[action_name], new_energy_state)}
+#      end
+#    )
   end
 
   def process_step_action_event(event, state_name, assigns, params \\ %{}) do
@@ -345,25 +449,26 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
         player_character_id = assigns.player_character_id
         {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
 
-        [action] = Lookup.list_descendants(ecs_combatant_entity, Tarragon.Ecspanse.Battles.Components.AvailableAction)
-        |> Enum.filter(
-             &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :movement]))
-           )
+        [action] =
+          Lookup.list_descendants(ecs_combatant_entity, Components.ActionState)
+          |> Enum.filter(
+               &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :movement]))
+             )
 
-      %{x: x, y: y, z: z} = selected_coords |> IO.inspect()
+      %{x: x, y: y, z: z} = selected_coords
       Tarragon.Ecspanse.Battles.Api.schedule_available_action(action.id)
       Tarragon.Ecspanse.Battles.Api.update_move_direction(ecs_combatant_entity.id, x, y ,z)
 
       {:active_completed, :idle} ->
         player_character_id = assigns.player_character_id
-        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(player_character_id)
+        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
 
-        [action] = Lookup.list_descendants(ecs_combatant_entity, Tarragon.Ecspanse.Battles.Components.AvailableAction)
+        [action_entity] = Lookup.list_descendants(ecs_combatant_entity, Components.ActionState)
                  |> Enum.filter(
                       &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :movement]))
                     )
 
-        Tarragon.Ecspanse.Battles.Api.cancel_scheduled_action(action.id)
+        Tarragon.Ecspanse.Battles.Api.cancel_scheduled_action(action_entity.id)
 
       _ ->
         :ok
@@ -395,13 +500,13 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
         {:idle, :active} ->
           %{
             energy_state
-            | current_energy: energy_state.current_energy - assigns[state_name].energy_cost
+          | current_energy: energy_state.current_energy - assigns[state_name].energy_cost
           }
 
-        {:active, :idle} ->
+        {_any, :idle} ->
           %{
             energy_state
-            | current_energy: energy_state.current_energy + assigns[state_name].energy_cost
+          | current_energy: energy_state.current_energy + assigns[state_name].energy_cost
           }
 
         _ ->
@@ -412,26 +517,25 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   end
 
   def process_attack_action_event(event, state_name, assigns, params) do
-    IO.inspect(event)
     energy_state = assigns.energy_state
     grid_state = assigns.grid_state
-    attack_target_options = grid_state.attack_target_options
-    enemy_character_ids = assigns.enemy_character_ids
     selected_character_id = params[:character_id]
     old_state = assigns[state_name]
-
-    IO.inspect("#{selected_character_id} #{attack_target_options}")
+    attack_target_options_character_ids = Enum.map(old_state.attack_target_options, &(&1.user_id))
+    IO.inspect("process_attack_action_event #{event}" <>
+               " selected_character_id: #{selected_character_id}" <>
+               " attack_target_options: #{inspect(attack_target_options_character_ids, charlists: :as_lists)}")
 
     new_state =
       cond do
         event == "action_click" and old_state.state == :idle ->
-          %{old_state | state: :selected}
+          %{old_state | state: :active}
 
         event == "cancel_action" ->
-          init_attack_action_state()
+          %{old_state | state: :idle}
 
-        event == "character_click" and old_state.state == :selected and selected_character_id in attack_target_options ->
-          %{old_state | state: :active}
+        event == "character_click" and old_state.state == :active and selected_character_id in attack_target_options_character_ids ->
+          %{old_state | state: :active_completed}
 
         true ->
           old_state
@@ -439,16 +543,16 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
 
     new_energy_state =
       case {old_state.state, new_state.state} do
-        {:selected, :active} ->
+        {:idle, :active} ->
           %{
             energy_state
-            | current_energy: energy_state.current_energy - assigns[state_name].energy_cost
+          | current_energy: energy_state.current_energy - assigns[state_name].energy_cost
           }
 
-        {:active, :idle} ->
+        {_any, :idle} ->
           %{
             energy_state
-            | current_energy: energy_state.current_energy + assigns[state_name].energy_cost
+          | current_energy: energy_state.current_energy + assigns[state_name].energy_cost
           }
 
         _ ->
@@ -456,59 +560,90 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       end
 
       new_grid_state = case {old_state.state, new_state.state} do
-        {:idle, :selected} ->
+        {:idle, :active} ->
+          player_character_id = assigns.player_character_id
+          {character_location, _id} = Enum.find(grid_state.character_ids_by_locations, fn {_, id} -> id == player_character_id end)
+          range = old_state.distance
+
+          highlighted_cells = Tarragon.Ecspanse.MapParameters.neighbours(character_location, range)
+
           %{
             grid_state
-          | attack_target_options: enemy_character_ids
+          | attack_range_highlights: highlighted_cells
           }
 
-        {:selected, :active} ->
+        {:active, :active_completed} ->
           %{
             grid_state
-          | attack_target_options: [], selected_attack_target: selected_character_id
+          | attack_range_highlights: [], attack_target_options: [], selected_attack_target: selected_character_id
           }
 
         {_any, :idle} ->
           %{
             grid_state
-          | attack_target_options: [], selected_attack_target: nil
+          | attack_range_highlights: [], attack_target_options: [], selected_attack_target: nil
           }
 
         _ ->
           grid_state
       end
 
-    IO.inspect(new_state.state)
-    IO.inspect(new_grid_state.selected_attack_target)
+      # State machine side effects
+    case {old_state.state, new_state.state} do
+      {:active, :active_completed} ->
+        player_character_id = assigns.player_character_id
+        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
+
+        [action] =
+          Lookup.list_descendants(ecs_combatant_entity, Components.ActionState)
+          |> Enum.filter(
+               &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :shooting]))
+             )
+
+        Tarragon.Ecspanse.Battles.Api.schedule_available_action(action.id)
+        Tarragon.Ecspanse.Battles.Api.update_attack_target(ecs_combatant_entity.id, selected_character_id)
+
+      {:active_completed, :idle} ->
+        player_character_id = assigns.player_character_id
+        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
+
+        [action_entity] = Lookup.list_descendants(ecs_combatant_entity, Components.ActionState)
+                          |> Enum.filter(
+                               &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :shooting]))
+                             )
+
+        Tarragon.Ecspanse.Battles.Api.cancel_scheduled_action(action_entity.id)
+
+      _ ->
+        :ok
+    end
+
+
     Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state, grid_state: new_grid_state})
   end
 
-  defp process_click_attack_option(options, id) do
-    Enum.into(options, %{}, fn {i, option} ->
-      if "#{i}" == id do
-        {i, %{option | state: :selected}}
-      else
-        {i, %{option | state: :idle}}
-      end
-    end)
-  end
-
-  defp process_select_attack_option(options, id) do
-    Enum.into(options, %{}, fn {i, option} ->
-      if "#{i}" == id do
-        {i, %{option | state: :active}}
-      else
-        {i, %{option | state: :translucent}}
-      end
-    end)
-  end
+#  defp process_click_attack_option(options, id) do
+#    Enum.into(options, %{}, fn {i, option} ->
+#      if "#{i}" == id do
+#        {i, %{option | state: :active}}
+#      else
+#        {i, %{option | state: :idle}}
+#      end
+#    end)
+#  end
+#
+#  defp process_select_attack_option(options, id) do
+#    Enum.into(options, %{}, fn {i, option} ->
+#      if "#{i}" == id do
+#        {i, %{option | state: :active}}
+#      else
+#        {i, %{option | state: :translucent}}
+#      end
+#    end)
+#  end
 
   def maybe_make_action_unavailable(action_state, energy_state) do
-    IO.inspect(
-      "maybe_make_action_unavailable #{action_state.name} #{action_state.state} #{action_state.energy_cost} #{energy_state.current_energy}"
-    )
-
-    cond do
+    result = cond do
       action_state.state == :idle and action_state.energy_cost > energy_state.current_energy ->
         %{action_state | state: :unavailable}
 
@@ -519,18 +654,26 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       true ->
         action_state
     end
+
+    IO.inspect(
+      "maybe_make_action_unavailable #{action_state.name} state: #{action_state.state} -> #{result.state} (cost: #{action_state.energy_cost} energy_available:#{energy_state.current_energy})"
+    )
+
+    result
   end
 
-  def init_attack_action_state() do
+  def init_attack_action_state(cost, is_available, range, attack_target_options) do
     %{
       name: :attack_action_state,
-      state: :idle,
+      state: (if is_available, do: :idle, else: :unavailable),
       options: %{
         1 => %{id: 1, name: "Head", state: :hidden},
         2 => %{id: 2, name: "Body", state: :hidden},
         3 => %{id: 3, name: "Legs", state: :hidden}
       },
-      energy_cost: 1
+      distance: range,
+      energy_cost: cost,
+      attack_target_options: attack_target_options
     }
   end
 
@@ -542,11 +685,11 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     }
   end
 
-  def init_step_action_state() do
+  def init_step_action_state(cost, is_available) do
     %{
       name: :step_action_state,
-      state: :idle,
-      energy_cost: 1
+      state: (if is_available, do: :idle, else: :unavailable),
+      energy_cost: cost
     }
   end
 
@@ -562,7 +705,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   def get_player_character do
     participant =
       Tarragon.Repo.all(Tarragon.Battles.Participant)
-      |> List.first()
+      |> Enum.find(&(!&1.is_bot))
       |> Tarragon.Repo.preload([:user_character])
 
     participant.user_character

@@ -5,8 +5,8 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatants do
 
   def render(assigns) do
     ~H"""
-    <div>
-      <div class="grid grid-cols-5 gap-2">
+    <div class="flex flex-col gap-2 divide-y divide-dashed divide-black">
+      <div class="grid grid-rows-5 gap-2">
         <div>Name: <%= @combatant.brand.name %></div>
 
         <div>Profession: <%= @combatant.profession.name %></div>
@@ -15,7 +15,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatants do
 
         <div>Action Points: <%= @combatant.action_points.current %></div>
 
-        <div>Position: <%= @combatant.position.x %></div>
+        <div>Position: x,y,z: <%= inspect({@combatant.position.x, @combatant.position.y, @combatant.position.z}) %></div>
       </div>
       <div class="underline underline-offset-2">Available Actions</div>
 
@@ -23,7 +23,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatants do
         <div
           :for={action <- @combatant.available_actions}
           class={[
-            "p-2 bg-slate-300 rounded-full",
+            "p-2 bg-slate-300 rounded-5",
             (@combatant.action_points.current < action.action.action_point_cost ||
                !@combatant.combatant.waiting_for_intentions) &&
               "border-2 border-red-500"
@@ -84,10 +84,10 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatants do
 
   def handle_event(
         "cancel-scheduled-action",
-        %{"action-entity-id" => scheduled_action_entity_id},
+        %{"action-entity-id" => action_entity_id},
         socket
       ) do
-    Api.cancel_scheduled_action(scheduled_action_entity_id)
+    Api.cancel_scheduled_action(action_entity_id)
     {:noreply, socket}
   end
 

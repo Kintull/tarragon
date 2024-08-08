@@ -111,13 +111,13 @@ grape_game_item =
     base_damage_bonus: 2
   })
 
-apple1 =
+_apple1 =
   Tarragon.Repo.insert!(%Tarragon.Inventory.CharacterItem{
     game_item: apple_game_item,
     current_condition: 10
   })
 
-apple2 =
+_apple2 =
   Tarragon.Repo.insert!(%Tarragon.Inventory.CharacterItem{
     game_item: apple_game_item,
     current_condition: 10
@@ -129,7 +129,7 @@ watermelon1 =
     current_condition: 10
   })
 
-watermelon2 =
+_watermelon2 =
   Tarragon.Repo.insert!(%Tarragon.Inventory.CharacterItem{
     game_item: watermelon_game_item,
     current_condition: 5
@@ -141,13 +141,13 @@ grape1 =
     current_condition: 5
   })
 
-grape2 =
+_grape2 =
   Tarragon.Repo.insert!(%Tarragon.Inventory.CharacterItem{
     game_item: grape_game_item,
     current_condition: 10
   })
 
-bag_alisa =
+_bag_alisa =
   Tarragon.Repo.insert!(%Tarragon.Inventory.ItemContainer{
     items: [watermelon1, grape1],
     capacity: 5

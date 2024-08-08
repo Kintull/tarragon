@@ -19,7 +19,8 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Animations.MovingHex do
      components: [
        {Components.Animations.StartPosition, [x: pos_x, y: pos_y, z: pos_z]},
        {Components.Animations.EndPosition, [x: pos_x + dir_x * units, y: pos_y + dir_y * units, z: pos_z + dir_z * units]},
-       {Components.Animations.Moving, [duration: duration]}
+       {
+         Components.Animations.Moving, [duration: duration]}
      ],
      parents: [parent]}
   end

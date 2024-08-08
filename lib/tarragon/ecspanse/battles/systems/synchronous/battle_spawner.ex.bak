@@ -18,7 +18,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawner do
 
     battle_entity =
       Ecspanse.Command.spawn_entity!(
-        Entities.Battle.new(
+        Entities.BattleEntity.new(
           lobby_game.id,
           "#{gp.red_team_params.name} vs. #{gp.blue_team_params.name}",
           gp.turns

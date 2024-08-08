@@ -1,18 +1,6 @@
 defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnStateChange do
   @moduledoc """
-    * update timer related information
   """
-
-  alias Tarragon.Ecspanse.Battles.Api
-  alias Tarragon.Ecspanse.Battles.BotAi
-  alias Tarragon.Ecspanse.Battles.Components
-  alias Tarragon.Ecspanse.Battles.Components.Actions
-  alias Tarragon.Ecspanse.Battles.Encumbering
-  alias Tarragon.Ecspanse.Battles.Entities
-  alias Tarragon.Ecspanse.Battles.GameLoopConstants
-  alias Tarragon.Ecspanse.Battles.Lookup
-
-  use GameLoopConstants
 
   use Ecspanse.System,
     event_subscriptions: [EcspanseStateMachine.Events.StateChanged]
@@ -28,10 +16,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnStateChange do
       ) do
     Logger.debug("OnStateChange #{entity_id} #{to_state}")
 
-    with {:ok, battle_entity} <- Ecspanse.Query.fetch_entity(entity_id) do
-      {:ok, state} = EcspanseStateMachine.project(battle_entity.id)
-      :ok
-    end
+    :ok
   end
 
 #  def increment_turn_counter(battle_entity) do

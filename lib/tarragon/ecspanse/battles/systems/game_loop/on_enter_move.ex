@@ -23,21 +23,33 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterMove do
     Logger.debug("OnEnterMove #{entity_id}")
 
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
-      scheduled_action_entities =
-        Lookup.list_descendants(battle_entity, Components.ScheduledAction)
+      action_entities =
+        Lookup.list_descendants(battle_entity, Components.ActionState)
         |> Enum.filter(
           &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :movement]))
         )
+        |> Enum.filter(
+             &match?({:ok, %{is_scheduled: true}}, Components.ActionState.fetch(&1))
+           )
 
-      if Enum.any?(scheduled_action_entities) do
-        scheduled_action_entities
+      if Enum.any?(action_entities) do
+        action_entities
         |> Enum.map(
           &(Ecspanse.Query.fetch_tagged_component(&1, [:movement])
             |> Withables.val_or_nil())
         )
         |> Enum.each(&spawn_moving_animations/1)
 
-        Ecspanse.Command.despawn_entities!(scheduled_action_entities)
+        action_entities
+        |> Enum.map(
+          fn action_entity ->
+            {:ok, action_state} = Components.ActionState.fetch(action_entity)
+            Ecspanse.Command.update_component!(action_state,
+              is_scheduled: false
+            )
+          end)
+
+#        Ecspanse.Command.despawn_entities!(action_entities)
       else
         EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end

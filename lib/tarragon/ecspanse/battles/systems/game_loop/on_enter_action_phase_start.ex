@@ -29,7 +29,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterActionPhaseStart do
   def run(_, _), do: :ok
 
   def clear_waiting_for_intentions(battle_entity) do
-    living_combatant_entities = Entities.Battle.list_living_combatants(battle_entity)
+    living_combatant_entities = Entities.BattleEntity.list_living_combatants(battle_entity)
 
     # clear waiting for intentions to each combatant
 

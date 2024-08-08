@@ -20,6 +20,19 @@ if System.get_env("PHX_SERVER") do
   config :tarragon, TarragonWeb.Endpoint, server: true
 end
 
+start_workers = System.get_env("START_WORKERS")
+
+if start_workers do
+  if (start_workers not in ["true", "false"]), do: raise("Only true and false are allowed for START_WORKERS")
+
+  start_workers = case start_workers do
+    "false" -> false
+    "true" -> true
+  end
+
+  config :tarragon, :start_workers, start_workers
+end
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

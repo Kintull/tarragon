@@ -5,7 +5,7 @@ defmodule Tarragon.Ecspanse.Battles.Projections.AvailableAction do
   use Ecspanse.Projection,
     fields: [
       :action,
-      :available_action,
+      :action_state,
       :entity
     ]
 
@@ -30,14 +30,13 @@ defmodule Tarragon.Ecspanse.Battles.Projections.AvailableAction do
   end
 
   def project_available_action(%Ecspanse.Entity{} = entity) do
-    {:ok, available_action} =
-      Components.AvailableAction.fetch(entity)
+    {:ok, action_state} = Components.ActionState.fetch(entity)
 
     {:ok, action_component} =
       Ecspanse.Query.fetch_tagged_component(entity, [:action])
 
     struct!(__MODULE__,
-      available_action: ProjectionUtils.project(available_action),
+      action_state: ProjectionUtils.project(action_state),
       action: ProjectionUtils.project(action_component),
       entity: ProjectionUtils.project(entity)
     )

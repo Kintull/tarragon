@@ -7,7 +7,7 @@ defmodule Tarragon.Ecspanse.Battles.Entities.AvailableAction do
   def new(combatant_entity, action_component_spec) do
     {Ecspanse.Entity,
      components: [
-       Components.AvailableAction,
+       Components.ActionState,
        action_component_spec
      ],
      parents: [combatant_entity]}
