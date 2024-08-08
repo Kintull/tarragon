@@ -1,4 +1,4 @@
-defmodule Tarragon.Ecspanse.Battles.Entities.Battle do
+defmodule Tarragon.Ecspanse.Battles.Entities.BattleEntity do
   @moduledoc """
   Factory for creating a battle
   """
@@ -88,26 +88,30 @@ defmodule Tarragon.Ecspanse.Battles.Entities.Battle do
       get_other_team_combatants(battle_entity, combatant_entity)
       |> Enum.group_by(fn ee ->
         with {:ok, enemy_position} <- Components.Position.fetch(ee) do
-          abs(position.x - enemy_position.x)
-        end
+            dx = abs(position.x - enemy_position.x)
+            dy = abs(position.y - enemy_position.y)
+            dz = abs(position.z - enemy_position.z)
+            div((dx + dy + dz), 2)
+         end
       end)
     end
   end
 
-  def am_i_in_range_of_enemy?(battle_entity, combatant_entity) do
-    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
-      get_other_team_combatants(battle_entity, combatant_entity)
-      |> Enum.any?(fn ee ->
-        with {:ok, {enemy_position, their_weapon}} <-
-               Ecspanse.Query.fetch_components(ee, {Components.Position, Components.MainWeapon}) do
-          abs(position.x - enemy_position.x) <= their_weapon.range
-        end
-      end)
-    end
-  end
+#  def am_i_in_range_of_enemy?(battle_entity, combatant_entity) do
+#    with {:ok, position} <- Components.Position.fetch(combatant_entity) do
+#      get_other_team_combatants(battle_entity, combatant_entity)
+#      |> Enum.any?(fn ee ->
+#        with {:ok, {enemy_position, their_weapon}} <-
+#               Ecspanse.Query.fetch_components(ee, {Components.Position, Components.MainWeapon}) do
+#          abs(position.x - enemy_position.x) <= their_weapon.range
+#        end
+#      end)
+#    end
+#  end
 
   def get_other_team_combatants(battle_entity, combatant_entity) do
     living_combatants = list_living_combatants(battle_entity)
+
     {:ok, my_team} = Lookup.fetch_parent(combatant_entity, Components.Team)
 
     Lookup.list_children(battle_entity, Components.Team)

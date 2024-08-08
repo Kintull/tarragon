@@ -179,4 +179,18 @@ character_item belongs_to game_item (fk: game_item_id)
     - end_battle:
         * Call `BattleBot.end_battle()` for all bots
         * Update Room record with `ended_at`
-        
+
+## ECS Lobby flow update:
+
+* `Lobby View` + `GenServer`
+    - creates battle room and participants entities in DB
+* `Tarragon.Battles.BattleTrackerEcs`
+    - calls `build_ecs_lobby()` which includes
+        - building `Tarragon.Ecspanse.Lobby.LobbyGame` structure
+          with `Tarragon.Ecspanse.Lobby.LobbyGame.PlayerCombatant`(s)
+          where every combatant is filled in from the `Room` entity created by the lobby.
+    - calls `Tarragon.Ecspanse.Battles.Api.spawn_battle(lobby_game)` on the filled in structure
+        - that generates a `Events.SpawnBattleRequest`
+
+* `Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2`
+    - receives `SpawnBattleRequest` and spawn all the entities

@@ -7,13 +7,13 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Dump.AvailableActionComponent do
     <div>
       <CommonComponents.properties_card>
         <:header>
-          <%= @available_action.action.name %>
+          <%= @action_state.action.name %>
         </:header>
-        <CommonComponents.details_card_from_map label="Action" map={@available_action.action} />
+        <CommonComponents.details_card_from_map label="Action" map={@action_state.action} />
         <CommonComponents.details_card_from_map
           label="Available Action"
-          map={@available_action.available_action}
-        /> <CommonComponents.details_card_from_map label="Entity" map={@available_action.entity} />
+          map={@action_state.action_state}
+        /> <CommonComponents.details_card_from_map label="Entity" map={@action_state.entity} />
       </CommonComponents.properties_card>
     </div>
     """

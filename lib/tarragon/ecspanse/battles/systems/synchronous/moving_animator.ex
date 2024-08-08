@@ -1,7 +1,4 @@
 defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.MovingAnimator do
-  alias Tarragon.Ecspanse.Battles.Lookup
-  alias Tarragon.Ecspanse.Battles.Components
-
   use Ecspanse.System
   # ,
   #   lock_components: [
@@ -11,7 +8,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.MovingAnimator do
   #     Components.Animations.StartPosition
   #   ]
 
-  def run(%Ecspanse.Frame{} = frame) do
+  def run(%Ecspanse.Frame{} = _frame) do
 #    Components.Animations.Moving.list()
 #    |> Enum.each(fn moving ->
 #      with moving_entity <- Ecspanse.Query.get_component_entity(moving),
@@ -41,13 +38,13 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.MovingAnimator do
     :ok
   end
 
-  defp clamp(value, min, max) when max < min, do: clamp(value, max, min)
-
-  defp clamp(value, min, max) do
-    cond do
-      value < min -> min
-      value > max -> max
-      true -> value
-    end
-  end
+#  defp clamp(value, min, max) when max < min, do: clamp(value, max, min)
+#
+#  defp clamp(value, min, max) do
+#    cond do
+#      value < min -> min
+#      value > max -> max
+#      true -> value
+#    end
+#  end
 end

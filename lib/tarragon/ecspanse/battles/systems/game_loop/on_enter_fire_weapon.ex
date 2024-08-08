@@ -23,53 +23,80 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFireWeapon do
     Logger.debug("OnEnterFireWeapon #{entity_id}")
 
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
-      scheduled_action_entities =
-        Lookup.list_descendants(battle_entity, Components.ScheduledAction)
+      action_entities =
+        Lookup.list_descendants(battle_entity, Components.ActionState)
+        |> Enum.filter(
+             &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :shooting]))
+           )
+        |> Enum.filter(
+             &match?({:ok, %{is_scheduled: true}}, Components.ActionState.fetch(&1))
+           )
 
-      shoot_scheduled_actions =
-        Enum.filter(
-          scheduled_action_entities,
-          &Ecspanse.Query.has_component?(&1, Components.Actions.Shooting.Shoot)
-        )
+      if Enum.any?(action_entities) do
+        [double_tap_attack_action_entities, regular_attack_action_entities] =
+          Enum.split_with(
+            action_entities,
+            &Ecspanse.Query.has_component?(&1, Components.Actions.Shooting.DoubleTap)
+          )
 
-      double_tap_scheduled_actions =
-        Enum.filter(
-          scheduled_action_entities,
-          &Ecspanse.Query.has_component?(&1, Components.Actions.Shooting.DoubleTap)
-        )
-
-      if Enum.any?(shoot_scheduled_actions) or Enum.any?(double_tap_scheduled_actions) do
-        shoot_scheduled_actions
+        regular_attack_action_entities
         |> Enum.each(&fire_main_weapon(battle_entity, &1))
 
-        double_tap_scheduled_actions
-        |> IO.inspect(label: "Double scheduled actions")
-        |> Enum.each(fn sa ->
-          fire_main_weapon(battle_entity, sa)
-          fire_main_weapon(battle_entity, sa)
+        double_tap_attack_action_entities
+        |> Enum.each(fn x ->
+          fire_main_weapon(battle_entity, x)
+          fire_main_weapon(battle_entity, x)
         end)
 
-        shoot_scheduled_actions |> Ecspanse.Command.despawn_entities!()
-        double_tap_scheduled_actions |> Ecspanse.Command.despawn_entities!()
+        action_entities
+        |> Enum.map(
+             fn action_entity ->
+               {:ok, action_state} = Components.ActionState.fetch(action_entity)
+               Ecspanse.Command.update_component!(action_state,
+                 is_scheduled: false
+               )
+             end)
       else
         EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end
+
+#
+#      double_tap_scheduled_actions =
+#        Enum.filter(
+#          scheduled_action_entities,
+#          &Ecspanse.Query.has_component?(&1, Components.Actions.Shooting.DoubleTap)
+#        )
+#
+#      if Enum.any?(shoot_scheduled_actions) or Enum.any?(double_tap_scheduled_actions) do
+#        shoot_scheduled_actions
+#        |> Enum.each(&fire_main_weapon(battle_entity, &1))
+#
+#        double_tap_scheduled_actions
+#        |> IO.inspect(label: "Double scheduled actions")
+#        |> Enum.each(fn sa ->
+#          fire_main_weapon(battle_entity, sa)
+#          fire_main_weapon(battle_entity, sa)
+#        end)
+
+#        shoot_scheduled_actions |> Ecspanse.Command.despawn_entities!()
+#        double_tap_scheduled_actions |> Ecspanse.Command.despawn_entities!()
+#      else
+#        EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
+#      end
     end
   end
 
   def run(_, _), do: :ok
 
-  defp fire_main_weapon(battle_entity, scheduled_action_entity) do
+  defp fire_main_weapon(battle_entity, action_entity) do
     with {:ok, shooter_entity} <-
-           Lookup.fetch_parent(scheduled_action_entity, Components.Combatant),
-         {:ok, {position, main_weapon}} <-
+           Lookup.fetch_parent(action_entity, Components.Combatant),
+         {:ok, {position, main_weapon, attack_target}} <-
            Ecspanse.Query.fetch_components(
              shooter_entity,
-             {Components.Position, Components.MainWeapon}
+             {Components.Position, Components.MainWeapon, Components.AttackActionTarget}
            ),
-         {:ok, action} <-
-           Ecspanse.Query.fetch_tagged_component(scheduled_action_entity, [:action, :shooting]),
-         {:ok, target_entity} <- Ecspanse.Entity.fetch(action.target_entity_id),
+         {:ok, target_entity} <- Ecspanse.Entity.fetch(attack_target.target_entity_id),
          {:ok, target_position} <- Components.Position.fetch(target_entity) do
       Enum.each(
         Range.new(1, main_weapon.projectiles_per_shot),
@@ -77,7 +104,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFireWeapon do
           spawn_projectile(
             battle_entity,
             position,
-            action.target_entity_id,
+            attack_target.target_entity_id,
             target_position,
             main_weapon.damage_per_projectile
           )

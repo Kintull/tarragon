@@ -10,38 +10,63 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.OnCancelScheduledAction 
     event_subscriptions: [Events.CancelScheduledAction]
 
   def run(
-        %Events.CancelScheduledAction{scheduled_action_entity_id: scheduled_action_entity_id},
+        %Events.CancelScheduledAction{action_entity_id: action_entity_id},
         _frame
       ) do
-    with {:ok, scheduled_action_entity} <- Ecspanse.Entity.fetch(scheduled_action_entity_id),
+    with {:ok, action_entity} <- Ecspanse.Entity.fetch(action_entity_id),
          {:ok, action} <-
-           Ecspanse.Query.fetch_tagged_component(scheduled_action_entity, [:action]),
+           Ecspanse.Query.fetch_tagged_component(action_entity, [:action]),
          {:ok, combatant_entity} <-
-           Lookup.fetch_parent(scheduled_action_entity, Components.Combatant),
+           Lookup.fetch_parent(action_entity, Components.Combatant),
          {:ok, action_points_component} <- Components.ActionPoints.fetch(combatant_entity),
          {:ok, battle_entity} <- Lookup.fetch_ancestor(combatant_entity, Components.Battle),
-         {:ok, battle_state} <- EcspanseStateMachine.current_state(battle_entity.id) do
+         {:ok, battle_state} <- EcspanseStateMachine.current_state(battle_entity.id),
+         {:ok, action_state} <- Components.ActionState.fetch(action_entity) do
       if battle_state == "Decisions Phase" do
-        spawn_available_action(scheduled_action_entity, action)
+        Ecspanse.Command.update_component!(action_state,
+          is_scheduled: false
+        )
 
         Ecspanse.Command.update_component!(action_points_component,
           current: action_points_component.current + action.action_point_cost
         )
 
-        Ecspanse.Command.despawn_entity!(scheduled_action_entity)
+        update_available_actions(combatant_entity)
+#        Ecspanse.Command.despawn_entity!(action_entity)
       end
     end
   end
 
-  defp spawn_available_action(scheduled_action_entity, action) do
-    components =
-      [
-        Components.AvailableAction,
-        Components.Utils.to_component_spec(action)
-      ]
+#  defp spawn_available_action(action_entity, action) do
+#    components =
+#      [
+#        Components.ActionState,
+#        Components.Utils.to_component_spec(action)
+#      ]
+#
+#    parents = Ecspanse.Query.list_parents(action_entity)
+#
+#    Ecspanse.Command.spawn_entity!({Ecspanse.Entity, components: components, parents: parents})
+#  end
 
-    parents = Ecspanse.Query.list_parents(scheduled_action_entity)
+  defp update_available_actions(combatant_entity) do
+    # get children (actions) of combatant_entity
+    # update children availability based on the action points (on combatant component)
+    with {:ok, action_points} <- Ecspanse.Query.fetch_component(combatant_entity, Components.ActionPoints) do
+      results = Ecspanse.Query.select({Ecspanse.Entity, Components.ActionState},
+                  for_children_of: [combatant_entity]
+                )
+                |> Ecspanse.Query.stream()
+                |> Enum.to_list()
 
-    Ecspanse.Command.spawn_entity!({Ecspanse.Entity, components: components, parents: parents})
+      Enum.map(results, fn {action_entity, action_state} ->
+        {:ok, action} = Ecspanse.Query.fetch_tagged_component(action_entity, [:action])
+
+        Ecspanse.Command.update_component!(action_state,
+          is_available: action.action_point_cost <= action_points.current
+        )
+      end)
+    end
   end
+
 end

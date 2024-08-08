@@ -20,7 +20,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.OnLockIntentions do
       clear_waiting_for_intentions(combatant_entity)
 
       waiting_on_any_living_combatant =
-        Entities.Battle.list_living_combatants(battle_entity)
+        Entities.BattleEntity.list_living_combatants(battle_entity)
         |> Enum.map(fn combatant_entity ->
           {:ok, combatant_component} = Components.Combatant.fetch(combatant_entity)
           combatant_component

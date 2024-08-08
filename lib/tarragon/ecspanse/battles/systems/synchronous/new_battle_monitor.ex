@@ -3,7 +3,6 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.NewBattleMonitor do
   Looks for battles that haven't been started and starts them once there are enough combatants
   """
   alias Tarragon.Ecspanse.Battles.Components.Battle
-  alias Tarragon.Ecspanse.Battles.Entities
 
   use Ecspanse.System
 
@@ -23,12 +22,12 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.NewBattleMonitor do
     end)
   end
 
-  defp limit_to_battles_with_enough_combatants(entity_battle_tuples) do
-    entity_battle_tuples
-    |> Enum.filter(fn {entity, _battle} ->
-      Entities.Battle.list_living_combatants(entity) >= 6
-    end)
-  end
+#  defp limit_to_battles_with_enough_combatants(entity_battle_tuples) do
+#    entity_battle_tuples
+#    |> Enum.filter(fn {entity, _battle} ->
+#      Entities.BattleEntity.list_living_combatants(entity) >= 6
+#    end)
+#  end
 
   defp limit_to_battles_not_started(entity_battle_tuples) do
     entity_battle_tuples

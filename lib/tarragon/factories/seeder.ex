@@ -156,19 +156,23 @@ defmodule Seeder do
         awaiting_start: false
       })
 
-    for character <- ally_characters do
+    team_a = for character <- ally_characters do
       Tarragon.Repo.insert!(%Tarragon.Battles.Participant{
         user_character: character,
         battle_room: battle_room,
-        team_a: true
+        team_a: true,
+        is_bot: true
       })
     end
+
+    team_a |> Enum.at(0) |> Ecto.Changeset.change(is_bot: false) |> Tarragon.Repo.update!()
 
     for character <- enemy_characters do
       Tarragon.Repo.insert!(%Tarragon.Battles.Participant{
         user_character: character,
         battle_room: battle_room,
-        team_b: true
+        team_b: true,
+        is_bot: true
       })
     end
 

@@ -1,11 +1,17 @@
 <% text_color_fn =
   fn hex, grid_state ->
     cond do
+      hex.hex_coords in grid_state.attack_range_highlights ->
+        "text-blue-200 hover:text-blue-500 hover:z-10"
+
+      hex.hex_coords == grid_state.selected_attack_target ->
+        "text-blue-500"
+
       hex.hex_coords in grid_state.move_options ->
-        "text-blue-300"
+        "text-green-200 hover:text-green-500 hover:z-10"
 
       hex.hex_coords == grid_state.selected_move ->
-        "text-blue-400"
+        "text-green-500"
 
       hex.hex_coords.x == 0 ->
         "text-green-200"
@@ -79,7 +85,6 @@ hex_width = hd(@grid_state.grid.cells).width %>
           height={hex.height}
           left={hex.left}
           top={hex.top}
-          hex_coords={hex.hex_coords}
         >
           <%
           char_id = @grid_state.character_ids_by_locations[hex.hex_coords]
@@ -88,6 +93,7 @@ hex_width = hd(@grid_state.grid.cells).width %>
           is_player = char_id == @player_character_id
           is_target = char_id == @grid_state.selected_attack_target
           is_target_option = char_id in @grid_state.attack_target_options %>
+          <p class="text-[0.5rem] text-black"><%= "#{hex.hex_coords.x} #{hex.hex_coords.y} #{hex.hex_coords.z}" %></p>
           <%= if char_id do %>
             <.battle_character
               is_target_option={is_target_option}

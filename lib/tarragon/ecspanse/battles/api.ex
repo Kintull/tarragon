@@ -79,6 +79,13 @@ defmodule Tarragon.Ecspanse.Battles.Api do
     Ecspanse.event({Events.LockIntentions, [combatant_entity_id: combatant_entity_id]})
   end
 
+  @spec update_attack_target(Ecspanse.Entity.id(), integer) :: :ok
+  def update_attack_target(combatant_entity_id, selected_character_id) do
+    Ecspanse.event(
+      {Events.SelectAttackTarget, [combatant_entity_id: combatant_entity_id, selected_character_id: selected_character_id]}
+    )
+  end
+
   @spec schedule_available_action(Ecspanse.Entity.id()) :: :ok
   def schedule_available_action(available_action_entity_id) do
     Ecspanse.event(
@@ -87,9 +94,9 @@ defmodule Tarragon.Ecspanse.Battles.Api do
   end
 
   @spec cancel_scheduled_action(Ecspanse.Entity.id()) :: :ok
-  def cancel_scheduled_action(scheduled_action_entity_id) do
+  def cancel_scheduled_action(action_entity_id) do
     Ecspanse.event(
-      {Events.CancelScheduledAction, [scheduled_action_entity_id: scheduled_action_entity_id]}
+      {Events.CancelScheduledAction, [action_entity_id: action_entity_id]}
     )
   end
 

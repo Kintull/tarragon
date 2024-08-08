@@ -4,7 +4,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterPopSmoke do
   """
   alias Tarragon.Ecspanse.Withables
   alias Tarragon.Ecspanse.Battles.Components
-  alias Tarragon.Ecspanse.Battles.Entities.Battle
+  alias Tarragon.Ecspanse.Battles.Entities
   alias Tarragon.Ecspanse.Battles.GameLoopConstants
   alias Tarragon.Ecspanse.Battles.Lookup
 
@@ -59,7 +59,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterPopSmoke do
       |> Enum.map(&(Components.Position.fetch(&1) |> Withables.val_or_nil()))
       |> Enum.map(& &1.x)
 
-    Battle.list_living_combatants(battle_entity)
+    Entities.BattleEntity.list_living_combatants(battle_entity)
     |> Enum.map(&(Components.Position.fetch(&1) |> Withables.val_or_nil()))
     |> Enum.filter(&(&1.x in positions))
     |> Enum.map(&Ecspanse.Query.get_component_entity(&1))

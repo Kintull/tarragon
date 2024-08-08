@@ -83,10 +83,10 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.SelectedCombatant do
 
   def handle_event(
         "cancel-scheduled-action",
-        %{"action-entity-id" => scheduled_action_entity_id},
+        %{"action-entity-id" => action_entity_id},
         socket
       ) do
-    Api.cancel_scheduled_action(scheduled_action_entity_id)
+    Api.cancel_scheduled_action(action_entity_id)
     {:noreply, socket}
   end
 

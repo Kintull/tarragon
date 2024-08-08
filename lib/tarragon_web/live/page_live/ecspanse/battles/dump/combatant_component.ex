@@ -46,7 +46,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Dump.CombatantComponent do
               :for={aa <- @combatant.available_actions}
               module={TarragonWeb.PageLive.Ecspanse.Battles.Dump.AvailableActionComponent}
               id={aa.entity.id}
-              available_action={aa}
+              action_state={aa}
             />
           </FlexGridLayouts.auto_grid>
         </FlexGridLayouts.auto_grid>
