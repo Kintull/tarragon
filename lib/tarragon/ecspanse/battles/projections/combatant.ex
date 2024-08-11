@@ -85,7 +85,7 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
         )
 
       attack_target_options =
-        Ecspanse.Query.select({Components.AttackTargetOption}, for_entities: [combatant_entity])
+        Ecspanse.Query.select({Components.AttackTargetOption}, for: [combatant_entity])
         |> Ecspanse.Query.stream()
         |> Enum.map(&(elem(&1,0)))
 

@@ -20,13 +20,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     %{current: current_energy, max: max_energy} = combatant_projection.action_points
     energy_regen = combatant_projection.combatant.action_points_per_turn
 
-    battle_bonus_map =
-      Enum.map(room.participants, fn participant ->
-        {participant.user_character_id,
-         Battles.impl().build_character_bonuses(participant.user_character_id)}
-      end)
-      |> Enum.into(%{})
-
     avatars_by_ids =
       Enum.into(room.participants, %{}, fn participant ->
         {participant.user_character_id, participant.user_character.avatar_url}
@@ -34,15 +27,13 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
 
     max_health_points_by_ids =
       Enum.into(room.participants, %{}, fn participant ->
+        {:ok, combatant_projection} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(participant.user_character_id)
+        IO.inspect("#{participant.user_character_id} - #{combatant_projection.entity.id}")
         {participant.user_character_id,
-         battle_bonus_map[participant.user_character_id].max_health}
+          combatant_projection.health.max}
       end)
 
-    current_health_points_by_ids =
-      Enum.into(room.participants, %{}, fn participant ->
-        {participant.user_character_id,
-         battle_bonus_map[participant.user_character_id].max_health}
-      end)
+    current_health_points_by_ids = max_health_points_by_ids
 
     character_ids_by_locations =
       (ally_team ++ enemy_team)
@@ -61,7 +52,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     turn = ecs_battle_entity.battle.turn
     ecs_sm_state = ecs_battle_entity.state_machine.current_state
 
-    IO.inspect(ecs_battle_entity.entity.id, label: "subscribe to")
     if connected?(socket) do
       Projections.Battle.start!(%{entity_id: ecs_battle_entity.entity.id, client_pid: self()})
     end
@@ -73,7 +63,6 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       end
     )
 
-    IO.inspect(character)
     {:ok, ecs_combatant_projection} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(character.id)
 
     move_action =
@@ -84,13 +73,18 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       ecs_combatant_projection.available_actions
       |> Enum.find(& &1.action.action_group == :attack)
 
+    defence_action =
+      ecs_combatant_projection.available_actions
+      |> Enum.find(& &1.action.action_group == :defense)
+
     weapon_range = ecs_combatant_projection.main_weapon.range
-    attack_target_options = ecs_combatant_projection.attack_target_options
+
+    ecs_combatant_projection.combatant.user_id |> IO.inspect(label: "mount user_id")
+    attack_target_options = ecs_combatant_projection.attack_target_options |> IO.inspect(label: "mount atk options")
 
     step_action_state = init_step_action_state(attack_action.action.action_point_cost, move_action.action_state.is_available)
     attack_action_state = init_attack_action_state(attack_action.action.action_point_cost, attack_action.action_state.is_available, weapon_range, attack_target_options)
-    IO.inspect(combatant_projection)
-
+    dodge_action_state = init_dodge_action_state(defence_action.action.action_point_cost, defence_action.action_state.is_available)
 
     socket =
       socket
@@ -130,7 +124,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
         }
       )
       |> assign(attack_action_state: attack_action_state)
-      |> assign(dodge_action_state: init_dodge_action_state())
+      |> assign(dodge_action_state: dodge_action_state)
       |> assign(step_action_state: step_action_state)
       |> assign(energy_state: init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen))
       |> assign(grid_state: init_grid_state(character_ids_by_locations))
@@ -159,6 +153,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       attack_range_highlights: [],
       attack_target_options: [],
       selected_attack_target: nil,
+      selected_attack_location: nil,
       character_ids_by_locations: character_ids_by_locations,
       grid: grid
     }
@@ -177,6 +172,11 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
 
   def handle_info({:projection_updated, %{result: combatant_projection = %Projections.Combatant{}}}, socket) do
     old_character_ids_by_locations = socket.assigns.grid_state.character_ids_by_locations
+
+    current_health_points_by_ids = socket.assigns.current_health_points_by_ids
+    character_id = combatant_projection.combatant.user_id
+    current_health = combatant_projection.health.current
+    new_current_health_points_by_ids = Map.put(current_health_points_by_ids, character_id, current_health)
 
     new_character_ids_by_locations =
       Enum.into(old_character_ids_by_locations, %{}, fn {location, character_id} ->
@@ -236,7 +236,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
           %{action_state: %{is_scheduled: false}} ->
             {
               init_attack_action_state(attack_action.action.action_point_cost, attack_action.action_state.is_available, weapon_range, attack_target_options),
-              %{new_grid_state | attack_range_highlights: [], selected_attack_target: nil}
+              %{new_grid_state | attack_range_highlights: [], selected_attack_target: nil, selected_attack_location: nil}
             }
 
           _ ->
@@ -252,6 +252,7 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       |> assign(energy_state: new_energy_state)
       |> assign(step_action_state: new_step_action_state)
       |> assign(attack_action_state: new_attack_action_state)
+      |> assign(current_health_points_by_ids: new_current_health_points_by_ids)
 
     {:noreply, socket}
   end
@@ -513,6 +514,34 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
           energy_state
       end
 
+    case {old_state.state, new_state.state} do
+      {:active, :active_completed} ->
+        player_character_id = assigns.player_character_id
+        {:ok, player_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
+
+        [action] =
+          Lookup.list_descendants(player_combatant_entity, Components.ActionState)
+          |> Enum.filter(
+               &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :dodge]))
+             )
+
+        Tarragon.Ecspanse.Battles.Api.schedule_available_action(action.id)
+
+      {:active_completed, :idle} ->
+        player_character_id = assigns.player_character_id
+        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
+
+        [action_entity] = Lookup.list_descendants(ecs_combatant_entity, Components.ActionState)
+                          |> Enum.filter(
+                               &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :dodge]))
+                             )
+
+        Tarragon.Ecspanse.Battles.Api.cancel_scheduled_action(action_entity.id)
+
+      _ ->
+        :ok
+    end
+
     Map.merge(assigns, %{state_name => new_state, energy_state: new_energy_state})
   end
 
@@ -573,35 +602,38 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
           }
 
         {:active, :active_completed} ->
+          {:ok, selected_combatant} = Tarragon.Ecspanse.Battles.Api.find_combatant_by_user_character_id(selected_character_id)
+          selected_character_location = selected_combatant.position
           %{
             grid_state
-          | attack_range_highlights: [], attack_target_options: [], selected_attack_target: selected_character_id
+          | attack_range_highlights: [], attack_target_options: [], selected_attack_target: selected_character_id, selected_attack_location: selected_character_location
           }
 
         {_any, :idle} ->
           %{
             grid_state
-          | attack_range_highlights: [], attack_target_options: [], selected_attack_target: nil
+          | attack_range_highlights: [], attack_target_options: [], selected_attack_target: nil, selected_attack_location: nil
           }
 
         _ ->
           grid_state
       end
 
-      # State machine side effects
+    # State machine side effects
     case {old_state.state, new_state.state} do
       {:active, :active_completed} ->
         player_character_id = assigns.player_character_id
-        {:ok, ecs_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
+        {:ok, player_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(player_character_id)
+        {:ok, enemy_combatant_entity} = Tarragon.Ecspanse.Battles.Api.find_combatant_entity_by_user_character_id(selected_character_id)
 
         [action] =
-          Lookup.list_descendants(ecs_combatant_entity, Components.ActionState)
+          Lookup.list_descendants(player_combatant_entity, Components.ActionState)
           |> Enum.filter(
                &match?({:ok, _}, Ecspanse.Query.fetch_tagged_component(&1, [:action, :shooting]))
              )
 
         Tarragon.Ecspanse.Battles.Api.schedule_available_action(action.id)
-        Tarragon.Ecspanse.Battles.Api.update_attack_target(ecs_combatant_entity.id, selected_character_id)
+        Tarragon.Ecspanse.Battles.Api.update_attack_target(player_combatant_entity.id, enemy_combatant_entity.id)
 
       {:active_completed, :idle} ->
         player_character_id = assigns.player_character_id
@@ -677,11 +709,11 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     }
   end
 
-  def init_dodge_action_state() do
+  def init_dodge_action_state(cost, is_available) do
     %{
       name: :dodge_action_state,
-      state: :idle,
-      energy_cost: 1
+      state: (if is_available, do: :idle, else: :unavailable),
+      energy_cost: cost
     }
   end
 

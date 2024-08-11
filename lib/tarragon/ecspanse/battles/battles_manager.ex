@@ -20,6 +20,7 @@ defmodule Tarragon.Ecspanse.Battles.BattlesManager do
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.NewBattleMonitor)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnScheduleAvailableAction)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnSelectMoveTile)
+    |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnSelectAttackTarget)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnCancelScheduledAction)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.OnLockIntentions)
     |> Ecspanse.add_frame_start_system(Systems.Synchronous.MovingAnimator)

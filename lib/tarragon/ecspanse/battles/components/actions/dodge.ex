@@ -10,7 +10,7 @@ defmodule Tarragon.Ecspanse.Battles.Components.Actions.Dodge do
       action_point_cost: 2,
       incoming_miss_chance_modifier: 200.00
     ],
-    tags: [:dodge]
+    tags: [:action, :dodge]
 
   @impl true
   def validate(state) do

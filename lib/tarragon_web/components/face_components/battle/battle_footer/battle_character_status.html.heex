@@ -1,0 +1,11 @@
+<div class={[]}>
+  <div class="CharacterStatus h-[20px] w-full flex flex-row justify-between items-center">
+    <%= if @is_selected_target do %>
+        <img class="aspect-square h-full" alt="scope target" src="/images/scope-simple-red.png" />
+    <% end %>
+
+    <%= if @shield_enabled do %>
+        <img class="aspect-square h-full" alt="scope target" src="/images/shield-mono.png" />
+    <% end %>
+  </div>
+</div>

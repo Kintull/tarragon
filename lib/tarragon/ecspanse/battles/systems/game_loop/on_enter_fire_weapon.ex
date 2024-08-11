@@ -33,7 +33,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFireWeapon do
            )
 
       if Enum.any?(action_entities) do
-        [double_tap_attack_action_entities, regular_attack_action_entities] =
+        {double_tap_attack_action_entities, regular_attack_action_entities} =
           Enum.split_with(
             action_entities,
             &Ecspanse.Query.has_component?(&1, Components.Actions.Shooting.DoubleTap)
@@ -95,16 +95,16 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFireWeapon do
            Ecspanse.Query.fetch_components(
              shooter_entity,
              {Components.Position, Components.MainWeapon, Components.AttackActionTarget}
-           ),
-         {:ok, target_entity} <- Ecspanse.Entity.fetch(attack_target.target_entity_id),
-         {:ok, target_position} <- Components.Position.fetch(target_entity) do
+           ) |> IO.inspect(label: "2"),
+         {:ok, target_entity} <- Ecspanse.Entity.fetch(attack_target.entity_id)|> IO.inspect(label: "3"),
+         {:ok, target_position} <- Components.Position.fetch(target_entity)|> IO.inspect(label: "4") do
       Enum.each(
         Range.new(1, main_weapon.projectiles_per_shot),
         fn _ ->
           spawn_projectile(
             battle_entity,
             position,
-            attack_target.target_entity_id,
+            attack_target.entity_id,
             target_position,
             main_weapon.damage_per_projectile
           )
@@ -113,13 +113,13 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFireWeapon do
     end
   end
 
-  defp spawn_projectile(battle_entity, position, target_entity_id, target_position, damage) do
+  defp spawn_projectile(battle_entity, position, entity_id, target_position, damage) do
     bullet_entity =
       Ecspanse.Command.spawn_entity!(
         Entities.Bullet.new(
           battle_entity,
           position,
-          target_entity_id,
+          entity_id,
           damage
         )
       )
