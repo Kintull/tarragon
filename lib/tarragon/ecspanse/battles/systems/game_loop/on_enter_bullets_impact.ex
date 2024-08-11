@@ -21,7 +21,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterBulletsImpact do
     Logger.debug("OnEnterBulletsImpact #{entity_id}")
 
     Components.Bullet.list()
-    |> Enum.reduce(%{}, fn bullet_component, acc -> acculmulate_damages(bullet_component, acc) end)
+    |> Enum.reduce(%{}, fn bullet_component, acc -> accumulate_damages(bullet_component, acc) end)
     |> Enum.map(fn {health, damage} ->
       {health, current: max(health.current - damage, 0)}
     end)
@@ -36,7 +36,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterBulletsImpact do
 
   def run(_, _), do: :ok
 
-  defp acculmulate_damages(bullet_component, damage_by_health) do
+  defp accumulate_damages(bullet_component, damage_by_health) do
+    IO.inspect(bullet_component.target_entity_id)
+
     with {:ok, target_entity} <- Ecspanse.Entity.fetch(bullet_component.target_entity_id),
          {:ok, health} <- Components.Health.fetch(target_entity) do
       damage = Map.get(damage_by_health, health, 0) + bullet_component.damage

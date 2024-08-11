@@ -24,15 +24,26 @@ shadow_color =
   style={["width: #{@width}px;", @style]}
 >
   <div class="flex flex-col justify-center items-center">
-    <.battle_character_health
-      class="w-[50px] h-min grid-col-min"
-      max_health={@max_health}
-      current_health={@current_health}
-    />
+    <%= if @is_selected_target || @shield_enabled do %>
+        <.battle_character_status is_selected_target={@is_selected_target} shield_enabled={@shield_enabled}/>
+    <% end %>
 
-    <div class="UserAvatar relative z-10 w-full aspect-[0.47] flex" style={"height: #{@height}px"}>
-      <img class="AvatarF1 h-full mx-auto" src={main[@facing]} />
-    </div>
+
+    <%= if @current_health > 0 do %>
+        <.battle_character_health
+          class="w-[50px] h-min grid-col-min"
+          max_health={@max_health}
+          current_health={@current_health}
+        />
+
+        <div class="UserAvatar relative z-10 w-full aspect-[0.47] flex" style={"height: #{@height}px"}>
+          <img class="AvatarF1 h-full mx-auto" src={main[@facing]} />
+        </div>
+    <% else %>
+        <div class="UserRip relative z-10 w-full aspect-[0.47] flex" style={"height: #{@height/2}px"}>
+          <img class="RipImg h-full mx-auto" src="/images/rip.png" />
+        </div>
+    <% end %>
 
     <div class={[
       "ShadowEllipse relative z-0 w-full aspect-[3] translate-y-[-100%] rounded-[50%/60%_40%]",

@@ -217,7 +217,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
 
   defp update_available_attack_target_option(battle_entity, combatant_entity) do
     results = Ecspanse.Query.select({Ecspanse.Entity, Components.AttackTargetOption},
-                for_entities: [combatant_entity]
+                for: [combatant_entity]
               )
               |> Ecspanse.Query.stream()
               |> Enum.to_list()
@@ -241,7 +241,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
     |> Enum.each(fn enemy ->
       with {:ok, enemy_combatant} <- Components.Combatant.fetch(enemy) do
         {:ok, c} = Components.Combatant.fetch(combatant_entity)
-        IO.inspect("center user: #{c.user_id}, enemy: #{enemy_combatant.user_id}", label: "enemies_in_main_weapon_range combatant.user_id")
+        IO.inspect("center user: #{c.user_id}, enemy: #{enemy_combatant.user_id}")
         Ecspanse.Command.add_component!(combatant_entity, {Components.AttackTargetOption, [user_id: enemy_combatant.user_id, combatant_entity_id: enemy.id]})
       end
     end)

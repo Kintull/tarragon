@@ -11,6 +11,7 @@ To start your Tarragon server you can either use Docker or run it locally.
 
 * Run postgres with username/password: postgres/postgres
 * Run `mix setup` to install and setup dependencies
+* Seed the database: `START_WORKERS=false mix ecto.setup`
 * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Visit `localhost:4000/login/1` to authenticate yourself.

@@ -10,6 +10,7 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
   alias Tarragon.Ecspanse.Battles.Events
   alias Tarragon.Ecspanse.Battles.Entities
   alias Tarragon.Ecspanse.Battles.Components.Actions
+  alias Tarragon.Battles
 
   use Ecspanse.System,
     event_subscriptions: [Events.SpawnBattleRequest]
@@ -44,41 +45,39 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
 
     Enum.zip(team_a_combatants, mp.spawns_team_a)
     |> Enum.map(fn {combatant, spawn_coords} ->
-      [
-        spawn_combatant(
-          combatant.character_id,
-          :sniper,
-          red_team,
-          gp,
-          Map.to_list(spawn_coords)
-        )
-      ]
+      spawn_combatant(
+        combatant.character_id,
+        :sniper,
+        red_team,
+        gp,
+        Map.to_list(spawn_coords)
+      )
+      combatant.character_id
     end)
 
     Enum.zip(team_b_combatants, mp.spawns_team_b)
     |> Enum.map(fn {combatant, spawn_coords} ->
-      [
-        spawn_combatant(
-          combatant.character_id,
-          :sniper,
-          blue_team,
-          gp,
-          Map.to_list(spawn_coords)
-        )
-      ]
+      spawn_combatant(
+        combatant.character_id,
+        :sniper,
+        blue_team,
+        gp,
+        Map.to_list(spawn_coords)
+      )
+      combatant.character_id
     end)
 
   end
 
   defp spawn_combatant(user_id, :pistolero, team, game_parameters, spawn_location) do
     frag_grenade_component = build_frag_grenade_component(game_parameters)
-
+    bonuses = Battles.impl().build_character_bonuses(user_id)
     Entities.Combatant.new_pistolero(
       Faker.Person.first_name(),
       spawn_location,
       [x: 0, y: 0, z: 0],
       team,
-      game_parameters.machine_gunner_params.max_health,
+      bonuses.max_health,
       frag_grenade_component,
       build_weapon(:pistolero, game_parameters),
       user_id
@@ -89,13 +88,13 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
 
   defp spawn_combatant(user_id, :sniper, team, game_parameters, spawn_location) do
     frag_grenade_component = build_frag_grenade_component(game_parameters)
-
+    bonuses = Battles.impl().build_character_bonuses(user_id)
     Entities.Combatant.new_sniper(
       Faker.Person.first_name(),
       spawn_location,
       [x: 0, y: 0, z: 0],
       team,
-      game_parameters.sniper_params.max_health,
+      bonuses.max_health,
       frag_grenade_component,
       build_weapon(:sniper, game_parameters),
       user_id
@@ -106,13 +105,13 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
 
   defp spawn_combatant(user_id, :machine_gunner, team, game_parameters, spawn_location) do
     frag_grenade_component = build_frag_grenade_component(game_parameters)
-
+    bonuses = Battles.impl().build_character_bonuses(user_id)
     Entities.Combatant.new_gunner(
       Faker.Person.first_name(),
       spawn_location,
       [x: 0, y: 0, z: 0],
       team,
-      game_parameters.machine_gunner_params.max_health,
+      bonuses.max_health,
       frag_grenade_component,
       build_weapon(:machine_gunner, game_parameters),
       user_id
