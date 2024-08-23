@@ -24,6 +24,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterActionPhaseStart do
     with {:ok, battle_entity} <- Ecspanse.Entity.fetch(entity_id) do
       clear_waiting_for_intentions(battle_entity)
     end
+
+    EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
   end
 
   def run(_, _), do: :ok

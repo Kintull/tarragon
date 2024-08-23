@@ -43,9 +43,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFragOut do
         spawn_frag_grenades(battle_entity, scheduled_action_entities)
 
         Ecspanse.Command.despawn_entities!(scheduled_action_entities)
-      else
-        EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end
+
+      EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
     end
   end
 

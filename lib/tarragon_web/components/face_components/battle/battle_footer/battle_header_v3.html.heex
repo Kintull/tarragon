@@ -24,7 +24,11 @@
       >
         <div class="flex w-full h-full">
           <span class="ScoreLeft m-auto font-metropolis-regular text-dark-30 font-bold text-[16px]">
-            <%= @time_left %>
+            <%= if @is_decision_phase do %>
+                <%= @time_left %>
+            <% else %>
+                <img class="WaitImg h-[25px]" src="/images/wait.gif" />
+            <% end %>
           </span>
         </div>
       </.bordered_rectangle>

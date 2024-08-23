@@ -62,7 +62,8 @@ defmodule Tarragon.MixProject do
       {:struct_access, "~> 1.1"},
       {:typedstruct, "~> 0.5.2"},
       {:ecspanse_state_machine, ">= 0.3.2"},
-      {:backoffice_templates, "~> 1.0.4"}
+      {:backoffice_templates, "~> 1.0.4"},
+      {:map_diff, "~> 1.3"}
       # {:ecspanse_state_machine, path: "/Users/ketupia/src/phoenix/ecspanse_state_machine"}
     ]
   end

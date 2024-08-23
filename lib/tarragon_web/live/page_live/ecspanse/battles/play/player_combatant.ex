@@ -55,7 +55,7 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatants do
 
       <div class="grid grid-cols-2 gap-2 pt-2">
         <div
-          :for={action <- @combatant.scheduled_actions}
+          :for={action <- Enum.filter(@combatant.available_actions, &(&1.action_state.is_scheduled))}
           class={[
             "p-2 bg-slate-300 rounded-full",
             !@combatant.combatant.waiting_for_intentions &&
@@ -68,7 +68,11 @@ defmodule TarragonWeb.PageLive.Ecspanse.Battles.Play.PlayerCombatants do
           <.action_tag_content action={action.action} />
         </div>
 
-        <div :if={!Enum.any?(@combatant.scheduled_actions)}>-- none --</div>
+        <div :if={!Enum.any?(@combatant.available_actions |> Enum.filter(&(&1.action_state.is_scheduled)))}>-- none --</div>
+      </div>
+
+      <div class="flex flex-col">
+
       </div>
     </div>
     """

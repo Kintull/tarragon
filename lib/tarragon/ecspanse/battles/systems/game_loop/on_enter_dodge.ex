@@ -30,9 +30,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDodge do
         Enum.each(scheduled_action_entities, &add_dodging(&1))
 
         Ecspanse.Command.despawn_entities!(scheduled_action_entities)
-      else
-        EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end
+
+      EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
     end
   end
 

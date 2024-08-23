@@ -44,9 +44,10 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterPopSmoke do
         obscure_combatants(battle_entity, scheduled_action_entities)
 
         Ecspanse.Command.despawn_entities!(scheduled_action_entities)
-      else
-        EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end
+
+      IO.inspect("OnEnterPopSmoke end")
+      EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
     end
   end
 

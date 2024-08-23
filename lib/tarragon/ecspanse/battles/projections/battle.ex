@@ -6,6 +6,7 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Battle do
 
   use Ecspanse.Projection,
     fields: [
+      :grid,
       :battle,
       :state_machine,
       :entity,
@@ -64,7 +65,12 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Battle do
       Lookup.list_children(battle_entity, Components.Bullet)
       |> Enum.map(&Projections.Bullet.project_bullet/1)
 
+    [grid] =
+      Lookup.list_children(battle_entity, Components.Grid)
+      |> Enum.map(&Projections.Grid.project_grid/1)
+
     struct!(__MODULE__,
+      grid: ProjectionUtils.project(grid),
       battle: ProjectionUtils.project(battle),
       entity: ProjectionUtils.project(battle_entity),
       state_machine: ProjectionUtils.project(state_machine),

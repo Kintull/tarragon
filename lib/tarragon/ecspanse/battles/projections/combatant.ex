@@ -85,9 +85,10 @@ defmodule Tarragon.Ecspanse.Battles.Projections.Combatant do
         )
 
       attack_target_options =
-        Ecspanse.Query.select({Components.AttackTargetOption}, for: [combatant_entity])
+        Ecspanse.Query.select({Components.AttackTargetOption}, for_children_of: [combatant_entity])
         |> Ecspanse.Query.stream()
         |> Enum.map(&(elem(&1,0)))
+        |> Enum.sort_by(&(&1.user_id))
 
       struct!(__MODULE__,
         available_actions: available_action_projections,
