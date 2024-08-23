@@ -48,13 +48,14 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     # option 1 - extend grid where every cell is a container, and it has properties like highlighted, selected, etc.
     # option 2 - store options for cells in an action state, and render them based on that state
 
-    {:ok, ecs_battle_entity} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room.id)
-    turn = ecs_battle_entity.battle.turn
-    ecs_sm_state = ecs_battle_entity.state_machine.current_state
+    {:ok, battle_projection} = Tarragon.Ecspanse.Battles.Api.find_battle_by_game(room.id)
+    turn = battle_projection.battle.turn
+    is_decision_phase = battle_projection.state_machine.current_state == "Decision Phase"
 
     if connected?(socket) do
-      Projections.Battle.start!(%{entity_id: ecs_battle_entity.entity.id, client_pid: self()})
+      Projections.Battle.start!(%{entity_id: battle_projection.entity.id, client_pid: self()})
     end
+
     Enum.each(
       (ally_team ++ enemy_team),
       fn character ->
@@ -85,11 +86,13 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
     step_action_state = init_step_action_state(attack_action.action.action_point_cost, move_action.action_state.is_available)
     attack_action_state = init_attack_action_state(attack_action.action.action_point_cost, attack_action.action_state.is_available, weapon_range, attack_target_options)
     dodge_action_state = init_dodge_action_state(defence_action.action.action_point_cost, defence_action.action_state.is_available)
+    grid_state = init_grid_state(character_ids_by_locations, battle_projection.grid)
 
     socket =
       socket
+      |> assign(is_decision_phase: is_decision_phase)
+      |> assign(combatant_projections: %{character.id => ecs_combatant_projection})
       |> assign(turn: turn)
-      |> assign(ecs_sm_state: ecs_sm_state)
       |> assign(ally_score: 0)
       |> assign(enemy_score: 0)
       |> assign(player_location: 0)
@@ -127,24 +130,22 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       |> assign(dodge_action_state: dodge_action_state)
       |> assign(step_action_state: step_action_state)
       |> assign(energy_state: init_energy_state(max_energy: max_energy, current_energy: current_energy, energy_regen: energy_regen))
-      |> assign(grid_state: init_grid_state(character_ids_by_locations))
+      |> assign(grid_state: grid_state)
       |> assign(bg_tile_size: 200)
       |> assign(room_id: room.id)
 
     {:ok, socket, layout: false}
   end
 
-  def init_grid_state(character_ids_by_locations) do
+  def init_grid_state(character_ids_by_locations, grid) do
     # hexagonal grid coordinates include x, y, z, where x + y + z = 0
     # creating a hexagonal grid with 7 hexagons
     # outer_r = 20
     # inner_r = round(outer_r * 0.86602540378)
-
-    cell_width = 63
+    # generate_grid_circle_flat
     #    grid = generate_grid_rectangle_flat(9, 5, cell_width)
     #    grid = generate_grid_rectangle_pointy(9, 5, cell_width)
     #    grid = generate_grid_circle_pointy(3, cell_width)
-    grid = generate_grid_circle_flat(5, cell_width)
 
     %{
       name: :grid_state,
@@ -163,14 +164,27 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   def handle_info({:projection_updated, %{result: projection = %Projections.Battle{}}}, socket) do
     time = projection.state_machine.time
 
+    is_decision_phase = projection.state_machine.current_state == "Decisions Phase"
+
     socket =
       socket
       |> assign(seconds_left: round(time/1000))
+      |> assign(is_decision_phase: is_decision_phase)
 
     {:noreply, socket}
   end
 
   def handle_info({:projection_updated, %{result: combatant_projection = %Projections.Combatant{}}}, socket) do
+#    IO.inspect("projection_updated Projections.Combatant")
+#    if socket.assigns.player_character_id == combatant_projection.combatant.user_id do
+#      Map.keys(combatant_projection)
+#        |> Enum.each(fn key ->
+#        diff = MapDiff.diff(Map.get(socket.assigns.combatant_projections[socket.assigns.player_character_id], key), Map.get(combatant_projection, key))
+#        if diff.changed != :equal do
+#          IO.inspect(Map.drop(diff, [:changed, :value]), label: key)
+#        end
+#      end)
+#    end
     old_character_ids_by_locations = socket.assigns.grid_state.character_ids_by_locations
 
     current_health_points_by_ids = socket.assigns.current_health_points_by_ids
@@ -200,8 +214,26 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
         socket.assigns.energy_state
       end
 
+    old_dodge_action_state = socket.assigns.dodge_action_state
     old_step_action_state = socket.assigns.step_action_state
     old_attack_action_state = socket.assigns.attack_action_state
+
+
+    new_dodge_action_state =
+      if combatant_projection.combatant.user_id == socket.assigns.player_character_id do
+        dodge_action =
+          combatant_projection.available_actions
+          |> Enum.find(& &1.action.action_group == :defense)
+
+        case dodge_action do
+          %{action_state: %{is_scheduled: false}} ->
+            init_dodge_action_state(dodge_action.action.action_point_cost, dodge_action.action_state.is_available)
+          _ ->
+            old_dodge_action_state
+        end
+      else
+        old_dodge_action_state
+      end
 
     {new_step_action_state, new_grid_state} =
       if combatant_projection.combatant.user_id == socket.assigns.player_character_id do
@@ -246,13 +278,17 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
         {old_attack_action_state, new_grid_state}
       end
 
+    user_id = combatant_projection.combatant.user_id
+
     socket =
       socket
       |> assign(grid_state: new_grid_state)
       |> assign(energy_state: new_energy_state)
       |> assign(step_action_state: new_step_action_state)
       |> assign(attack_action_state: new_attack_action_state)
+      |> assign(dodge_action_state: new_dodge_action_state)
       |> assign(current_health_points_by_ids: new_current_health_points_by_ids)
+      |> assign(combatant_projections: Map.put(socket.assigns.combatant_projections, user_id, combatant_projection))
 
     {:noreply, socket}
   end

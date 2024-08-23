@@ -48,11 +48,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterMove do
               is_scheduled: false
             )
           end)
-
-#        Ecspanse.Command.despawn_entities!(action_entities)
-      else
-        EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end
+
+      EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
     end
   end
 

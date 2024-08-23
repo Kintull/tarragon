@@ -1,4 +1,8 @@
-<div class="relative w-screen h-[117px] px-[2px] pt-[2px] bg-dark-50 rounded-t-[11px]">
+<%
+disabled_pointer_events = if !@is_decision_phase, do: "pointer-events-none"
+%>
+
+<div class={["relative w-screen h-[117px] px-[2px] pt-[2px] bg-dark-50 rounded-t-[11px]", disabled_pointer_events]}>
   <div class="absolute z-10 w-full h-full bottom-[70px] flex flex-row justify-center items-center gap-[16px]">
     <.action_button_v3
       state={@step_action_state.state}

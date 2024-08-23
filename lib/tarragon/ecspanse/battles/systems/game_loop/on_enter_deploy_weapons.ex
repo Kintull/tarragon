@@ -35,9 +35,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDeployWeapons do
         |> Ecspanse.Command.update_components!()
 
         Ecspanse.Command.despawn_entities!(scheduled_action_entities)
-      else
-        EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end
+
+      EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
     end
   end
 

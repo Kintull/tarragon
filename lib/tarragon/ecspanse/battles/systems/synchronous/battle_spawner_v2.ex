@@ -29,6 +29,25 @@ defmodule Tarragon.Ecspanse.Battles.Systems.Synchronous.BattleSpawnerV2 do
         )
       )
 
+    grid_entity = Ecspanse.Command.spawn_entity!(
+      Entities.GridEntity.new(
+        battle_entity
+      )
+    )
+
+    Enum.each(
+      mp.map_tiles.cells,
+      fn %MapParameters.Tile{} = tile ->
+        Ecspanse.Command.spawn_entity!(
+          Entities.TileEntity.new(
+            tile,
+            grid_entity
+          )
+        )
+      end
+    )
+
+
     IO.puts(
       EcspanseStateMachine.format_as_mermaid_diagram(battle_entity.id)
       |> Withables.val_or_nil()

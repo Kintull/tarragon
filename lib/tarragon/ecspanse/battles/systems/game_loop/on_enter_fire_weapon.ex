@@ -56,9 +56,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFireWeapon do
                  is_scheduled: false
                )
              end)
-      else
-        EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
       end
+
+      EcspanseStateMachine.transition_to_default_exit(entity_id, @to_state)
 
 #
 #      double_tap_scheduled_actions =
@@ -95,9 +95,9 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterFireWeapon do
            Ecspanse.Query.fetch_components(
              shooter_entity,
              {Components.Position, Components.MainWeapon, Components.AttackActionTarget}
-           ) |> IO.inspect(label: "2"),
-         {:ok, target_entity} <- Ecspanse.Entity.fetch(attack_target.entity_id)|> IO.inspect(label: "3"),
-         {:ok, target_position} <- Components.Position.fetch(target_entity)|> IO.inspect(label: "4") do
+           ),
+         {:ok, target_entity} <- Ecspanse.Entity.fetch(attack_target.entity_id),
+         {:ok, target_position} <- Components.Position.fetch(target_entity) do
       Enum.each(
         Range.new(1, main_weapon.projectiles_per_shot),
         fn _ ->

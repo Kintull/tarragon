@@ -39,6 +39,8 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
 
       process_bots(battle_entity)
     end
+
+    Logger.debug("OnEnterDecisionsPhase END #{entity_id}")
   end
 
   def run(_, _), do: :ok
@@ -217,13 +219,13 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
 
   defp update_available_attack_target_option(battle_entity, combatant_entity) do
     results = Ecspanse.Query.select({Ecspanse.Entity, Components.AttackTargetOption},
-                for: [combatant_entity]
+                for_children_of: [combatant_entity]
               )
               |> Ecspanse.Query.stream()
               |> Enum.to_list()
 
     # Remove old target options
-    Enum.each(results, fn {_, old_target_option} -> Ecspanse.Command.remove_component!(old_target_option) end)
+    Enum.each(results, fn {old_options_entity, _} -> Ecspanse.Command.despawn_entity!(old_options_entity) end)
 
     {:ok, main_weapon} = Components.MainWeapon.fetch(combatant_entity)
 
@@ -240,11 +242,11 @@ defmodule Tarragon.Ecspanse.Battles.Systems.GameLoop.OnEnterDecisionsPhase do
     enemies_in_main_weapon_range
     |> Enum.each(fn enemy ->
       with {:ok, enemy_combatant} <- Components.Combatant.fetch(enemy) do
-        {:ok, c} = Components.Combatant.fetch(combatant_entity)
-        IO.inspect("center user: #{c.user_id}, enemy: #{enemy_combatant.user_id}")
-        Ecspanse.Command.add_component!(combatant_entity, {Components.AttackTargetOption, [user_id: enemy_combatant.user_id, combatant_entity_id: enemy.id]})
+        Ecspanse.Command.spawn_entity!(Entities.AttackTargetOption.new([user_id: enemy_combatant.user_id, combatant_entity_id: enemy.id], combatant_entity))
       end
     end)
+
+    :ok
   end
 
   defp update_available_actions(combatant_entities) when is_list(combatant_entities) do

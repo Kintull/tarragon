@@ -7,19 +7,25 @@ defmodule TarragonWeb.PageLive.DebugEcs do
 
   @impl true
   def mount(_params, _session, socket) do
-    character_id = 271
+    participant = Tarragon.Repo.all(Tarragon.Battles.Participant)
+    |> Enum.filter(&(&1.is_bot == false))
+    |> Enum.sort_by(&(&1.id), :desc)
+    |> List.first()
 
+    character_id = participant.user_character_id
     {:ok, combatant_entity} = Api.find_combatant_entity_by_user_character_id(character_id)
     {:ok, combatant} = Api.find_combatant_by_user_character_id(character_id)
 
     {:ok, team_entity} = Lookup.fetch_parent(combatant_entity, Tarragon.Ecspanse.Battles.Components.Team)
     {:ok, battle_entity} = Lookup.fetch_parent(team_entity, Tarragon.Ecspanse.Battles.Components.Battle)
 
-    |> IO.inspect
     battle = Tarragon.Ecspanse.Battles.Projections.Battle.project_battle(battle_entity)
 
     if connected?(socket),
        do: Projections.Battle.start!(%{entity_id: battle_entity.id, client_pid: self()})
+
+
+   fps = Ecspanse.Resource.debug()
 
     socket =
       socket
@@ -41,9 +47,9 @@ defmodule TarragonWeb.PageLive.DebugEcs do
       id={"board_player_combatant_#{@player_combatant.entity.id}"}
       />
     </div>
-    <pre><%= inspect(@battle, pretty: true) %></pre>
 
     """
+    # per system we need to know how much time it take to run a single cycle
   end
 
   @impl true

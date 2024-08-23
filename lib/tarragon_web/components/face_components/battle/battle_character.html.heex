@@ -15,12 +15,15 @@ shadow_color =
     @is_target -> "bg-brown-40"
     @is_target_option -> "bg-brown-30"
     true -> "bg-brown-20"
-  end %>
+  end
+
+disable_pointer_events = if @disable_clicks, do: "pointer-events-none"
+%>
 
 <div
   phx-click="character_click"
   phx-value-character_id={@character_id}
-  class={["BattleCharacter", @class]}
+  class={["BattleCharacter", @class, disable_pointer_events]}
   style={["width: #{@width}px;", @style]}
 >
   <div class="flex flex-col justify-center items-center">

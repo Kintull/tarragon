@@ -5,6 +5,21 @@ defmodule Tarragon.Ecspanse.MapParameters do
 
   @type hex_coord :: %{x: integer(), y: integer(), z: integer()}
 
+  alias Tarragon.Ecspanse.MapParameters
+
+  typedstruct do
+    field :map_tiles, MapParameters.MapTiles.t()
+    field :spawns_team_a, [MapParameters.hex_coord()]
+    field :spawns_team_b, [MapParameters.hex_coord()]
+  end
+
+  typedstruct module: MapTiles do
+    field :name, String.t()
+    field :cells, [MapParameters.Tile.t()]
+    field :width, integer()
+    field :height, integer()
+  end
+
   typedstruct module: Tile do
     field :coord, %{x: integer(), y: integer()}
     field :hex_coords, MapParameters.hex_coord()
@@ -14,22 +29,9 @@ defmodule Tarragon.Ecspanse.MapParameters do
     field :height, integer()
   end
 
-  typedstruct module: MapTiles do
-    field :name, String.t()
-    field :cells, [Tile.t()]
-    field :width, integer()
-    field :height, integer()
-  end
-
-  typedstruct do
-    field :map_tiles, MapTiles.t()
-    field :spawns_team_a, [MapParameters.hex_coord()]
-    field :spawns_team_b, [MapParameters.hex_coord()]
-  end
-
   def new() do
     %__MODULE__{
-      map_tiles: generate_grid_circle_flat(3, 100),
+      map_tiles: generate_grid_circle_flat(5, 63),
       spawns_team_a: [
         %{x: -1, y: 4, z: -3},
         %{x: 0, y: 4, z: -4},
@@ -62,7 +64,7 @@ defmodule Tarragon.Ecspanse.MapParameters do
           height = cell_height
           width = cell_width
 
-          %Tile{
+          %Tarragon.Ecspanse.MapParameters.Tile{
             coord: offset_coords,
             hex_coords: hex_coordinates,
             left: left,
@@ -79,7 +81,7 @@ defmodule Tarragon.Ecspanse.MapParameters do
     map_diameter = Enum.map(-map_radius..map_radius, & &1) |> length
     width = map_diameter * 1.5 * cell_width
     height = map_diameter * cell_height
-    %{name: "circular_grid_flat", cells: cells, width: width, height: height}
+    %MapParameters.MapTiles{name: "circular_grid_flat", cells: cells, width: width, height: height}
   end
 
   def offset_to_hex_flat(offset) do

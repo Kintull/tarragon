@@ -31,14 +31,14 @@ defmodule Tarragon.Ecspanse.Battles.Entities.BattleEntity do
              exits: [@state_names.pop_smoke],
              timeout: 1_000
            ],
-           [name: @state_names.pop_smoke, exits: [@state_names.frag_out], timeout: 1_000],
+           [name: @state_names.pop_smoke, exits: [@state_names.frag_out], timeout: 1],
            [
              name: @state_names.frag_out,
              exits: [@state_names.dodge],
-             timeout: @movement_durations.grenades
+             timeout: 1
            ],
            [name: @state_names.dodge, exits: [@state_names.deploy_weapons], timeout: 1_000],
-           [name: @state_names.deploy_weapons, exits: [@state_names.fire_weapon], timeout: 1_000],
+           [name: @state_names.deploy_weapons, exits: [@state_names.fire_weapon], timeout: 1],
            [
              name: @state_names.fire_weapon,
              exits: [@state_names.bullets_impact],
@@ -47,14 +47,14 @@ defmodule Tarragon.Ecspanse.Battles.Entities.BattleEntity do
            [
              name: @state_names.bullets_impact,
              exits: [@state_names.frag_grenades_detonate],
-             timeout: 1000
+             timeout: 1_000
            ],
            [
              name: @state_names.frag_grenades_detonate,
              exits: [@state_names.pack_weapons],
              timeout: 1_000
            ],
-           [name: @state_names.pack_weapons, exits: [@state_names.move], timeout: 1_000],
+           [name: @state_names.pack_weapons, exits: [@state_names.move], timeout: 1],
            [
              name: @state_names.move,
              exits: [@state_names.action_phase_end],

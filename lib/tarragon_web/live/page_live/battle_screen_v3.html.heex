@@ -49,6 +49,7 @@ hex_width = hd(@grid_state.grid.cells).width %>
   <div class="absolute right-1/2 top-0 translate-x-[50%] z-20">
     <.battle_header_v3
       time_left={@seconds_left}
+      is_decision_phase={@is_decision_phase}
       blue_score={@ally_score}
       red_score={@enemy_score}
     />
@@ -95,10 +96,12 @@ hex_width = hd(@grid_state.grid.cells).width %>
           is_target_option = char_id in @grid_state.attack_target_options
           shield_enabled = is_player && (@dodge_action_state.state == :active)
           is_selected_target = (char_id != nil) && (char_id == @grid_state.selected_attack_target)
+          disable_clicks = @attack_action_state.state != :active
           %>
           <p class="text-[0.5rem] text-black"><%= "#{hex.hex_coords.x} #{hex.hex_coords.y} #{hex.hex_coords.z}" %></p>
           <%= if char_id do %>
             <.battle_character
+              disable_clicks={disable_clicks}
               shield_enabled={shield_enabled}
               is_target_option={is_target_option}
               is_selected_target={is_selected_target}
@@ -122,6 +125,7 @@ hex_width = hd(@grid_state.grid.cells).width %>
 
   <.battle_footer_v3
     class="z-10 relative"
+    is_decision_phase={@is_decision_phase}
     step_action_state={@step_action_state}
     attack_action_state={@attack_action_state}
     dodge_action_state={@dodge_action_state}
