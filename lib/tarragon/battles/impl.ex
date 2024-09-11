@@ -124,7 +124,7 @@ defmodule Tarragon.Battles.Impl do
         join: uc in assoc(p, :user_character),
         where: r.awaiting_start == false and not is_nil(r.started_at),
         where: uc.id == ^character_id,
-        where: p.closure_shown == false and p.is_bot == false,
+        where: p.closure_shown == false,
         select: r.id
 
     Repo.one(

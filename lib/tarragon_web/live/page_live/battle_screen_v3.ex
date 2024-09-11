@@ -7,11 +7,19 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
   alias Tarragon.Ecspanse.Battles.Components
 
   @impl true
-  def mount(_params, _, socket) do
-    character = get_player_character()
+  def mount(_params, session, socket) do
+    session_char_int = Map.get(session, "user_id")
+    IO.inspect(session_char_int, label: "character from session")
+
+    character = if session_char_int do
+      get_player_character(session_char_int)
+      else
+      get_player_character()
+    end
     character.id |> IO.inspect(label: "player_character_id")
     room = Battles.impl().get_character_active_room(character.id)
     {ally_team, enemy_team} = split_ally_enemy_teams(character.id, room.participants)
+
     selected_enemy = hd(enemy_team)
 
     seconds_left = 20
@@ -776,6 +784,16 @@ defmodule TarragonWeb.PageLive.BattleScreenV3 do
       |> Enum.find(&(!&1.is_bot))
       |> Tarragon.Repo.preload([:user_character])
 
+    participant.user_character
+  end
+
+  def get_player_character(id) do
+    participant =
+      Tarragon.Repo.all(Tarragon.Battles.Participant)
+      |> Enum.find(&(&1.user_character_id == id))
+      |> Tarragon.Repo.preload([:user_character])
+
+      IO.inspect(participant)
     participant.user_character
   end
 
