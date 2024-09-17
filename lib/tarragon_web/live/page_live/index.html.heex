@@ -1,30 +1,17 @@
 <.flash_group flash={@flash} />
-<div
-  class="w-full h-screen  p-4 flex items-center justify-center bg-cover bg-center bg-no-repeat"
-  style="background-image: url('/images/background-newspaper-light.webp')"
->
-  <div class="py-6 px-10 sm:max-w-md md:max-w-xl w-full rounded-2xl">
-    <div class="flex flex-col space-y-3">
-      <div class="flex flex-col gap-2 justify-center items-center">
-        <div class="w-60 font-metropolis-regular shadow-play-button outline-play-button-text play-button bg-obsidian-black">
-          <div class="relative w-full h-5 flex flex-row justify-center">
-            <div class="absolute -top-2">
-              <a class="text-3xl" onClick="toggleFullScreenAndRedirect()">FullScreen!</a>
-            </div>
-          </div>
-        </div>
 
-        <div class="font-metropolis-regular shadow-play-button outline-play-button-text play-button bg-obsidian-black w-60">
-          <.link class="text-3xl w-full h-full" onclick="openAsWindow();">
-            <div class="relative w-full h-5 flex flex-row justify-center">
-              <div class="absolute -top-2 w-full h-full">
-                Next
-              </div>
-            </div>
-          </.link>
-        </div>
-      </div>
-    </div>
+<div class="Entergameview w-full h-screen bg-cover bg-center bg-no-repeat relative" style="background-image: url('/images/background-newspaper-light.webp')">
+  <div class="Newgamebutton w-[187px] h-[50px] mx-auto top-[346px] relative shadow">
+    <div class="Rectangle47 w-[187px] h-[50px] left-0 top-0 absolute bg-[#326f95] absolute rounded-md"></div>
+    <div class="Rectangle125 w-[181.88px] h-[44.87px] left-[2.56px] top-[2.56px] absolute rounded-[5px] border border-[#fff4e5]"></div>
+    <div class="ButtonText left-[50px] top-[16px] absolute text-center text-white text-base font-semibold font-metropolis-regular tracking-tight">NEW GAME</div>
+  </div>
+  <div class="Continuebutton w-[187px] h-[50px] mx-auto top-[370px] relative shadow">
+    <div class="Rectangle47 w-[187px] h-[50px] left-0 top-0 absolute bg-[#326f95] rounded-md"></div>
+    <div class="Rectangle125 w-[181.88px] h-[44.87px] left-[2.56px] top-[2.56px] absolute rounded-[5px] border border-[#fff4e5]"></div>
+    <.link onclick="window.location.replace('/intro_screen');">
+      <div class="ButtonText left-[51px] top-[16px] absolute text-center text-white text-base font-semibold font-metropolis-regular tracking-tight">CONTINUE</div>
+    </.link>
   </div>
 </div>
 
@@ -39,13 +26,13 @@
     }
     function openAsWindow() {
       if (isMobile()) {
-        window.location.replace('/game_screen');
+        window.location.replace('/intro_screen');
       }
       else {
         let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
   width=412,height=915,left=100,top=100`;
 
-        open('/game_screen', 'Tarragon Client', params);
+        open('/intro_screen', 'Tarragon Client', params);
       }
     }
     function toggleFullScreenAndRedirect() {

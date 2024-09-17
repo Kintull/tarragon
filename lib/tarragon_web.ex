@@ -86,6 +86,7 @@ defmodule TarragonWeb do
       # Core UI components and translation
       import TarragonWeb.CoreComponents
       import TarragonWeb.FaceComponents
+      import TarragonWeb.ComponentsV2
       import TarragonWeb.BackofficeComponents
       import TarragonWeb.Gettext
 

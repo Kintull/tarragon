@@ -1,0 +1,21 @@
+<% svg_height = 100 %>
+<svg class="h-[40px] w-full">
+    <svg
+            viewBox="0 0 300 40"
+            width="300px"
+            height="40px"
+            preserveAspectRatio="xMidYMid meet"
+    >
+        <text class="font-metropolis-bold"
+              x="50%"
+              y="50%"
+              dominant-baseline="middle"
+              text-anchor="middle"
+              font-size={@font_size}
+              fill="white"
+              stroke="#51677B"
+              stroke-width="1.8">
+            <%= render_slot(@inner_block) %>
+        </text>
+    </svg>
+</svg>

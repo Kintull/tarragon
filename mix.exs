@@ -63,7 +63,8 @@ defmodule Tarragon.MixProject do
       {:typedstruct, "~> 0.5.2"},
       {:ecspanse_state_machine, ">= 0.3.2"},
       {:backoffice_templates, "~> 1.0.4"},
-      {:map_diff, "~> 1.3"}
+      {:map_diff, "~> 1.3"},
+      {:dart_sass, "~> 0.5.1", runtime: Mix.env() == :dev}
       # {:ecspanse_state_machine, path: "/Users/ketupia/src/phoenix/ecspanse_state_machine"}
     ]
   end
@@ -80,9 +81,9 @@ defmodule Tarragon.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.setup": ["sass.install --if-missing", "tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["sass default", "tailwind default", "esbuild default"],
+      "assets.deploy": ["sass default", "tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
   end
 end

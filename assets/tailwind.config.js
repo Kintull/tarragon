@@ -98,6 +98,8 @@ module.exports = {
                 'cwisdom': ['Conventional-Wisdom', 'sans-serif'],
                 'jotione-regular': ['JotiOne-Regular', 'sans-serif'],
                 'metropolis-regular': ['Metropolis-Regular', 'sans-serif'],
+                'metropolis-bold': ['Metropolis-Bold', 'sans-serif'],
+                'metropolis-semibold': ['Metropolis-SemiBold', 'sans-serif'],
                 'futura': ['Futura', 'sans-serif'],
             },
             gridTemplateColumns: {

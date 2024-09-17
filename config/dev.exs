@@ -29,7 +29,8 @@ config :tarragon, TarragonWeb.Endpoint,
   secret_key_base: "qh+HguQnnCmDbwinbi2vv0RmKpcvEkTj4KtmC3u0xMCv2PqLZptEueUPEu1642KC",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]},
+    sass: {DartSass, :install_and_run, [:default, ~w(--watch)]}
   ]
 
 # ## SSL Support
