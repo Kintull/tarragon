@@ -1,4 +1,4 @@
-<div class="EnterGameView w-full h-screen bg-cover bg-center bg-no-repeat flex justify-center items-center" style="background-image: url('/images/background-newspaper-light.webp')">
+<div class="EnterGameView w-full h-[100dvh] bg-cover bg-center bg-no-repeat flex justify-center items-center" style="background-image: url('/images/background-newspaper-light-croppeds.webp')">
   <div class="IntroModalBackground w-[344px] bg-dark-40 border-[1px] border-beige-30 rounded-[10px]">
     <div class="IntroModalFrame w-full h-full relative flex-col gap-[10px] py-[10px] justify-between items-center flex">
       <div class="IntroBlock w-[322px] h-[218px] relative">
@@ -48,7 +48,7 @@
               <div class="CodeBackground w-[286px] h-[26px] left-0 top-0 absolute bg-[#dcd2c5] rounded-[10px] shadow-inner"></div>
               <% value = Phoenix.HTML.Form.normalize_value("text", "") %>
               <div phx-feedback-for="code" class="CodeHelperText w-full h-full flex items-center justify-between">
-                <input id={@form[:code].id} type="text" field={nil} name={@form[:code].name} value={@form[:code].value} placeholder="Code must be 4-10 characters long" class="absolute text-[11px] text-[#65819a] font-metropolis-bold left-0 top-0 w-full h-full border-transparent bg-transparent"/>
+                <input id={@form[:code].id} type="number" field={nil} name={@form[:code].name} value={@form[:code].value} placeholder="Code must be 4-10 characters long" class="absolute text-[11px] text-[#65819a] font-metropolis-bold left-0 top-0 w-full h-full border-transparent bg-transparent"/>
               </div>
             </div>
             <div class="CodeDescriptionText relative mx-auto py-[10px] w-[287px] text-[#51677b] text-[11px] font-metropolis-bold tracking-wide">Code is your login id. Only letters and numbers <br/>are allowed.</div>

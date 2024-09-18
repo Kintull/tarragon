@@ -1,0 +1,72 @@
+<style>
+    .ExpeditionBackground {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-image: url('/images/exploration-bg-cropped.png')
+    }
+</style>
+
+<div class="absolute halftone-exploration top-0 left-0 w-[100vw] h-[100dvh]">
+    <div class="ExpeditionBackground w-full h-full">&nbsp;</div>
+</div>
+
+<div class="ExplorationHeader w-[100vw] h-[50px] flex relative">
+    <div class="HeaderBackground w-full h-[50px] top-0 left-0 absolute bg-[#28343e] border-b border-[#ad9e88]"></div>
+    <div class="BackButton w-[32px] h-[34px] my-auto relative left-[15px]">
+        <svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25.0935 15.5592L24.877 16L25.0935 16.4408L31.6417 29.7741L2.34996 16L31.6416 2.22587L25.0935 15.5592Z" fill="#181F25" stroke="#DDD3C5" stroke-width="2"/>
+            <path d="M28.6316 5.33341L6.02856 16.0001L28.6316 26.6667" stroke="#7AA9B8" stroke-width="2"/>
+        </svg>
+    </div>
+    <div class="ExplorationTitle relative m-auto text-center text-white text-[16px] font-metropolis-bold tracking-tight">Exploration</div>
+</div>
+
+<div class="ExplorationTrack mx-auto mt-[150px] w-[180px] h-[300px] bg-dark-40 border border-beige-30 rounded-[10px] relative">
+    <div class="ExplorationStages relative flex flex-col items-center justify-center gap-[5px]">
+        <%= for i <- 5..1 do %>
+            <%= case i do %>
+                <% 5 -> %>
+                    <!-- Pointer -->
+                    <div class="Pointer w-[7px] h-[11px]">
+                        <svg width="7" height="11" viewBox="0 0 7 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.08768 7.5998L3.5 7.17293L2.91232 7.5998L1.89898 8.33583L3.5 3.30033L5.10102 8.33583L4.08768 7.5998Z" fill="#181F25" stroke="#DDD3C5" stroke-width="2"/>
+                        </svg>
+                    </div>
+
+                    <!-- Stage 5 -->
+                    <div class="Stage5 relative w-[43px] h-[37px] flex">
+                        <img class="Hexagon w-full h-full absolute m-auto" src="/images/exploration-boss.png" />
+                        <img class="Santelmo relative z-10 w-[25px] aspect-square m-auto" src="/images/santelmo.png" />
+                    </div>
+                <% 1 -> %>
+                    <!-- Pointer -->
+                    <div class="Pointer w-[7px] h-[11px]">
+                        <svg width="7" height="11" viewBox="0 0 7 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.08768 7.5998L3.5 7.17293L2.91232 7.5998L1.89898 8.33583L3.5 3.30033L5.10102 8.33583L4.08768 7.5998Z" fill="#181F25" stroke="#DDD3C5" stroke-width="2"/>
+                        </svg>
+                    </div>
+
+                    <!-- Stage 1 -->
+                    <div class="Stage1 relative w-[49px] h-[33px] flex">
+                        <div class="StageBackground w-full h-full bg-blue-20 rounded-[5px] shadow border border-beige-30 absolute"></div>
+                        <div class="relative z-10 m-auto text-center text-white text-sm font-metropolis-bold tracking-tight"><%= i %></div>
+                    </div>
+                <% _ -> %>
+                    <!-- Pointer 3 -->
+                    <div class="Pointer w-[7px] h-[11px]">
+                        <svg width="7" height="11" viewBox="0 0 7 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.08768 7.5998L3.5 7.17293L2.91232 7.5998L1.89898 8.33583L3.5 3.30033L5.10102 8.33583L4.08768 7.5998Z" fill="#181F25" stroke="#DDD3C5" stroke-width="2"/>
+                        </svg>
+                    </div>
+
+                    <!-- Stage 3 -->
+                    <div class="Stage3 relative w-[31px] h-[20px] flex">
+                        <div class="StageBackground w-full h-full bg-blue-30 rounded-[5px] border border-beige-30 absolute"></div>
+                        <div class="relative z-10 m-auto text-center text-white text-xs font-metropolis-bold tracking-tight"><%= i %></div>
+                    </div>
+            <% end %>
+        <% end %>
+    </div>
+</div>
+
+

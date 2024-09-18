@@ -1,0 +1,116 @@
+<div class="absolute halftone-reveal top-0 left-0 w-[100vw] h-[100dvh]">
+
+    <div class="RevealBackground w-full h-full bg-gradient-to-b from-black to-[#C71B1B]" >&nbsp;</div>
+</div>
+
+
+<style>
+    @keyframes scaleUp {
+        0% {
+            transform: scale(0.8);
+        }
+        70% {
+            transform: scale(1.05); /* Overshooting to 105% */
+        }
+        100% {
+            transform: scale(1); /* Final size at 100% */
+        }
+    }
+
+    .CharacterModel {
+        transform: scale(0.8);
+        animation: scaleUp 0.3s ease-out forwards;
+    }
+
+    .Luna {
+        transform: scale(0.8);
+        animation: scaleUp 0.3s ease-out forwards;
+    }
+</style>
+
+<!-- Revealed Hero Model or Avatar -->
+<div class="CharacterModel w-[173px] h-[198px] mx-auto mt-[170px] relative">
+    <div class="CharacterModelBackground w-[173px] h-[198px] left-0 top-0 absolute bg-[#28343e] rounded-[10px] border border-[#ad9e88]"></div>
+    <div class="p-[5px] w-[173px] h-[198px] relative">
+        <img class="CharacterModeImage  w-full h-full rounded-[7px] object-cover" src="/images/female-character-reveal.png" />
+    </div>
+</div>
+
+<!-- NEW Mark -->
+<div class="NewLogo w-[95px] h-[59px] absolute top-[80px] right-[90px]">
+    <div class="NewLogoText left-[10px] top-0 absolute text-[#dbd7d5] text-[30px] font-bold font-metropolis-bold">NEW</div>
+    <div class="NewLogoSvg left-[5px] top-[40px] absolute">
+        <svg width="103" height="31" viewBox="0 0 103 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#filter0_d_841_7315)">
+                <path d="M72.4778 11.5C76.7164 11.5 79.3238 13.3385 82.6068 15.6534C83.4112 16.2206 84.3054 16.8164 85.3006 17.4207C88.6119 19.4316 93.0414 21.5373 99 23C90.8317 19.1954 86.3621 13.2156 82.6931 8.3068C79.2326 3.67701 76.4843 -2.95033e-06 72.0165 -3.00361e-06L70.4208 -3.02264e-06L17.8081 -3.65004e-06C12.7557 -3.71029e-06 8.03055 1.20508 4 3.29928C7.03452 5.50397 11.7975 10.3302 15.4639 11.7357C15.9022 11.6435 16.3355 11.564 16.7608 11.5L70.4208 11.5L72.4778 11.5Z" fill="#DBD7D5"/>
+            </g>
+            <defs>
+                <filter id="filter0_d_841_7315" x="0" y="0" width="103" height="31" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                    <feOffset dy="4"/>
+                    <feGaussianBlur stdDeviation="2"/>
+                    <feComposite in2="hardAlpha" operator="out"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_841_7315"/>
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_841_7315" result="shape"/>
+                </filter>
+            </defs>
+        </svg>
+    </div>
+</div>
+
+
+<!-- Hero Information (Class, Abilities) -->
+<div class="HeroInfoBlock w-full h-[216px] relative flex flex-col items-center gap-[20px]">
+    <!-- Hero Name -->
+    <div class="Luna text-[#dbd7d5] text-[24px] font-bold font-metropolis-bold mt-[10px]">Luna</div>
+
+    <!-- Hero Class Icons -->
+    <div class="HeroClassIcons w-[300px] h-[42px] flex justify-center gap-[20px] items-center mt-[25px]">
+        <!-- Separator Left -->
+        <div>
+            <svg width="69" height="4" viewBox="0 0 69 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 2C73.6 2 73.6667 2 64.5 2" stroke="#AD9E88" stroke-width="3"/>
+            </svg>
+        </div>
+
+        <!-- First Icon -->
+        <div class="ClassIconGroup relative w-[42px] h-[42px] flex items-center justify-center mr-[10px]">
+            <div class="ClassIconBackground w-[42px] h-[42px] bg-[#51677b] rounded-full border border-[#ad9e88]"></div>
+            <img class="ClassIconImage w-[27px] h-[27px] absolute" src="/images/ghille-suit-class.png" />
+        </div>
+
+        <!-- Second Icon -->
+        <img class="ClassIcon w-[42px] h-[42px]" src="/images/scope-class.png" />
+
+        <!-- Separator Right -->
+
+        <div>
+            <svg width="69" height="4" viewBox="0 0 69 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 2C73.6 2 73.6667 2 64.5 2" stroke="#AD9E88" stroke-width="3"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Skill Icons -->
+    <div class="SkillIcons w-[159px] h-[70px] flex justify-center gap-[20px] mt-[35px]">
+        <!-- Action Badge 1 -->
+        <div class={["relative w-[70px] h-[70px]"]}>
+            <div class="ActionBackground w-[70px] h-[70px] bg-[#28343e] rounded-[10px] border border-[#ad9e88]"></div>
+            <img class="ActionIcon w-[60px] h-[60px] absolute top-[5px] left-[5px] rounded-[7px] border border-[#3c4e5d]" src="/images/ghille-suit-skill.png" />
+        </div>
+
+        <!-- Action Badge 2 -->
+        <div class={["relative w-[70px] h-[70px]"]}>
+            <div class="ActionBackground w-[70px] h-[70px] bg-[#28343e] rounded-[10px] border border-[#ad9e88]"></div>
+            <img class="ActionIcon w-[60px] h-[60px] absolute top-[5px] left-[5px] rounded-[7px] border border-[#3c4e5d]" src="/images/critical-damage-skill.png" />
+        </div>
+    </div>
+
+    <!--Continue-->
+    <div class="ContinueText relative top-[50px] mx-auto font-metropolis-bold text-[15px] text-white">Tap anywhere to continue</div>
+</div>
+
+
+

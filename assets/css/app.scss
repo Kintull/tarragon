@@ -240,6 +240,41 @@
     1px 1px 0 black;
   }
 
+
+  .halftone-reveal {
+    /* brightness controls the threshold point */
+    filter: brightness(0.57) blur(0.1px) contrast(3);
+
+  }
+
+  .halftone-reveal::after {
+    overflow: clip;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(3px at center, black, white);
+    background-size: 3px 3px;
+    background-blend-mode: multiply;
+    mix-blend-mode: screen;
+  }
+
+  .halftone-exploration {
+    /* brightness controls the threshold point */
+    filter: brightness(0.68) blur(0.3px) contrast(3);
+
+  }
+
+  .halftone-exploration::after {
+    overflow: clip;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(5px at center, black, white);
+    background-size: 5px 5px;
+    background-blend-mode: multiply;
+    mix-blend-mode: screen;
+  }
+
   .scrollbar-y-hidden::-webkit-scrollbar {
     display: none;
   }

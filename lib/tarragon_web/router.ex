@@ -35,6 +35,9 @@ defmodule TarragonWeb.Router do
     live "/battle_screen", PageLive.BattleScreen, :battle_screen
     live "/backpack_screen", PageLive.BackpackScreen, :backpack_screen
     live "/intro_screen", PageLive.IntroScreen, :intro_screen
+    live "/tutorial_screen", PageLive.TutorialScreen, :tutorial_screen
+    live "/reveal_screen", PageLive.RevealScreen, :reveal_screen
+    live "/exploration_screen", PageLive.ExplorationScreen, :exploration_screen
     live "/battle_screen_v2", PageLive.BattleScreenV2, :battle_screen
     live "/battle_screen_v3", PageLive.BattleScreenV3, :battle_screen
     live "/debug", PageLive.DebugEcs, :index

@@ -1,0 +1,104 @@
+<div class="TutorialBackground absolute top-0 left-0 w-[100vw] h-[100dvh]" style="background-size: cover;background-repeat: no-repeat;background-image: url('/images/tutorial_bg.png')">&nbsp;</div>
+
+<div class="MainHeaderBlock absolute z-10 w-full h-[50px] flex justify-center items-center relative bg-dark-20 border-b-[1px] border-beige-30">
+    <!-- Timer block (centered) -->
+    <div class="TimerBlock flex items-center justify-center w-[73px] h-[64px] bg-brown-10 rounded-[10px] border border-beige-30 absolute left-1/2 transform -translate-x-1/2 shadow-xl shadow-red-400">
+        <div class="flex flex-col items-center gap-[5px] pt-[10px]">
+            <img class="TimerImage w-[25px] h-[25px]" src="/images/skull-counter.png" />
+            <div class="TimerCountdown text-dark-40 text-sm font-normal font-metropolis-bold tracking-wide">
+                00:15:57
+            </div>
+        </div>
+    </div>
+
+    <!-- Soft currency block (right of TimerBlock) -->
+    <div class="SoftCurrencyBlock flex items-center w-[58px] h-[33px] absolute right-[40px]">
+        <img class="CurrencyImage w-[33px] h-[33px]" src="/images/crystal.png" />
+        <div class="CurrencyValue text-white text-s font-semibold font-metropolis-bold tracking-wide ml-[4px]">
+            890
+        </div>
+    </div>
+</div>
+
+<div class="BottomBlock absolute bottom-0 flex flex-col justify-center items-center">
+    <div class="DialogueBlock relative w-[100vw] h-[180px]">
+        <div class="DialogueBlockBackground w-full h-full bg-dark-30 rounded-t-[10px] border-t border-beige-30 absolute left-0 top-0"></div>
+
+        <div class="CharacterInfoRight absolute -top-[65px] -left-[20px] z-10 flex flex-row justify-end items-start mt-[26px] w-full h-[92px]">
+            <!-- Character icon and name block -->
+            <div class="CharacterIconBlock relative flex flex-row items-center">
+                <!-- Character name -->
+                <div class="CharacterNameBlock relative left-[20px] top-[20px] w-[120px] h-[30px] bg-beige-20 rounded-[5px] border border-beige-30 flex items-center justify-center">
+                    <span class="CharacterNameText relative right-[5px] text-dark-40 text-[16px] font-metropolis-bold tracking-wide">Luna</span>
+                </div>
+
+                <!-- Character icon -->
+                <div class="CharacterIconBackground w-[92px] h-[92px] p-[5px] bg-dark-40 rounded-[10px] border border-beige-30 relative">
+                    <img class="CharacterIconImage w-full rounded-lg border border-beige-30" src="/images/female-character-avatar.png" />
+                </div>
+            </div>
+        </div>
+
+        <div class="CharacterInfoLeft absolute -top-[65px] -right-[20px] z-10 flex flex-row justify-start items-start mt-[26px] w-full h-[92px]">
+            <!-- Character icon and name block -->
+            <div class="CharacterIconBlock relative flex flex-row items-center">
+                <!-- Character icon -->
+                <div class="CharacterIconBackground relative z-10 w-[92px] h-[92px] p-[5px] bg-dark-40 rounded-[10px] border border-beige-30 relative">
+                    <img class="CharacterIconImage w-full rounded-lg border border-beige-30" src="/images/female-character-avatar.png" />
+                </div>
+
+                <!-- Character name -->
+                <div class="CharacterNameBlock relative right-[20px] top-[20px] w-[120px] h-[30px] bg-beige-20 rounded-[5px] border border-beige-30 flex items-center justify-center">
+                    <span class="CharacterNameText relative left-[5px] text-dark-40 text-[16px] font-metropolis-bold tracking-wide">Luna</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="DialogueText relative top-[65px] z-10 w-[352px] h-[100px] mx-auto text-white text-[16px] font-metropolis-bold tracking-wide">
+            I’ve seen that look before. You’re out of time, but you’re not out of options. I can buy you a few more minutes, but I need something in return.
+        </div>
+    </div>
+
+    <div class="FooterBlock w-[100vw] h-[60px] flex justify-evenly items-center relative">
+        <div class="FooterBackground absolute z-10 border-t-[1px] border-beige-30 w-full h-full bg-dark-20"></div>
+        <!-- Arena button component -->
+        <div class="ArenaButton z-10 flex flex-col items-center w-[39px] h-[50px]">
+            <img class="ArenaIcon w-[35px] h-[35px]" src="/images/swords-white.png" />
+            <div class="ArenaLabel text-white text-[10px] font-semibold font-metropolis-bold tracking-wide">Exploration</div>
+        </div>
+
+        <!-- Locked buttons -->
+        <div class="Separator z-10">
+            <svg width="2" height="39" viewBox="0 0 2 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 39V0" stroke="#3C4E5D" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="LockedButton z-10 flex justify-center items-center w-[39px] h-[50px]">
+            <img class="LockIcon w-[35px] h-[35px] filter grayscale-[0.8]" src="/images/lock.png" />
+        </div>
+        <div class="Separator z-10">
+            <svg width="2" height="39" viewBox="0 0 2 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 39V0" stroke="#3C4E5D" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="LockedButton z-10 flex justify-center items-center w-[39px] h-[50px]">
+            <img class="LockIcon w-[35px] h-[35px] filter grayscale-[0.8]" src="/images/lock.png" />
+        </div>
+        <div class="Separator z-10">
+            <svg width="2" height="39" viewBox="0 0 2 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 39V0" stroke="#3C4E5D" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="LockedButton z-10 flex justify-center items-center w-[39px] h-[50px]">
+            <img class="LockIcon w-[35px] h-[35px] filter grayscale-[0.8]" src="/images/lock.png" />
+        </div>
+        <div class="Separator z-10">
+            <svg width="2" height="39" viewBox="0 0 2 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 39V0" stroke="#3C4E5D" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="LockedButton z-10 flex justify-center items-center w-[39px] h-[50px]">
+            <img class="LockIcon w-[35px] h-[35px] filter grayscale-[0.8]" src="/images/lock.png" />
+        </div>
+    </div>
+</div>
