@@ -38,6 +38,8 @@ defmodule TarragonWeb.Router do
     live "/tutorial_screen", PageLive.TutorialScreen, :tutorial_screen
     live "/reveal_screen", PageLive.RevealScreen, :reveal_screen
     live "/exploration_screen", PageLive.ExplorationScreen, :exploration_screen
+    live "/victory_screen", PageLive.VictoryScreen, :victory_screen
+    live "/defeat_screen", PageLive.DefeatScreen, :defeat_screen
     live "/battle_screen_v2", PageLive.BattleScreenV2, :battle_screen
     live "/battle_screen_v3", PageLive.BattleScreenV3, :battle_screen
     live "/debug", PageLive.DebugEcs, :index

@@ -1,16 +1,16 @@
 <% rarity_map = %{
-  "common" => "bg-gradient-to-br to-gray-300 from-gray-200 border-[2px] border-gray-100 ",
-  "uncommon" => "bg-gradient-to-br to-lime-500 from-lime-200 border-[2px] border-lime-200",
-  "rare" => "bg-gradient-to-br to-blue-500 from-blue-200 border-[2px] border-blue-300",
-  "epic" => "bg-gradient-to-br to-purple-500 from-purple-200 border-[2px] border-purple-200",
-  "legendary" => "bg-gradient-to-br to-yellow-400 from-yellow-200 border-[2px] border-yellow-300"
+  "common" => "bg-gradient-to-b from-[#6588A0] to-[#BDD8E9] border-[2px] border-gray-100 ",
+  "uncommon" => "bg-gradient-to-b from-[#62A026] to-[#DAFFB5] border-[2px] border-lime-200",
+  "rare" => "bg-gradient-to-b from-[#7BADFF] to-[#2E589D] border-[2px] border-blue-300",
+  "epic" => "bg-gradient-to-b from-[#AC1919] to-[#EA8989] border-[2px] border-red-200",
+  "legendary" => "bg-gradient-to-b from-[#B79004] to-[#F8E640] border-[2px] border-yellow-300"
 }
 
 border_rarity_map = %{
   "common" => "border-[2px] border-gray-200 ",
   "uncommon" => "border-[2px] border-lime-400",
   "rare" => "border-[2px] border-blue-400",
-  "epic" => "border-[2px] border-purple-300",
+  "epic" => "border-[2px] border-red-300",
   "legendary" => "border-[2px] border-yellow-400",
   "broken" => "border-[2px] border-amber-400",
   "trash" => "border-[2px] border-light-carmine-pink"
@@ -51,7 +51,7 @@ bg_condition_info =
   end %>
 
 <div class={[
-  "min-w-[50px] md:w-[5vw] max-w-[100px]",
+  "w-[67px]",
   "aspect-square rounded-xl text-center text-[1rem]",
   "transition-all",
   rarity_map[@rarity],

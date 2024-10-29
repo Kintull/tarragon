@@ -77,6 +77,17 @@ module.exports = {
                 "green-20": "#99C270",
                 "green-30": "#709749",
                 "green-40": "#48612F",
+                "ssrare-10": "#F8E640",
+                "ssrare-20": "#D2A504",
+                "srare-10": "#C71B1B",
+                "srare-20": "#761111",
+                "rare-10": "#0159DC",
+                "rare-20": "#100496",
+                "ucommon-10": "#6EDD00",
+                "ucommon-20": "#57AF00",
+                "common-10": "#BDD8E9",
+                "common-20": "#93A8B6",
+
 
                 "brand": "#FD4F00",
                 "oasis": "#FEF0CA",

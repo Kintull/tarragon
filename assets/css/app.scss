@@ -181,8 +181,25 @@
     background-color: #8B0000;
   }
 
-  .small-stroke-black {
+  .small-stroke-grey {
     @include stroke(1, grey);
+  }
+
+  .small-stroke-black {
+    @include stroke(1, #181F25);
+  }
+
+  .absolute-center-x-y {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .absolute-center-x {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .face-screen-stroke-experimental {
@@ -260,7 +277,7 @@
 
   .halftone-exploration {
     /* brightness controls the threshold point */
-    filter: brightness(0.68) blur(0.3px) contrast(3);
+    filter: brightness(0.7) blur(0.3px) contrast(3);
 
   }
 
@@ -269,8 +286,8 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(5px at center, black, white);
-    background-size: 5px 5px;
+    background: radial-gradient(3px at center, black, white);
+    background-size: 3px 3px;
     background-blend-mode: multiply;
     mix-blend-mode: screen;
   }

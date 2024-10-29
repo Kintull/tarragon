@@ -11,7 +11,7 @@
 </div>
 
 <div class="ExplorationHeader w-[100vw] h-[50px] flex relative">
-    <div class="HeaderBackground w-full h-[50px] top-0 left-0 absolute bg-[#28343e] border-b border-[#ad9e88]"></div>
+    <div class="HeaderBackground w-full h-[50px] top-0 left-0 absolute bg-dark-40 border-b border-beige-30"></div>
     <div class="BackButton w-[32px] h-[34px] my-auto relative left-[15px]">
         <svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M25.0935 15.5592L24.877 16L25.0935 16.4408L31.6417 29.7741L2.34996 16L31.6416 2.22587L25.0935 15.5592Z" fill="#181F25" stroke="#DDD3C5" stroke-width="2"/>
@@ -68,5 +68,53 @@
         <% end %>
     </div>
 </div>
+
+<div class="ExplorationFooter w-[100vw] h-[118px] absolute bottom-0 flex">
+    <div class="FooterBackground w-full h-full left-0 top-0 absolute bg-dark-40 border-t border-beige-30"></div>
+    <div class="ExploreButton w-[170px] h-[55px] m-auto relative shadow-md">
+        <div class="Rectangle47 w-full h-full left-0 top-0 absolute bg-[#326f95] rounded-md"></div>
+        <div class="Rectangle125 w-[164px] h-[49px] left-[3px] top-[3px] absolute rounded-[5px] border border-beige-10"></div>
+        <div class="ButtonText left-[55px] top-[19px] absolute text-center text-white text-[15px] font-semibold font-metropolis-bold tracking-tight">Explore</div>
+    </div>
+</div>
+
+<div id="ExplorationSelectHeroModal" class="ExplorationSelectHeroModal w-[370px] h-[440px] absolute z-20 top-20 absolute-center-x drop-shadow-lg" >
+    <div class="ExplorationSelectHeroModalBackground w-full h-full left-0 top-0 absolute bg-dark-30 rounded-[10px] border border-beige-30"></div>
+    <div class="ExplorationSelectHeroModalBackButton w-[25px] h-[27px] left-[17px] top-[10px] absolute origin-top-left rounded-[10px]">
+        <svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.7453 12.0534L19.5223 12.5L19.7453 12.9466L24.6695 22.8108L2.3817 12.5L24.6695 2.18923L19.7453 12.0534Z" fill="#181F25" stroke="#DDD3C5" stroke-width="2"/>
+            <path d="M22.7368 4.16659L4.78735 12.5L22.7368 20.8333" stroke="#7AA9B8" stroke-width="2"/>
+        </svg>
+
+    </div>
+    <div class="ExplorationSelectHeroModalTitle absolute-center-x top-[14px] absolute text-center text-white text-base font-semibold font-metropolis-bold tracking-tight">Select hero</div>
+    <div class="HeroContainer w-[97%] h-[286px] absolute-center-x top-[45px] drop-shadow-lg absolute">
+        <div class="HeroContainerBackground w-full h-full left-0 top-0 absolute bg-dark-40 rounded-[10px] border border-beige-20"></div>
+        <div class="HeroGrid w-full h-[99px] px-[7px] left-0 top-[14px] absolute rounded-[10px] justify-center items-center gap-[7px] inline-flex">
+            <div class="HeroBadge w-20 h-[100px] relative">
+                <div class="HeroBadgeBackground w-full h-full left-0 top-0 absolute bg-dark-40 rounded-[10px] border border-beige-20"></div>
+                <img class="HeroAvatarTall w-[75px] h-[95px] absolute-center-x-y absolute rounded-[7px]" src="/images/female-character-hero-select.png" />
+                <img class="ClassInfo w-[13px] h-[13px] left-[7px] top-[7px] absolute" src="/images/scope-class.png" />
+                <div class="LevelInfo w-[21px] h-[15px] left-[9px] top-[82px] absolute text-center text-white text-[10px] small-stroke-black font-metropolis-bold font-metropolis-bold ">Lv. 1</div>
+            </div>
+            <div class="HeroBadge w-20 h-[100px] relative">
+                <div class="HeroBadgeBackground w-full h-full left-0 top-0 absolute bg-dark-40 rounded-[10px] border border-beige-30"></div>
+                <img class="HeroAvatar w-[74px] h-[95px] absolute-center-x-y absolute rounded-[7px] brightness-50" src="/images/male-avatar-exploration-modal.png" />
+                <div class="HeroProgress w-[62px] h-3.5 absolute-center-x top-[78px] absolute">
+                    <div class="Rectangle159 w-full h-full left-0 top-0 absolute bg-dark-40 rounded-[3px] border border-beige-30"></div>
+                    <div class="ProgressText absolute-center-x-y absolute text-center text-white text-[8px] font-semibold font-metropolis-bold tracking-tight">0/10</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ContinueButton w-[170px] h-[55px] absolute-center-x top-[359px] absolute drop-shadow-lg">
+        <div class="Rectangle47 w-full h-full left-0 top-0 absolute bg-[#326f95] rounded-md"></div>
+        <div class="Rectangle125 w-[165px] h-[49px] left-[2px] top-[3px] absolute rounded-[5px] border border-beige-10"></div>
+        <div class="ButtonText left-[49px] top-[19px] absolute text-center text-white text-[15px] font-semibold font-metropolis-bold tracking-tight">Continue</div>
+    </div>
+</div>
+
+
+
 
 
